@@ -7,7 +7,7 @@ Stay tuned as we build, design, and innovate to bring this idea to life.
 
 ## 💡 About
 This repository will soon host our next big project.  
-We’re still planning, brainstorming, and setting things up — but trust us, it’s going to be worth the wait!
+We’re still planning, brainstorming, and setting things up but trust us, it’s going to be worth the wait!
 
 ## 🛠️ Tech Stack (to be revealed)
 We’ll share details about the technologies, frameworks, and tools we’re using once development starts.
