@@ -26,4 +26,4 @@ Make sure to **watch** or **star** this repo to get updates when we launch the f
 
 ---
 
-> _“Every great project starts with an idea — and this one’s just getting started.”_
+> _“Every great project starts with an idea and this one’s just getting started.”_
