@@ -2,7 +2,7 @@
 # 🚀 Project Coming Soon
 
 Hey there 👋  
-We’re currently working on something exciting — a brand new project that’s on the way!  
+We’re currently working on something exciting a brand new project that’s on the way!  
 Stay tuned as we build, design, and innovate to bring this idea to life.
 
 ## 💡 About
