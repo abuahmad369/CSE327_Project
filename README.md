@@ -1,4 +1,4 @@
-# CSE327_Project
+# CSE327_Project: University E-Voting System 
 # 🚀 University E-Voting System 
 
 Hey there 👋  
