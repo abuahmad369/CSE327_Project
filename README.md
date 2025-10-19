@@ -39,7 +39,9 @@ It ensures **fairness**, **security**, and **anonymity** while simplifying elect
 - Receive confirmation after successful submission  
 
 ### 🧾 Non-Identifying Audit Logs  
-The system automatically records important activities — such as votes being cast or results being published — **without storing any voter’s identity or vote choice**.  
+The system automatically records important activities
+such as votes being cast or results being published 
+**without storing any voter’s identity or vote choice**.  
 This ensures full transparency **without breaking voter anonymity**.
 
 **Example:**
