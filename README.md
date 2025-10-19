@@ -44,4 +44,25 @@ The system automatically records important activities — such as votes being ca
 This ensures full transparency **without breaking voter anonymity**.
 
 **Example:**
+✅ *No personal data (like voter name or ID) is ever logged.*
+
+---
+
+## 🧰 Tech Stack  
+
+**Frontend:** Next.js / React / Tailwind CSS  
+**Backend:** Node.js (Express or Next API Routes)  
+**Database:** PostgreSQL or MySQL  
+**Hosting:** Render / Vercel / Netlify  
+**Authentication:** JWT / Token-based Voter Verification  
+**Security:** SSL/TLS Encryption, Hashed Tokens, Role-Based Access Control  
+
+---
+
+## 🚀 Installation & Setup  
+
+1. **Clone this repository**
+   ```bash
+   git clone https://github.com/your-username/university-evoting-system.git
+   cd university-evoting-system
 
