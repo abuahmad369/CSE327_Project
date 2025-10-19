@@ -1,29 +1,47 @@
-# CSE327_Project: University E-Voting System 
-# 🚀 University E-Voting System 
+# CSE327 Project : University E-Voting System
+# 🗳️ University E-Voting System  
 
-Hey there 👋  
-We’re currently working on something exciting a brand new project that’s on the way!  
-Stay tuned as we build, design, and innovate to bring this idea to life.
+![Next.js](https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)
+![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
+![Node.js](https://img.shields.io/badge/Node.js-43853D?style=for-the-badge&logo=node.js&logoColor=white)
+![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
+![Status](https://img.shields.io/badge/Status-Development-blue)
 
-## 💡 About
-This repository will soon host our next big project.  
-We’re still planning, brainstorming, and setting things up but trust us, it’s going to be worth the wait!
-
-## 🛠️ Tech Stack (to be revealed)
-We’ll share details about the technologies, frameworks, and tools we’re using once development starts.
-
-## 📅 Status
-🚧 Under construction  
-⚙️ Work in progress  
-🎯 Coming soon...
-
-## 🤝 Contributors
-This project is being developed by a passionate team of developers and creators.  
-More details will be added soon!
-
-## ⭐ Stay Tuned
-Make sure to **watch** or **star** this repo to get updates when we launch the first version!
+A secure, transparent, and user-friendly **web-based electronic voting platform** designed for universities.  
+It enables administrators to create and manage elections, students to vote online once anonymously, and the public to view results — all through a centralized and protected system.
 
 ---
 
-> _“Every great project starts with an idea and this one’s just getting started.”_
+## 🎯 Project Overview  
+
+The **University E-Voting System** modernizes the traditional paper-based voting process.  
+It ensures **fairness**, **security**, and **anonymity** while simplifying election management for administrators and providing accessibility for students.
+
+### Key Goals  
+- Prevent duplicate or fraudulent votes  
+- Maintain voter privacy and data integrity  
+- Deliver instant, accurate results  
+- Provide transparency through verifiable audit logs  
+
+---
+
+## ⚙️ Key Features  
+
+### 👩‍💼 Admin Panel  
+- Create and manage elections  
+- Approve or reject candidate applications  
+- Upload and verify voter lists  
+- Generate secure, one-time voting tokens  
+- Publish election results instantly  
+
+### 👨‍🎓 Voter Portal  
+- Secure login with university credentials  
+- Cast a single anonymous vote  
+- Receive confirmation after successful submission  
+
+### 🧾 Non-Identifying Audit Logs  
+The system automatically records important activities — such as votes being cast or results being published — **without storing any voter’s identity or vote choice**.  
+This ensures full transparency **without breaking voter anonymity**.
+
+**Example:**
+
