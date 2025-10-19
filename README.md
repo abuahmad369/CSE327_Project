@@ -7,7 +7,7 @@
 ![Status](https://img.shields.io/badge/Status-Development-blue)
 
 A secure, transparent, and user-friendly **web-based electronic voting platform** designed for universities.  
-It enables administrators to create and manage elections, students to vote online once anonymously, and the public to view results — all through a centralized and protected system.
+It enables administrators to create and manage elections, students to vote online once anonymously, and the public to view results all through a centralized and protected system.
 
 ---
 
