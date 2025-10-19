@@ -58,3 +58,39 @@ This ensures full transparency **without breaking voter anonymity**.
 **Security:** SSL/TLS Encryption, Hashed Tokens, Role-Based Access Control  
 
 ---
+
+## 🔐 Security & Privacy
+
+- Each voter receives a **unique one-time token** for voting.  
+- Tokens are **validated** and marked as “used” after submission.  
+- **Audit logs** capture important actions but never link them to voter identities.  
+- All **passwords and sensitive data** are encrypted and hashed using secure algorithms.
+
+---
+
+## 📊 System Workflow
+
+1. **Admin** creates the election and approves candidates.  
+2. **Voters** log in using university credentials and receive secure tokens.  
+3. **Votes** are cast and stored **anonymously** in the database.  
+4. The system automatically **calculates and displays results**.  
+5. **Non-identifying audit logs** record every key event for transparency.
+
+---
+
+## 🧪 Testing & Validation
+
+- **Unit Testing:** Token generation, authentication, and result calculation.  
+- **Integration Testing:** End-to-end flow from login → vote → result.  
+- **Security Testing:** Validate against SQL Injection / XSS / Replay attacks.  
+- **User Acceptance Testing:** Conducted with sample university users.
+
+---
+
+## 🧠 Future Enhancements
+
+- Add **blockchain-based vote verification** for enhanced trust.  
+- Develop **mobile apps** (Android / iOS) for easier access.  
+- Implement **live result dashboards** and statistical analytics.  
+- Introduce **biometric verification** for admin login.
+
