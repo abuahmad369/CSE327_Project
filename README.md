@@ -59,14 +59,3 @@ This ensures full transparency **without breaking voter anonymity**.
 
 ---
 
-## 🚀 Installation & Setup  
-
-1. **Clone this repository**
-   ```bash
-   git clone https://github.com/your-username/university-evoting-system.git
-   cd university-evoting-system
-
-   
----
-
-
