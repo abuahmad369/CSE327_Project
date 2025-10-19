@@ -1,5 +1,5 @@
 # CSE327_Project
-# 🚀 Project Coming Soon
+# 🚀 University E-Voting System 
 
 Hey there 👋  
 We’re currently working on something exciting a brand new project that’s on the way!  
