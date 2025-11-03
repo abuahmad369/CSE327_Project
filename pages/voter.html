@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>votesChain — Voter</title>
+  <link rel="stylesheet" href="../assets/style.css"/>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <a href="../index.html" class="logo">votesChain
+        <span class="logo-bars"><span class="logo-bar"></span><span class="logo-bar"></span><span class="logo-bar light"></span></span>
+      </a>
+      <nav>
+        <a href="admin.html">Admin</a>
+        <a href="candidate.html">Candidate</a>
+        <a href="voter.html" class="active">Voter</a>
+        <a href="public.html">Public</a>
+        <button class="login-btn">Login</button>
+      </nav>
+    </header>
+
+    <section class="page-hero">
+      <h1>Voter Portal (Draft)</h1>
+      <p>Verify identity, receive token, and cast your anonymous vote.</p>
+    </section>
+
+    <main class="section">
+      <div class="kpis">
+        <div class="card">
+          <h3>Get Token</h3>
+          <p>Receive your one-time voting token via student login or email.</p>
+          <button class="btn btn-primary" style="margin-top:10px;">Request Token</button>
+        </div>
+        <div class="card">
+          <h3>Ballot</h3>
+          <p>Open ballot, review candidates, and cast vote securely.</p>
+          <button class="btn btn-secondary" style="margin-top:10px;">Open Ballot</button>
+        </div>
+        <div class="card">
+          <h3>My Receipts</h3>
+          <p>View non-identifying receipt hash confirming inclusion in ledger.</p>
+          <button class="btn btn-secondary" style="margin-top:10px;">View Receipts</button>
+        </div>
+        <div class="card">
+          <h3>Help & FAQ</h3>
+          <p>How tokens work, deadlines, and troubleshooting.</p>
+          <button class="btn btn-secondary" style="margin-top:10px;">Open FAQ</button>
+        </div>
+      </div>
+
+      <h2 style="margin-top:24px;">Open Elections</h2>
+      <table class="table">
+        <thead><tr><th>Title</th><th>Closes</th><th>Action</th></tr></thead>
+        <tbody>
+          <tr><td>NSU Union Vote 2025</td><td>2025-11-01 21:00</td><td><button class="btn btn-primary">Vote</button></td></tr>
+        </tbody>
+      </table>
+    </main>
+
+    <footer class="features">
+      <div class="feature"><div class="feature-icon">🗳</div><div class="feature-text"><h3>Anonymous Ballot</h3><p>Privacy-preserving process</p></div></div>
+      <div class="feature"><div class="feature-icon">🔐</div><div class="feature-text"><h3>One-Time Tokens</h3><p>Prevents double voting</p></div></div>
+      <div class="feature"><div class="feature-icon">🔍</div><div class="feature-text"><h3>Public Verifiability</h3><p>Receipts & tallies</p></div></div>
+    </footer>
+  </div>
+</body>
+</html>
