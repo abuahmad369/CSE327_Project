@@ -1,5 +1,4 @@
-# CSE327 Project : University E-Voting System
-# 🗳️ CampusCast : University E-Voting System  
+# 🗳️ CampusCast : University E-Voting System (CSE327 Project)
 <p align="center">
   <img width="320" height="320" alt="online-voting" src="https://github.com/user-attachments/assets/2422ca95-a33d-4f51-9e25-f25ae51952da" />
 </p>
