@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Supervisor Dashboard | CampusCast</title>
+  <link rel="stylesheet" href="../assets/style.css" />
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #0f2027, #2c5364, #00c97f);
+      color: #fff;
+      min-height: 100vh;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      background: rgba(0, 0, 0, 0.35);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      backdrop-filter: blur(8px);
+    }
+
+    header h1 {
+      font-size: 1.6rem;
+      letter-spacing: 0.5px;
+      font-weight: 600;
+      color: #00ffae;
+    }
+
+    nav a, nav button {
+      color: white;
+      text-decoration: none;
+      margin-left: 1rem;
+      font-weight: 500;
+      transition: color 0.3s;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+
+    nav a:hover, nav button:hover {
+      color: #00ffae;
+    }
+
+    main {
+      flex: 1;
+      padding: 2rem;
+    }
+
+    /* Dashboard Cards */
+    .dashboard {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      text-align: center;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+      transition: transform 0.3s;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+    }
+
+    .card h3 {
+      font-weight: 500;
+      color: #fff;
+      margin-bottom: 0.5rem;
+    }
+
+    .card h2 {
+      font-size: 2.2rem;
+      color: #00ffae;
+      margin: 0;
+    }
+
+    /* Reports Section */
+    .reports {
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 1rem;
+      padding: 1.5rem;
+    }
+
+    .reports h2 {
+      color: #00ffae;
+      margin-bottom: 1rem;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      color: #fff;
+    }
+
+    table th, table td {
+      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 0.8rem;
+      text-align: left;
+    }
+
+    table th {
+      color: #00ffae;
+      font-weight: 600;
+    }
+
+    .status {
+      padding: 0.3rem 0.6rem;
+      border-radius: 4px;
+      font-weight: 500;
+    }
+
+    .status.active {
+      background: #00ffae;
+      color: #000;
+    }
+
+    .status.completed {
+      background: #006644;
+    }
+
+    .status.pending {
+      background: #ffc107;
+      color: #000;
+    }
+
+    footer {
+      text-align: center;
+      padding: 1rem;
+      background: rgba(0, 0, 0, 0.35);
+    }
+
+    .filter-bar {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 1rem;
+    }
+
+    .filter-bar select {
+      background: rgba(255, 255, 255, 0.15);
+      color: #fff;
+      border: none;
+      padding: 0.4rem 0.8rem;
+      border-radius: 5px;
+      outline: none;
+    }
+
+    .filter-bar select option {
+      background: #0f2027;
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>👁 Supervisor Dashboard</h1>
+    <nav>
+      <a href="../index.html">🏠 Home</a>
+      <a href="#">Reports</a>
+      <a href="#">Activities</a>
+      <button onclick="logout()">Logout</button>
+    </nav>
+  </header>
+
+  <main>
+    <section class="dashboard">
+      <div class="card">
+        <h3>Total Elections</h3>
+        <h2>3</h2>
+      </div>
+      <div class="card">
+        <h3>Active Election</h3>
+        <h2>1</h2>
+      </div>
+      <div class="card">
+        <h3>Registered Voters</h3>
+        <h2>1,200</h2>
+      </div>
+      <div class="card">
+        <h3>Supervised Polls</h3>
+        <h2>7</h2>
+      </div>
+    </section>
+
+    <section class="reports">
+      <div class="filter-bar">
+        <select>
+          <option value="all">All Elections</option>
+          <option value="active">Active</option>
+          <option value="completed">Completed</option>
+        </select>
+      </div>
+
+      <h2>Election Reports</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Election ID</th>
+            <th>Title</th>
+            <th>Date</th>
+            <th>Status</th>
+            <th>Voter Turnout</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>#E001</td>
+            <td>Student Council 2025</td>
+            <td>Nov 2, 2025</td>
+            <td><span class="status active">Active</span></td>
+            <td>72%</td>
+          </tr>
+          <tr>
+            <td>#E002</td>
+            <td>Department Reps</td>
+            <td>Oct 15, 2025</td>
+            <td><span class="status completed">Completed</span></td>
+            <td>84%</td>
+          </tr>
+          <tr>
+            <td>#E003</td>
+            <td>Club Executive Poll</td>
+            <td>Upcoming</td>
+            <td><span class="status pending">Pending</span></td>
+            <td>—</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+
+  <footer>
+    <p>© 2025 <strong>CampusCast</strong> | Supervisor Panel by 𝙁𝙤𝙪𝙧𝘼</p>
+  </footer>
+
+  <script>
+    function logout() {
+      alert("Logging out Supervisor...");
+      window.location.href = "../index.html";
+    }
+  </script>
+</body>
+</html>
