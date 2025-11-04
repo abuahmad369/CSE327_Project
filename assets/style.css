@@ -240,3 +240,164 @@ h1 {
   }
   .content { max-width:100%; }
 }
+/* ===== New Header Style (sticky + glass + no underline) ===== */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+  padding: 14px 18px;
+  margin: 6px 0 18px;
+  border-radius: 14px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.12);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow: 0 12px 24px rgba(0,0,0,.12);
+}
+
+/* Logo (CampusCast) */
+.logo {
+  text-decoration: none;              /* no underline */
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  font-size: 18px;
+  font-weight: 800;
+  color: #fff;
+}
+.logo-text { display: flex; align-items: center; gap: 10px; }
+.logo-bars { display: flex; gap: 4px; height: 18px; align-items: stretch; }
+.bar { width: 8px; background: #a4d65e; border-radius: 2px; }
+.bar.alt { background: #fff; }
+.logo-subtitle { font-size: 11px; color: #a4d65e; letter-spacing: 1px; font-weight: 600; }
+
+/* Navigation */
+.site-nav {
+  display: flex;
+  gap: 24px;
+  align-items: center;
+}
+.site-nav .nav-link {
+  color: #ffffff;
+  text-decoration: none;              /* no underline */
+  font-size: 15px;
+  opacity: .95;
+  padding: 8px 2px;
+  border-radius: 6px;
+  transition: opacity .2s ease, transform .2s ease, background-color .2s ease;
+}
+.site-nav .nav-link:hover,
+.site-nav .nav-link:focus-visible {
+  opacity: 1;
+  transform: translateY(-1px);
+  background: rgba(255,255,255,0.06);
+}
+
+/* Login button aligned with nav */
+.login-btn {
+  text-decoration: none;              /* no underline */
+  background: #d4e8b8;
+  color: #0d3a1a;
+  padding: 8px 14px;
+  border-radius: 10px;
+  font-weight: 800;
+  display: inline-block;
+  line-height: 1;
+  border: 2px solid #d4e8b8;
+  transition: transform .2s ease, box-shadow .2s ease, background-color .2s ease;
+}
+.login-btn:hover,
+.login-btn:focus-visible {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 22px rgba(0,0,0,.18);
+}
+
+/* Ensure all anchors in the header have no underline */
+.site-header a { text-decoration: none; }
+
+/* Responsive tweaks */
+@media (max-width: 820px) {
+  .site-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+  .site-nav {
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+}
+
+/* === FIX: make header visible everywhere (stronger bg + higher z + clear text) === */
+.site-header{
+  position: sticky;
+  top: 0;
+  z-index: 1000;                       /* keep it above everything */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+  padding: 14px 18px;
+  margin: 6px 0 18px;
+  border-radius: 14px;
+
+  /* darker, semi-opaque background so white text pops over white sections */
+  background: rgba(13, 58, 26, 0.95);  /* deep green */
+  border: 1px solid rgba(255,255,255,0.18);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow: 0 12px 24px rgba(0,0,0,.24);
+}
+
+/* ensure everything inside the header has high-contrast text and no underlines */
+.site-header a,
+.site-header .logo,
+.site-header .logo * {
+  color: #fff !important;
+  text-decoration: none !important;
+}
+
+/* brand bars & subtitle keep brand colors */
+.site-header .logo-bars .bar    { background:#a4d65e; }
+.site-header .logo-bars .bar.alt{ background:#fff; }
+.site-header .logo-subtitle     { color:#a4d65e; }
+
+/* nav links hover state */
+.site-header .site-nav .nav-link{
+  color:#fff;
+  opacity:.95;
+  padding: 8px 6px;
+  border-radius:6px;
+  transition: opacity .2s, transform .2s, background-color .2s;
+}
+.site-header .site-nav .nav-link:hover,
+.site-header .site-nav .nav-link:focus-visible{
+  opacity:1;
+  background: rgba(255,255,255,0.12);
+  transform: translateY(-1px);
+}
+
+/* login button contrast on the darker header */
+.site-header .login-btn{
+  background:#d4e8b8;
+  color:#0d3a1a;
+  border:2px solid #d4e8b8;
+  padding:8px 14px;
+  border-radius:10px;
+  font-weight:800;
+}
+.site-header .login-btn:hover{ box-shadow:0 8px 20px rgba(0,0,0,.25); transform:translateY(-2px); }
+
+/* keep animated background behind the header */
+.hands-bg{ z-index:-1 !important; }
+
+/* if any content is anchor-linked, avoid being hidden under the sticky header */
+.main-content{ scroll-margin-top: 90px; }
+
+

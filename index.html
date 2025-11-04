@@ -7,83 +7,92 @@
   <link rel="stylesheet" href="assets/style.css" />
 </head>
 <body>
-  
-  <!-- Animated Hands Background -->
-  <div class="hands-bg" ahr></div>
+  <!-- Background animation (hands illustration) -->
+  <div class="hands-bg"></div>
 
   <div class="container">
-
-    <!-- Header / Navigation -->
-    <header>
-      <a href="" class="logo" aria-label="Go to University E-Voting homepage">
-        CampusCast: University E-Voting
-        <span class="logo-bars">
-          <span class="logo-bar"></span>
-          <span class="logo-bar"></span>
-          <span class="logo-bar light"></span>
-        </span>
+    
+    <!-- Site Header -->
+    <header class="site-header">
+      <a href="index.html" class="logo" aria-label="Go to CampusCast homepage">
+        <div class="logo-text">
+          <span>CampusCast</span>
+          <div class="logo-bars">
+            <div class="bar"></div>
+            <div class="bar alt"></div>
+            <div class="bar"></div>
+            <div class="bar alt"></div>
+          </div>
+        </div>
+        <div class="logo-subtitle">University E-voting System</div>
       </a>
 
-      <nav>
-        <a href="pages/admin.html">Admin</a>
-        <a href="pages/candidate.html">Candidate</a>
-        <a href="pages/voter.html">Voter</a>
-        <a href="pages/public.html">Public</a>
-        <button class="login-btn" type="button">Login</button>
+      <nav class="site-nav">
+        <a href="pages/admin.html" class="nav-link">Admin</a>
+        <a href="pages/candidate.html" class="nav-link">Candidate</a>
+        <a href="pages/voter.html" class="nav-link">Voter</a>
+        <a href="pages/public.html" class="nav-link">Public</a>
+        <a class="login-btn" href="/login/login.html" role="button">Login</a>
       </nav>
     </header>
 
-    <!-- Main Section -->
+    <!-- Main Content -->
     <main class="main-content">
       
-      <!-- Voting Illustration -->
+      <!-- Candidate Avatar Display -->
       <div class="illustration" aria-label="Candidate avatars">
+        <!-- Avatar A -->
         <figure class="avatar">
           <picture>
             <source srcset="assets/img/avatar_1a.png" type="image/png" />
-            <img src="assets/img/avatar_1a.png" alt="Candidate 1 avatar" width="256" height="256" loading="lazy" />
+            <img src="assets/img/avatar_1a.png" alt="Candidate A" width="256" height="256" loading="lazy" />
           </picture>
           <figcaption class="avatar-label">A</figcaption>
         </figure>
 
+        <!-- Avatar B -->
         <figure class="avatar">
           <picture>
             <source srcset="assets/img/avatar_2a.png" type="image/png" />
-            <img src="assets/img/avatar_2a.png" alt="Candidate 2 avatar" width="256" height="256" loading="lazy" />
+            <img src="assets/img/avatar_2a.png" alt="Candidate B" width="256" height="256" loading="lazy" />
           </picture>
           <figcaption class="avatar-label">B</figcaption>
         </figure>
 
+        <!-- Avatar C -->
         <figure class="avatar">
           <picture>
             <source srcset="assets/img/avatar_3a.png" type="image/png" />
-            <img src="assets/img/avatar_3a.png" alt="Candidate 3 avatar" width="256" height="256" loading="lazy" />
+            <img src="assets/img/avatar_3a.png" alt="Candidate C" width="256" height="256" loading="lazy" />
           </picture>
           <figcaption class="avatar-label">C</figcaption>
         </figure>
 
+        <!-- Avatar D -->
         <figure class="avatar">
           <picture>
             <source srcset="assets/img/avatar_4a.png" type="image/png" />
-            <img src="assets/img/avatar_4a.png" alt="Candidate 4 avatar" width="256" height="256" loading="lazy" />
+            <img src="assets/img/avatar_4a.png" alt="Candidate D" width="256" height="256" loading="lazy" />
           </picture>
           <figcaption class="avatar-label">D</figcaption>
         </figure>
       </div>
 
-      <!-- Textual Content -->
+      <!-- Textual Section -->
       <section class="content">
         <span class="badge">Empower Your Vote!</span>
         <h1>CampusCast: University E-Voting System</h1>
         <p class="description">
-          The <strong>CampusCast: University E-Voting System</strong>
+          Welcome to <strong>CampusCast</strong>, a secure and fast digital voting system tailored for universities.
         </p>
 
+        <!-- CTA Buttons -->
         <div class="button-group">
-          <button class="btn btn-primary" type="button">Register</button>
+          <a class="btn btn-primary" href="/reg/reg.html" role="button">Register</a>
           <button class="btn btn-secondary" type="button">Learn More</button>
         </div>
 
+        <!-- Security Note -->
         <div class="ethereum-note">
           <span class="ethereum-icon">🔐</span>
           End-to-End Encryption
@@ -91,49 +100,54 @@
       </section>
     </main>
 
-    <!-- Features Footer -->
+    <!-- Feature Highlights Footer -->
     <footer class="features">
 
+      <!-- Feature 1 -->
       <div class="feature">
         <div class="feature-icon">🧾</div>
         <div class="feature-text">
           <h3>Transparent Process</h3>
-          <p></p>
+          <p>All records are verifiable and auditable by design.</p>
         </div>
       </div>
 
+      <!-- Feature 2 -->
       <div class="feature">
         <div class="feature-icon">🔒</div>
         <div class="feature-text">
           <h3>End-to-End Encryption</h3>
-          <p></p>
+          <p>Votes remain private and tamper-proof at every stage.</p>
         </div>
       </div>
 
+      <!-- Feature 3 -->
       <div class="feature">
         <div class="feature-icon">⚡</div>
         <div class="feature-text">
           <h3>Fast & Efficient</h3>
-          <p></p>
+          <p>Cast and count votes in real time with zero paper trail.</p>
         </div>
       </div>
 
+      <!-- Navigation Controls -->
       <div class="nav-arrows">
         <button class="arrow-btn" aria-label="Previous slide">‹</button>
         <button class="arrow-btn" aria-label="Next slide">›</button>
       </div>
 
+      <!-- Pagination Dots -->
       <div class="dots" aria-hidden="true">
         <span class="dot active"></span>
         <span class="dot"></span>
         <span class="dot"></span>
       </div>
 
+      <!-- Credits -->
       <div class="footer-credit">
-        <p>© 2025 <strong>𝙁𝙤𝙪𝙧𝘼</strong>-CampusCast</p>
+        <p>© 2025 <strong>FourA</strong> – CampusCast</p>
       </div>
     </footer>
-    
   </div>
 </body>
 </html>
