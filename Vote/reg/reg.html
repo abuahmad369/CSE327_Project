@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CampusCast – University E-Voting System</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- Background decorative shapes -->
+  <div class="bg-shape shape-1"></div>
+  <div class="bg-shape shape-2"></div>
+  <div class="bg-shape shape-3"></div>
+  <div class="bg-shape shape-4"></div>
+
+  <!-- Header / Navigation -->
+  <header>
+    <div class="logo">
+      <div class="logo-text">
+        <span>CampusCast</span>
+        <div class="logo-bars">
+          <div class="bar" style="background: #a4d65e;"></div>
+          <div class="bar alt"></div>
+          <div class="bar" style="background: #a4d65e;"></div>
+          <div class="bar alt"></div>
+        </div>
+      </div>
+      <div class="logo-subtitle">University E-voting System</div>
+    </div>
+
+    <nav>
+      <a href="#how-to-vote">How to Vote</a>
+      <a href="#about">About Us</a>
+      <button class="btn-register-nav">Register</button>
+    </nav>
+  </header>
+
+  <!-- Page Content -->
+  <main class="container">
+
+    <!-- Registration Form -->
+    <section class="form-section">
+      <h1>Registration Form</h1>
+      <p>
+        Register to join CampusCast, the leading university e-voting platform.<br />
+        Make your voice count where it matters most!
+      </p>
+
+      <form id="registrationForm">
+        <div class="form-group">
+          <label for="name">Name</label>
+          <input type="text" id="name" name="name" placeholder="Enter your full name" required />
+        </div>
+
+        <div class="form-group">
+          <label for="dob">Date of Birth</label>
+          <input type="date" id="dob" name="dob" required />
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email Address</label>
+          <input type="email" id="email" name="email" placeholder="Enter your university email" required />
+        </div>
+
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" placeholder="Create a secure password" required />
+        </div>
+
+        <button type="submit" class="btn-submit">Submit</button>
+      </form>
+    </section>
+
+    <!-- Voter Activity Illustration -->
+    <section class="illustration-section">
+      <div class="illustration-card">
+        <div class="card-frame"></div>
+
+        <!-- Card Header -->
+        <div class="card-header">
+          <span class="dot"></span>
+          <span class="label">Active Campus Voters</span>
+          <span class="sparkle" aria-hidden="true">✦</span>
+        </div>
+
+        <!-- Showcase Area -->
+        <div class="showcase">
+          <!-- Left Polaroid -->
+          <figure class="polaroid p-left" aria-label="Student registration">
+            <img src="/assets/reg/reg2.png" alt="Students registering using CampusCast" />
+            <figcaption>
+              <span class="chip chip-green">Register</span>
+              <span class="chip chip-outline">CampusCast</span>
+            </figcaption>
+          </figure>
+
+          <!-- Right Polaroid -->
+          <figure class="polaroid p-right" aria-label="Student voting">
+            <img src="/assets/reg/reg1.png" alt="Students casting their votes online" />
+            <figcaption>
+              <span class="chip chip-purple">Vote</span>
+              <span class="chip chip-outline">Secure • Fast</span>
+            </figcaption>
+          </figure>
+        </div>
+
+        <!-- Card Footer -->
+        <div class="card-footer">
+          <div class="stat">
+            <span class="caption">Total Votes Cast</span>
+            <span class="value" id="voteCount">0</span>
+          </div>
+
+          <button
+            class="cta-ghost"
+            type="button"
+            onclick="window.location.hash = '#registrationForm'">
+            Learn how it works
+          </button>
+        </div>
+
+        <!-- Decorative blobs -->
+        <div class="blob b1" aria-hidden="true"></div>
+        <div class="blob b2" aria-hidden="true"></div>
+      </div>
+    </section>
+  </main>
+
+  <!-- External Script -->
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CampusCast – Login</title>
+  <link rel="stylesheet" href="/login/styles.css" />
+</head>
+<body>
+  <!-- Decorative background shapes -->
+  <div class="bg-shape shape-1"></div>
+  <div class="bg-shape shape-2"></div>
+  <div class="bg-shape shape-3"></div>
+  <div class="bg-shape shape-4"></div>
+
+  <!-- Site Header -->
+  <header>
+    <div class="logo">
+      <div class="logo-text">
+        <span>CampusCast</span>
+        <div class="logo-bars">
+          <div class="bar" style="background: #a4d65e;"></div>
+          <div class="bar alt"></div>
+          <div class="bar" style="background: #a4d65e;"></div>
+          <div class="bar alt"></div>
+        </div>
+      </div>
+      <div class="logo-subtitle">University E-voting System</div>
+    </div>
+
+    <nav>
+      <a href="#how-to-vote">How to Vote</a>
+      <a href="#about">About Us</a>
+      <a href="/reg/reg.html" class="btn-register-nav" role="button">Register</a>
+    </nav>
+  </header>
+
+  <!-- Main Content Area -->
+  <div class="container">
+
+    <!-- Login Section -->
+    <section class="login-section">
+      <h1>Log In to Your Account</h1>
+
+      <div class="login-card">
+        <h2>Welcome back 👋</h2>
+
+        <form id="loginForm">
+          <!-- Email Input -->
+          <div class="form-group">
+            <label for="email">Your Email</label>
+            <div class="input-wrapper">
+              <input 
+                type="email" 
+                id="email" 
+                name="email" 
+                placeholder="e.g. you@studentmail.com" 
+                required 
+              />
+              <span class="input-icon" aria-hidden="true">👤</span>
+            </div>
+          </div>
+
+          <!-- Password Input -->
+          <div class="form-group">
+            <label for="password">Your Password</label>
+            <div class="input-wrapper">
+              <input 
+                type="password" 
+                id="password" 
+                name="password" 
+                placeholder="e.g. SecurePass123" 
+                required 
+              />
+              <span class="input-icon" aria-hidden="true">🔒</span>
+            </div>
+          </div>
+
+          <!-- Submit Button -->
+          <button type="submit" class="btn-signin">Sign In</button>
+
+          <!-- Footer Links -->
+          <div class="login-footer">
+            <a href="/reg/reg.html">Don't have an account?</a>
+            <a href="#forgot-password">Forgot password?</a>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- Sign-up Teaser Section -->
+    <section class="signup-section">
+      <h2>New to CampusCast?</h2>
+      <p>Join now and experience secure, accessible student voting from anywhere.</p>
+      <button 
+        class="btn-signup" 
+        type="button" 
+        onclick="window.location.href='/reg/reg.html'"
+      >
+        Sign Up
+      </button>
+    </section>
+
+  </div>
+</body>
+</html>
