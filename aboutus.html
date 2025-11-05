@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CampusCast – আমাদের সম্পর্কে</title>
+  <link rel="stylesheet" href="assets/style.css" />
+</head>
+<body>
+  <!-- Same background as index -->
+  <div class="hands-bg"></div>
+
+  <div class="container">
+    <!-- Header -->
+    <header class="site-header">
+      <a href="index.html" class="logo" aria-label="CampusCast হোমপেজে যান">
+        <div class="logo-text">
+          <span>CampusCast</span>
+          <div class="logo-bars">
+            <div class="bar"></div>
+            <div class="bar alt"></div>
+            <div class="bar"></div>
+            <div class="bar alt"></div>
+          </div>
+        </div>
+        <div class="logo-subtitle">বিশ্ববিদ্যালয় ই-ভোটিং সিস্টেম</div>
+      </a>
+
+      <nav class="site-nav">
+        <a href="/login/login.html" class="nav-link">প্রশাসক</a>
+        <a href="registervoters.html" class="nav-link">প্রার্থী</a>
+        <a href="supervisedpoll.html" class="nav-link">ভোটার</a>
+        <a href="public.html" class="nav-link">পাবলিক</a>
+        <a class="login-btn" href="/login/login.html" role="button">লগইন</a>
+      </nav>
+    </header>
+
+    <!-- Main -->
+    <main class="main-content" style="flex-direction:column; gap:28px;">
+      <!-- Intro -->
+      <section class="content" style="max-width:860px;">
+        <span class="badge">আমাদের সম্পর্কে</span>
+        <h1>আমরা NSU এর ছাত্র : ই-ভোটিংকে সহজ ও স্বচ্ছ করতে কাজ করছি</h1>
+        <p class="description">
+          <strong>CampusCast</strong> হলো বিশ্ববিদ্যালয় কমিউনিটির জন্য তৈরি একটি নিরাপদ, দ্রুত
+          এবং ব্যবহারবান্ধব ই-ভোটিং প্ল্যাটফর্ম। আমরা নর্থ সাউথ ইউনিভার্সিটি (NSU)-এর
+          শিক্ষার্থী, প্রযুক্তি ও ডিজাইন ভালোবাসি, এবং ক্যাম্পাসের গণতান্ত্রিক প্রক্রিয়াকে
+          আরও স্বচ্ছ ও সবাইের জন্য সহজ করতে চাই।
+        </p>
+      </section>
+
+      <!-- Team Grid (reuse .illustration + .avatar cards for same look) -->
+      <section aria-label="টিম সদস্যরা" style="width:100%;">
+        <div class="illustration">
+          <!-- Member 1 -->
+          <figure class="avatar">
+            <picture>
+              <source srcset="assets/img/avatar_1a.png" type="image/png" />
+              <img src="assets/img/avatar_1a.png" alt="তামীম" width="256" height="256" loading="lazy" />
+            </picture>
+            <figcaption class="avatar-label">তামীম</figcaption>
+            <div style="font-size:12px; color:#4b5563; text-align:center;">
+              NSU • CSE<br/>ফুলস্ট্যাক ডেভেলপার<br/>
+            </div>
+          </figure>
+
+          <!-- Member 2 -->
+          <figure class="avatar">
+            <picture>
+              <source srcset="assets/img/avatar_2a.png" type="image/png" />
+              <img src="assets/img/avatar_2a.png" alt="শিশির" width="256" height="256" loading="lazy" />
+            </picture>
+            <figcaption class="avatar-label">শিশির</figcaption>
+            <div style="font-size:12px; color:#4b5563; text-align:center;">
+              NSU • CSE<br/>ফুলস্ট্যাক ডেভেলপার<br/>
+            </div>
+          </figure>
+
+          <!-- Member 3 -->
+          <figure class="avatar">
+            <picture>
+              <source srcset="assets/img/avatar_3a.png" type="image/png" />
+              <img src="assets/img/avatar_3a.png" alt="আরিয়ান " width="256" height="256" loading="lazy" />
+            </picture>
+            <figcaption class="avatar-label">আরিয়ান </figcaption>
+            <div style="font-size:12px; color:#4b5563; text-align:center;">
+              NSU • CSE<br/>ফুলস্ট্যাক ডেভেলপার<br/>
+            </div>
+          </figure>
+
+          <!-- Member 4 -->
+          <figure class="avatar">
+            <picture>
+              <source srcset="assets/img/avatar_4a.png" type="image/png" />
+              <img src="assets/img/avatar_4a.png" alt="ইমতিয়াজ" width="256" height="256" loading="lazy" />
+            </picture>
+            <figcaption class="avatar-label">ইমতিয়াজ</figcaption>
+            <div style="font-size:12px; color:#4b5563; text-align:center;">
+            NSU • CSE<br/>ফুলস্ট্যাক ডেভেলপার<br/>
+            </div>
+          </figure>
+        </div>
+      </section>
+
+      <!-- Mission / Values -->
+      
+    </main>
+
+    <!-- Footer (same style) -->
+    <footer class="features">
+      <div class="feature">
+        <div class="feature-icon">🧾</div>
+        <div class="feature-text">
+          <h3>স্বচ্ছ প্রক্রিয়া</h3>
+          <p>সমস্ত রেকর্ড যাচাইযোগ্য ও নিরীক্ষাযোগ্য।</p>
+        </div>
+      </div>
+
+      <div class="feature">
+        <div class="feature-icon">🔒</div>
+        <div class="feature-text">
+          <h3>এন্ড-টু-এন্ড এনক্রিপশন</h3>
+          <p>প্রতিটি ধাপে আপনার তথ্য সুরক্ষিত থাকে।</p>
+        </div>
+      </div>
+
+      <div class="feature">
+        <div class="feature-icon">⚡</div>
+        <div class="feature-text">
+          <h3>দ্রুত ও কার্যকর</h3>
+          <p>রিয়েল-টাইমে ফলাফল দেখতে পারবেন।</p>
+        </div>
+      </div>
+      <div class="nav-arrows">
+        <button class="arrow-btn" aria-label="পূর্বের স্লাইড">‹</button>
+        <button class="arrow-btn" aria-label="পরবর্তী স্লাইড">›</button>
+      </div>
+
+      <div class="dots" aria-hidden="true">
+        <span class="dot active"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+      </div>
+
+      <div class="footer-credit">
+        <p>© ২০২৫ <strong>FourA</strong> – CampusCast</p>
+      </div>
+    </footer>
+  </div>
+</body>
+</html>

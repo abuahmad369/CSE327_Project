@@ -1,20 +1,20 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bn">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CampusCast: University E-Voting System</title>
+  <title>CampusCast: বিশ্ববিদ্যালয় ই-ভোটিং সিস্টেম</title>
   <link rel="stylesheet" href="assets/style.css" />
 </head>
 <body>
-  <!-- Background animation (hands illustration) -->
+  <!-- ব্যাকগ্রাউন্ড (হাতে ভোট তোলার অ্যানিমেশন) -->
   <div class="hands-bg"></div>
 
   <div class="container">
     
-    <!-- Site Header -->
+    <!-- সাইট হেডার -->
     <header class="site-header">
-      <a href="index.html" class="logo" aria-label="Go to CampusCast homepage">
+      <a href="index.html" class="logo" aria-label="CampusCast হোমপেজে যান">
         <div class="logo-text">
           <span>CampusCast</span>
           <div class="logo-bars">
@@ -24,128 +24,131 @@
             <div class="bar alt"></div>
           </div>
         </div>
-        <div class="logo-subtitle">University E-voting System</div>
+        <div class="logo-subtitle">বিশ্ববিদ্যালয় ই-ভোটিং সিস্টেম</div>
       </a>
 
       <nav class="site-nav">
-        <a href="pages/admin.html" class="nav-link">Admin</a>
-        <a href="pages/candidate.html" class="nav-link">Candidate</a>
-        <a href="pages/voter.html" class="nav-link">Voter</a>
-        <a href="pages/public.html" class="nav-link">Public</a>
-        <a class="login-btn" href="/login/login.html" role="button">Login</a>
+        <a href="/login/login.html" class="nav-link">প্রশাসক</a>
+        <a href="/login/login.html" class="nav-link">প্রার্থী</a>
+        <a href="/login/login.html" class="nav-link">ভোটার</a>
+        <a href="public.html" class="nav-link">পাবলিক</a>
+        <a class="login-btn" href="/login/login.html" role="button">লগইন</a>
       </nav>
     </header>
 
-    <!-- Main Content -->
+    <!-- মূল কনটেন্ট -->
     <main class="main-content">
       
-      <!-- Candidate Avatar Display -->
-      <div class="illustration" aria-label="Candidate avatars">
-        <!-- Avatar A -->
+      <!-- প্রার্থীর অ্যাভাটার -->
+      <div class="illustration" aria-label="প্রার্থীদের ছবি">
+        <!-- অ্যাভাটার ক -->
         <figure class="avatar">
           <picture>
             <source srcset="assets/img/avatar_1a.png" type="image/png" />
-            <img src="assets/img/avatar_1a.png" alt="Candidate A" width="256" height="256" loading="lazy" />
+            <img src="assets/img/avatar_1a.png" alt="প্রার্থী ক" width="256" height="256" loading="lazy" />
           </picture>
-          <figcaption class="avatar-label">A</figcaption>
+          <figcaption class="avatar-label">ক</figcaption>
         </figure>
 
-        <!-- Avatar B -->
+        <!-- অ্যাভাটার খ -->
         <figure class="avatar">
           <picture>
             <source srcset="assets/img/avatar_2a.png" type="image/png" />
-            <img src="assets/img/avatar_2a.png" alt="Candidate B" width="256" height="256" loading="lazy" />
+            <img src="assets/img/avatar_2a.png" alt="প্রার্থী খ" width="256" height="256" loading="lazy" />
           </picture>
-          <figcaption class="avatar-label">B</figcaption>
+          <figcaption class="avatar-label">খ</figcaption>
         </figure>
 
-        <!-- Avatar C -->
+        <!-- অ্যাভাটার গ -->
         <figure class="avatar">
           <picture>
             <source srcset="assets/img/avatar_3a.png" type="image/png" />
-            <img src="assets/img/avatar_3a.png" alt="Candidate C" width="256" height="256" loading="lazy" />
+            <img src="assets/img/avatar_3a.png" alt="প্রার্থী গ" width="256" height="256" loading="lazy" />
           </picture>
-          <figcaption class="avatar-label">C</figcaption>
+          <figcaption class="avatar-label">গ</figcaption>
         </figure>
 
-        <!-- Avatar D -->
+        <!-- অ্যাভাটার ঘ -->
         <figure class="avatar">
           <picture>
             <source srcset="assets/img/avatar_4a.png" type="image/png" />
-            <img src="assets/img/avatar_4a.png" alt="Candidate D" width="256" height="256" loading="lazy" />
+            <img src="assets/img/avatar_4a.png" alt="প্রার্থী ঘ" width="256" height="256" loading="lazy" />
           </picture>
-          <figcaption class="avatar-label">D</figcaption>
+          <figcaption class="avatar-label">ঘ</figcaption>
         </figure>
       </div>
 
-      <!-- Textual Section -->
+      <!-- টেক্সট সেকশন -->
       <section class="content">
-        <span class="badge">Empower Your Vote!</span>
-        <h1>CampusCast: University E-Voting System</h1>
+        <span class="badge">আপনার ভোটকে শক্তিশালী করুন!</span>
+        <h1>CampusCast: বিশ্ববিদ্যালয় ই-ভোটিং সিস্টেম</h1>
         <p class="description">
-          Welcome to <strong>CampusCast</strong>, a secure and fast digital voting system tailored for universities.
+          স্বাগতম <strong>CampusCast</strong>-এ—বিশ্ববিদ্যালয়ের জন্য নিরাপদ ও দ্রুতগতির একটি ডিজিটাল ভোটিং ব্যবস্থা।
         </p>
 
-        <!-- CTA Buttons -->
+        <!-- CTA বাটন -->
         <div class="button-group">
-          <a class="btn btn-primary" href="/reg/reg.html" role="button">Register</a>
-          <button class="btn btn-secondary" type="button">Learn More</button>
+          <a class="btn btn-primary" href="/reg/reg.html" role="button">নিবন্ধন</a>
+          <button class="btn btn-secondary" type="button" onclick="window.location.href='aboutus.html'">
+  আরও জানুন
+</button>
+
         </div>
 
-        <!-- Security Note -->
+        <!-- সিকিউরিটি নোট -->
         <div class="ethereum-note">
           <span class="ethereum-icon">🔐</span>
-          End-to-End Encryption
+          এন্ড-টু-এন্ড এনক্রিপশন
         </div>
       </section>
     </main>
 
-    <!-- Feature Highlights Footer -->
+    <!-- ফিচার হাইলাইটস -->
     <footer class="features">
 
-      <!-- Feature 1 -->
+      <!-- ফিচার ১ -->
       <div class="feature">
         <div class="feature-icon">🧾</div>
         <div class="feature-text">
-          <h3>Transparent Process</h3>
-          <p>All records are verifiable and auditable by design.</p>
+          <h3>স্বচ্ছ প্রক্রিয়া</h3>
+          <p>সমস্ত রেকর্ড নকশাগতভাবে যাচাইযোগ্য ও নিরীক্ষাযোগ্য।</p>
         </div>
       </div>
 
-      <!-- Feature 2 -->
+      <!-- ফিচার ২ -->
       <div class="feature">
         <div class="feature-icon">🔒</div>
         <div class="feature-text">
-          <h3>End-to-End Encryption</h3>
-          <p>Votes remain private and tamper-proof at every stage.</p>
+          <h3>এন্ড-টু-এন্ড এনক্রিপশন</h3>
+          <p>প্রতিটি ধাপে ভোট ব্যক্তিগত ও বিকৃতিহীন থাকে।</p>
         </div>
       </div>
 
-      <!-- Feature 3 -->
+      <!-- ফিচার ৩ -->
       <div class="feature">
         <div class="feature-icon">⚡</div>
         <div class="feature-text">
-          <h3>Fast & Efficient</h3>
-          <p>Cast and count votes in real time with zero paper trail.</p>
+          <h3>দ্রুত ও কার্যকর</h3>
+          <p>কাগজ ছাড়াই রিয়েল-টাইমে ভোট প্রদান ও গণনা।</p>
         </div>
       </div>
 
-      <!-- Navigation Controls -->
+      <!-- ন্যাভিগেশন নিয়ন্ত্রণ -->
       <div class="nav-arrows">
-        <button class="arrow-btn" aria-label="Previous slide">‹</button>
-        <button class="arrow-btn" aria-label="Next slide">›</button>
+        <button class="arrow-btn" aria-label="পূর্বের স্লাইড">‹</button>
+        <button class="arrow-btn" aria-label="পরবর্তী স্লাইড">›</button>
       </div>
 
-      <!-- Pagination Dots -->
+      <!-- পেজিনেশন ডট -->
       <div class="dots" aria-hidden="true">
         <span class="dot active"></span>
         <span class="dot"></span>
         <span class="dot"></span>
       </div>
 
-      <!-- Credits -->
+      <!-- ক্রেডিটস -->
       <div class="footer-credit">
-        <p>© 2025 <strong>FourA</strong> – CampusCast</p>
+        <p>© ২০২৫ <strong>FourA</strong> – CampusCast</p>
       </div>
     </footer>
   </div>

@@ -1,132 +1,263 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bn">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CampusCast – University E-Voting System</title>
-  <link rel="stylesheet" href="styles.css" />
+  <title>CampusCast – নিবন্ধন</title>
+  <link rel="stylesheet" href="/assets/style.css" />
 </head>
 <body>
-  <!-- Background decorative shapes -->
-  <div class="bg-shape shape-1"></div>
-  <div class="bg-shape shape-2"></div>
-  <div class="bg-shape shape-3"></div>
-  <div class="bg-shape shape-4"></div>
+  <!-- Same background as index -->
+  <div class="hands-bg"></div>
 
-  <!-- Header / Navigation -->
-  <header>
-    <div class="logo">
-      <div class="logo-text">
-        <span>CampusCast</span>
-        <div class="logo-bars">
-          <div class="bar" style="background: #a4d65e;"></div>
-          <div class="bar alt"></div>
-          <div class="bar" style="background: #a4d65e;"></div>
-          <div class="bar alt"></div>
-        </div>
-      </div>
-      <div class="logo-subtitle">University E-voting System</div>
-    </div>
-
-    <nav>
-      <a href="#how-to-vote">How to Vote</a>
-      <a href="#about">About Us</a>
-      <button class="btn-register-nav">Register</button>
-    </nav>
-  </header>
-
-  <!-- Page Content -->
-  <main class="container">
-
-    <!-- Registration Form -->
-    <section class="form-section">
-      <h1>Registration Form</h1>
-      <p>
-        Register to join CampusCast, the leading university e-voting platform.<br />
-        Make your voice count where it matters most!
-      </p>
-
-      <form id="registrationForm">
-        <div class="form-group">
-          <label for="name">Name</label>
-          <input type="text" id="name" name="name" placeholder="Enter your full name" required />
-        </div>
-
-        <div class="form-group">
-          <label for="dob">Date of Birth</label>
-          <input type="date" id="dob" name="dob" required />
-        </div>
-
-        <div class="form-group">
-          <label for="email">Email Address</label>
-          <input type="email" id="email" name="email" placeholder="Enter your university email" required />
-        </div>
-
-        <div class="form-group">
-          <label for="password">Password</label>
-          <input type="password" id="password" name="password" placeholder="Create a secure password" required />
-        </div>
-
-        <button type="submit" class="btn-submit">Submit</button>
-      </form>
-    </section>
-
-    <!-- Voter Activity Illustration -->
-    <section class="illustration-section">
-      <div class="illustration-card">
-        <div class="card-frame"></div>
-
-        <!-- Card Header -->
-        <div class="card-header">
-          <span class="dot"></span>
-          <span class="label">Active Campus Voters</span>
-          <span class="sparkle" aria-hidden="true">✦</span>
-        </div>
-
-        <!-- Showcase Area -->
-        <div class="showcase">
-          <!-- Left Polaroid -->
-          <figure class="polaroid p-left" aria-label="Student registration">
-            <img src="/assets/reg/reg2.png" alt="Students registering using CampusCast" />
-            <figcaption>
-              <span class="chip chip-green">Register</span>
-              <span class="chip chip-outline">CampusCast</span>
-            </figcaption>
-          </figure>
-
-          <!-- Right Polaroid -->
-          <figure class="polaroid p-right" aria-label="Student voting">
-            <img src="/assets/reg/reg1.png" alt="Students casting their votes online" />
-            <figcaption>
-              <span class="chip chip-purple">Vote</span>
-              <span class="chip chip-outline">Secure • Fast</span>
-            </figcaption>
-          </figure>
-        </div>
-
-        <!-- Card Footer -->
-        <div class="card-footer">
-          <div class="stat">
-            <span class="caption">Total Votes Cast</span>
-            <span class="value" id="voteCount">0</span>
+  <div class="container">
+    <!-- Site Header (same as index) -->
+    <header class="site-header">
+      <a href="/index.html" class="logo" aria-label="CampusCast হোমপেজে যান">
+        <div class="logo-text">
+          <span>CampusCast</span>
+          <div class="logo-bars">
+            <div class="bar"></div>
+            <div class="bar alt"></div>
+            <div class="bar"></div>
+            <div class="bar alt"></div>
           </div>
+        </div>
+        <div class="logo-subtitle">বিশ্ববিদ্যালয় ই-ভোটিং সিস্টেম</div>
+      </a>
 
-          <button
-            class="cta-ghost"
-            type="button"
-            onclick="window.location.hash = '#registrationForm'">
-            Learn how it works
-          </button>
+      <nav class="site-nav">
+        <a href="/login/login.html" class="nav-link">প্রশাসক</a>
+        <a href="/login/login.html" class="nav-link">প্রার্থী</a>
+        <a href="/login/login.html" class="nav-link">ভোটার</a>
+        <a href="/public.html" class="nav-link">পাবলিক</a>
+        <a class="login-btn" href="/login/login.html" role="button">লগইন</a>
+      </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content" style="gap:40px; align-items:flex-start;">
+      <!-- Left: Registration form card -->
+      <section aria-label="নিবন্ধন ফর্ম" style="flex:1; max-width:520px;">
+        <div style="
+          background:#fff;
+          border:1px solid var(--border);
+          border-radius:14px;
+          box-shadow:0 6px 18px rgba(0,0,0,.08);
+          padding:22px;
+        ">
+          <h2 style="margin-bottom:14px; font-size:22px; font-weight:800; color:var(--ink);">নিবন্ধন</h2>
+
+          <form id="registrationForm" autocomplete="off" novalidate>
+            <!-- Name -->
+            <div class="form-group" style="margin-bottom:12px;">
+              <label for="name" style="display:block; font-weight:700; margin-bottom:6px;">নাম</label>
+              <input
+                type="text" id="name" name="name"
+                placeholder="আপনার পূর্ণ নাম"
+                required
+                style="width:100%; padding:12px; border:1px solid var(--border); border-radius:10px; font-size:15px;"
+              />
+            </div>
+
+            <!-- DOB -->
+            <div class="form-group" style="margin-bottom:12px;">
+              <label for="dob" style="display:block; font-weight:700; margin-bottom:6px;">জন্মতারিখ</label>
+              <input
+                type="date" id="dob" name="dob" required
+                style="width:100%; padding:12px; border:1px solid var(--border); border-radius:10px; font-size:15px;"
+              />
+            </div>
+
+            <!-- Email -->
+            <div class="form-group" style="margin-bottom:12px;">
+              <label for="email" style="display:block; font-weight:700; margin-bottom:6px;">ইমেইল</label>
+              <input
+                type="email" id="email" name="email"
+                placeholder="উদাহরণ: you@studentmail.com"
+                required
+                style="width:100%; padding:12px; border:1px solid var(--border); border-radius:10px; font-size:15px;"
+              />
+            </div>
+
+            <!-- Password -->
+            <div class="form-group" style="margin-bottom:6px;">
+              <label for="password" style="display:block; font-weight:700; margin-bottom:6px;">পাসওয়ার্ড</label>
+              <input
+                type="password" id="password" name="password"
+                placeholder="একটি নিরাপদ পাসওয়ার্ড দিন"
+                required
+                style="width:100%; padding:12px; border:1px solid var(--border); border-radius:10px; font-size:15px;"
+              />
+            </div>
+
+            <!-- Status -->
+            <p id="regStatus" role="status" aria-live="polite" class="status" style="margin:.5rem 0 .25rem;"></p>
+
+            <!-- Submit -->
+            <button type="submit" class="btn btn-primary" style="width:100%;">নিবন্ধন সম্পন্ন করুন</button>
+
+            <!-- Footer links -->
+            <div class="login-footer" style="margin-top:12px; display:flex; justify-content:space-between;">
+              <a href="/login/login.html" class="nav-link" style="text-decoration:none;">ইতিমধ্যে অ্যাকাউন্ট আছে? লগইন</a>
+              <a href="/index.html" class="nav-link" style="text-decoration:none;">হোমে ফিরে যান</a>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <!-- Right: Info block (matches index tone) -->
+      <section class="content" style="max-width:520px;">
+        <span class="badge">দ্রুত নিবন্ধন</span>
+        <h1>CampusCast-এ নতুন অ্যাকাউন্ট তৈরি করুন</h1>
+        <p class="description">
+          কয়েকটি সহজ ধাপেই আপনার অ্যাকাউন্ট তৈরি করুন। নিবন্ধন সম্পন্ন হলে আপনি
+          সরাসরি ভোট তত্ত্বাবধায়ক প্যানেলে প্রবেশ করবেন।
+        </p>
+
+        <div class="button-group">
+          <a class="btn btn-secondary" href="/login/login.html" role="button">ইতিমধ্যে অ্যাকাউন্ট আছে? লগইন</a>
         </div>
 
-        <!-- Decorative blobs -->
-        <div class="blob b1" aria-hidden="true"></div>
-        <div class="blob b2" aria-hidden="true"></div>
-      </div>
-    </section>
-  </main>
+        <div class="ethereum-note">
+          <span class="ethereum-icon">🔐</span>
+          আপনার তথ্য সুরক্ষিতভাবে সংরক্ষিত।
+        </div>
+      </section>
+    </main>
 
-  <!-- External Script -->
-  <script src="script.js"></script>
+    <!-- Footer (same style as index) -->
+    <footer class="features">
+      <div class="feature">
+        <div class="feature-icon">🧾</div>
+        <div class="feature-text">
+          <h3>স্বচ্ছ প্রক্রিয়া</h3>
+          <p>সমস্ত রেকর্ড যাচাইযোগ্য ও নিরীক্ষাযোগ্য।</p>
+        </div>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">🔒</div>
+        <div class="feature-text">
+          <h3>এন্ড-টু-এন্ড এনক্রিপশন</h3>
+          <p>প্রতিটি ধাপে আপনার তথ্য সুরক্ষিত থাকে।</p>
+        </div>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">⚡</div>
+        <div class="feature-text">
+          <h3>দ্রুত ও কার্যকর</h3>
+          <p>রিয়েল-টাইমে ফলাফল দেখতে পারবেন।</p>
+        </div>
+      </div>
+
+      <div class="nav-arrows">
+        <button class="arrow-btn" aria-label="পূর্বের স্লাইড">‹</button>
+        <button class="arrow-btn" aria-label="পরবর্তী স্লাইড">›</button>
+      </div>
+
+      <div class="dots" aria-hidden="true">
+        <span class="dot active"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+      </div>
+
+      <div class="footer-credit">
+        <p>© ২০২৫ <strong>FourA</strong> – CampusCast</p>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Auth + Registration Logic (kept, messages localized) -->
+  <script>
+    const CC_USERS_KEY = "cc_users";
+    const CC_CURRENT_USER_KEY = "cc_currentUser";
+
+    function loadUsers() {
+      try { return JSON.parse(localStorage.getItem(CC_USERS_KEY) || "[]"); }
+      catch { return []; }
+    }
+    function saveUsers(users) {
+      localStorage.setItem(CC_USERS_KEY, JSON.stringify(users));
+    }
+    function getUserByEmail(email) {
+      return loadUsers().find(u => u.email.toLowerCase() === email.toLowerCase()) || null;
+    }
+    async function hash(text) {
+      const enc = new TextEncoder().encode(text);
+      const buf = await crypto.subtle.digest("SHA-256", enc);
+      return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, "0")).join("");
+    }
+    async function ensureDefaultAdmin() {
+      const users = loadUsers();
+      const hasAdmin = users.some(u => (u.role === "admin" || u.role === "supervisor"));
+      if (!hasAdmin) {
+        users.push({
+          email: "admin",
+          passHash: await hash("admin"),
+          role: "supervisor",
+          name: "Admin",
+          createdAt: Date.now()
+        });
+        saveUsers(users);
+        console.info("Seeded default admin/admin (supervisor role) for demo.");
+      }
+    }
+    async function registerUser({ email, password, name, dob }) {
+      if (!email || !password || !name || !dob) throw new Error("সব ঘর পূরণ করুন।");
+      const users = loadUsers();
+      if (users.some(u => u.email.toLowerCase() === email.toLowerCase()))
+        throw new Error("এই ইমেইল দিয়ে আগে থেকেই অ্যাকাউন্ট আছে।");
+      const newUser = {
+        email,
+        passHash: await hash(password),
+        role: "supervisor", // ডেমোর জন্য সরাসরি supervisor রোল
+        name,
+        dob,
+        createdAt: Date.now()
+      };
+      users.push(newUser);
+      saveUsers(users);
+      return newUser;
+    }
+    async function loginUser(email, password) {
+      const user = getUserByEmail(email);
+      if (!user) throw new Error("অবৈধ লগইন তথ্য।");
+      if (user.passHash !== await hash(password))
+        throw new Error("অবৈধ লগইন তথ্য।");
+      localStorage.setItem(CC_CURRENT_USER_KEY, JSON.stringify(user));
+      return user;
+    }
+
+    (async function init() {
+      await ensureDefaultAdmin();
+
+      const form = document.getElementById("registrationForm");
+      const statusEl = document.getElementById("regStatus");
+
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        statusEl.textContent = "";
+        statusEl.style.color = "crimson";
+
+        const name = document.getElementById("name").value.trim();
+        const dob  = document.getElementById("dob").value;
+        const email = document.getElementById("email").value.trim();
+        const password = document.getElementById("password").value.trim();
+
+        if (!name || !dob || !email || !password) {
+          statusEl.textContent = "সব ঘর পূরণ করুন।";
+          return;
+        }
+
+        try {
+          await registerUser({ email, password, name, dob });
+          await loginUser(email, password);
+          window.location.href = "/supervisor.html";
+        } catch (err) {
+          statusEl.textContent = err.message || "নিবন্ধন ব্যর্থ হয়েছে।";
+        }
+      });
+    })();
+  </script>
 </body>
 </html>
