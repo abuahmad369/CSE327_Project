@@ -401,3 +401,85 @@ h1 {
 .main-content{ scroll-margin-top: 90px; }
 
 
+/* =========================
+   TABLET (iPad & smaller) 
+   Up to 1024px
+   ========================= */
+@media (max-width: 1024px) {
+  /* Header stacks nicely */
+  .site-header { 
+    flex-direction: column; 
+    align-items: stretch; 
+    gap: 12px; 
+    padding: 12px 14px; 
+  }
+  .site-nav { 
+    flex-wrap: wrap; 
+    gap: 10px; 
+    justify-content: space-between; 
+  }
+
+  /* Main content becomes single column */
+  .main-content { 
+    flex-direction: column; 
+    align-items: stretch; 
+    gap: 24px; 
+    padding: 24px; 
+  }
+
+  /* Avatar grid → 2 columns */
+  .illustration { 
+    grid-template-columns: repeat(2, minmax(160px, 1fr)); 
+    gap: 16px; 
+  }
+
+  /* Form / card widths */
+  .content { max-width: 100% !important; }
+  .login-footer { gap: 10px; flex-wrap: wrap; }
+
+  /* Buttons wrap */
+  .button-group { flex-wrap: wrap; gap: 10px; }
+}
+
+/* =========================
+   PHONE (most mobiles)
+   Up to 600px
+   ========================= */
+@media (max-width: 600px) {
+  /* Tighten paddings */
+  .site-header { padding: 10px 12px; border-radius: 10px; }
+  .logo-text span { font-size: 16px; }
+  .logo-subtitle { font-size: 10px; }
+
+  /* Make nav easier to tap */
+  .site-nav { gap: 8px; }
+  .site-nav .nav-link, .login-btn { padding: 10px 12px; font-size: 14px; }
+
+  /* Single-column content */
+  .main-content { padding: 18px 14px; gap: 20px; }
+
+  /* Avatar grid → 1 column on phones */
+  .illustration { grid-template-columns: 1fr; gap: 14px; }
+
+  /* Cards fill width */
+  .avatar { max-width: 100%; }
+  
+  /* Forms: comfy inputs & prevent iOS zoom */
+  input, select, textarea { font-size: 16px; }
+  .form-group { margin-bottom: 12px; }
+
+  /* Buttons full-width on phone */
+  .btn, .login-btn { width: 100%; text-align: center; }
+  .button-group { flex-direction: column; gap: 10px; }
+
+  /* Typography scaling (you already use clamp, this just helps) */
+  h1 { font-size: clamp(24px, 7vw, 36px); }
+  h2 { font-size: clamp(18px, 5.5vw, 24px); }
+  .description { font-size: clamp(14px, 4.2vw, 16px); }
+
+  /* Footer stacks */
+  .features { gap: 12px; }
+  .feature { min-width: 100%; }
+  .nav-arrows, .dots { display: none; } /* optional: hide carousel UI on tiny screens */
+}
+
