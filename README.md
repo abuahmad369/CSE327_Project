@@ -1,7 +1,7 @@
 # 🗳️ CampusCast : University E-Voting System (CSE327 Project)
 
 ### 🌐 Live Website  
-👉 https://www.campuscast.netlify.app
+👉 https://campuscast.netlify.app
 
 <p align="center">
   <img width="320" height="320" alt="online-voting" src="https://github.com/user-attachments/assets/2422ca95-a33d-4f51-9e25-f25ae51952da" />
