@@ -28,9 +28,10 @@
 
       <nav class="site-nav">
         <a href="/login/login.html" class="nav-link">প্রশাসক</a>
-        <a href="/login/login.html" class="nav-link">প্রার্থী</a>
+        <a href="/candidate.html" class="nav-link">প্রার্থী</a>
         <a href="/login/login.html" class="nav-link">ভোটার</a>
         <a href="/public.html" class="nav-link">পাবলিক</a>
+         <a href="/dashboard-test.html" class="nav-link">ড্যাশবোর্ড</a>
         <a class="login-btn" href="/login/login.html" role="button">লগইন</a>
       </nav>
     </header>
@@ -81,7 +82,7 @@
             </div>
 
             <!-- Password -->
-            <div class="form-group" style="margin-bottom:6px;">
+            <div class="form-group" style="margin-bottom:12px;">
               <label for="password" style="display:block; font-weight:700; margin-bottom:6px;">পাসওয়ার্ড</label>
               <input
                 type="password" id="password" name="password"
@@ -91,6 +92,18 @@
               />
             </div>
 
+            <!-- Role Selection -->
+            <div class="form-group" style="margin-bottom:6px;">
+              <label for="role" style="display:block; font-weight:700; margin-bottom:6px;">রোল নির্বাচন করুন</label>
+              <select id="role" name="role" required
+                style="width:100%; padding:12px; border:1px solid var(--border); border-radius:10px; font-size:15px;">
+                <option value="">নির্বাচন করুন</option>
+                <option value="candidate">প্রার্থী</option>
+                <option value="voter">ভোটার</option>
+                <option value="public">পাবলিক</option>
+              </select>
+            </div>
+
             <!-- Status -->
             <p id="regStatus" role="status" aria-live="polite" class="status" style="margin:.5rem 0 .25rem;"></p>
 
@@ -98,9 +111,13 @@
             <button type="submit" class="btn btn-primary" style="width:100%;">নিবন্ধন সম্পন্ন করুন</button>
 
             <!-- Footer links -->
-            <div class="login-footer" style="margin-top:12px; display:flex; justify-content:space-between;">
-              <a href="/login/login.html" class="nav-link" style="text-decoration:none;">ইতিমধ্যে অ্যাকাউন্ট আছে? লগইন</a>
-              <a href="/index.html" class="nav-link" style="text-decoration:none;">হোমে ফিরে যান</a>
+            <div class="login-footer" style="margin-top:12px; display:flex; justify-content:space-between; font-size:14px;">
+              <a href="/login/login.html" class="nav-link" style="text-decoration:none; color:var(--brand); font-weight:600;">
+                ইতিমধ্যে অ্যাকাউন্ট আছে? লগইন
+              </a>
+              <a href="/index.html" class="nav-link" style="text-decoration:none; color:var(--brand); font-weight:600;">
+                হোমে ফিরে যান
+              </a>
             </div>
           </form>
         </div>
@@ -109,10 +126,10 @@
       <!-- Right: Info block (matches index tone) -->
       <section class="content" style="max-width:520px;">
         <span class="badge">দ্রুত নিবন্ধন</span>
-        <h1>CampusCast-এ নতুন অ্যাকাউন্ট তৈরি করুন</h1>
+        <h1>CampusCast এ নতুন অ্যাকাউন্ট তৈরি করুন</h1>
         <p class="description">
           কয়েকটি সহজ ধাপেই আপনার অ্যাকাউন্ট তৈরি করুন। নিবন্ধন সম্পন্ন হলে আপনি
-          সরাসরি ভোট তত্ত্বাবধায়ক প্যানেলে প্রবেশ করবেন।
+          আপনার নির্ধারিত প্যানেলে প্রবেশ করতে পারবেন।
         </p>
 
         <div class="button-group">
@@ -138,7 +155,7 @@
       <div class="feature">
         <div class="feature-icon">🔒</div>
         <div class="feature-text">
-          <h3>এন্ড-টু-এন্ড এনক্রিপশন</h3>
+          <h3>এন্ড টু এন্ড এনক্রিপশন</h3>
           <p>প্রতিটি ধাপে আপনার তথ্য সুরক্ষিত থাকে।</p>
         </div>
       </div>
@@ -146,7 +163,7 @@
         <div class="feature-icon">⚡</div>
         <div class="feature-text">
           <h3>দ্রুত ও কার্যকর</h3>
-          <p>রিয়েল-টাইমে ফলাফল দেখতে পারবেন।</p>
+          <p>রিয়েল টাইমে ফলাফল দেখতে পারবেন।</p>
         </div>
       </div>
 
@@ -167,70 +184,76 @@
     </footer>
   </div>
 
-  <!-- Auth + Registration Logic (kept, messages localized) -->
+  <!-- Supabase client -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script>
-    const CC_USERS_KEY = "cc_users";
+    const SUPABASE_URL = "https://dfniyjbsmznnzklfprsx.supabase.co";
+    const SUPABASE_ANON_KEY = "sb_publishable_XNUFe9_ygaeMfYHd6Z97XQ_UE1-VhGn";
+
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
     const CC_CURRENT_USER_KEY = "cc_currentUser";
 
-    function loadUsers() {
-      try { return JSON.parse(localStorage.getItem(CC_USERS_KEY) || "[]"); }
-      catch { return []; }
-    }
-    function saveUsers(users) {
-      localStorage.setItem(CC_USERS_KEY, JSON.stringify(users));
-    }
-    function getUserByEmail(email) {
-      return loadUsers().find(u => u.email.toLowerCase() === email.toLowerCase()) || null;
-    }
+    const ROLE_ROUTES = {
+      supervisor: "/done.html",
+      candidate: "/done.html",
+      voter: "/done.html",
+      public: "/done.html"
+    };
+
     async function hash(text) {
       const enc = new TextEncoder().encode(text);
       const buf = await crypto.subtle.digest("SHA-256", enc);
-      return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, "0")).join("");
+      return Array.from(new Uint8Array(buf))
+        .map(b => b.toString(16).padStart(2, "0"))
+        .join("");
     }
-    async function ensureDefaultAdmin() {
-      const users = loadUsers();
-      const hasAdmin = users.some(u => (u.role === "admin" || u.role === "supervisor"));
-      if (!hasAdmin) {
-        users.push({
-          email: "admin",
-          passHash: await hash("admin"),
-          role: "supervisor",
-          name: "Admin",
-          createdAt: Date.now()
-        });
-        saveUsers(users);
-        console.info("Seeded default admin/admin (supervisor role) for demo.");
+
+    async function registerUser({ email, password, name, dob, role }) {
+      if (!email || !password || !name || !dob || !role) {
+        throw new Error("সব ঘর পূরণ করুন এবং রোল নির্বাচন করুন।");
       }
-    }
-    async function registerUser({ email, password, name, dob }) {
-      if (!email || !password || !name || !dob) throw new Error("সব ঘর পূরণ করুন।");
-      const users = loadUsers();
-      if (users.some(u => u.email.toLowerCase() === email.toLowerCase()))
-        throw new Error("এই ইমেইল দিয়ে আগে থেকেই অ্যাকাউন্ট আছে।");
-      const newUser = {
-        email,
-        passHash: await hash(password),
-        role: "supervisor", // ডেমোর জন্য সরাসরি supervisor রোল
-        name,
-        dob,
-        createdAt: Date.now()
-      };
-      users.push(newUser);
-      saveUsers(users);
-      return newUser;
-    }
-    async function loginUser(email, password) {
-      const user = getUserByEmail(email);
-      if (!user) throw new Error("অবৈধ লগইন তথ্য।");
-      if (user.passHash !== await hash(password))
-        throw new Error("অবৈধ লগইন তথ্য।");
-      localStorage.setItem(CC_CURRENT_USER_KEY, JSON.stringify(user));
-      return user;
+
+      const password_hash = await hash(password);
+
+      const { data, error } = await supabase
+        .from("users")
+        .insert([
+          {
+            name,
+            email,
+            password_hash,
+            role,
+            dob
+          }
+        ])
+        .select()
+        .single();
+
+      if (error) {
+        // 23505 = unique_violation in Postgres
+        if (error.code === "23505") {
+          throw new Error("এই ইমেইল দিয়ে আগে থেকেই অ্যাকাউন্ট আছে।");
+        }
+        throw new Error(error.message || "নিবন্ধন ব্যর্থ হয়েছে।");
+      }
+
+      return data;
     }
 
-    (async function init() {
-      await ensureDefaultAdmin();
+    function setCurrentUserSession(user) {
+      localStorage.setItem(
+        CC_CURRENT_USER_KEY,
+        JSON.stringify({
+          id: user.id,
+          email: user.email,
+          role: user.role,
+          name: user.name
+        })
+      );
+    }
 
+    (function initRegistration() {
       const form = document.getElementById("registrationForm");
       const statusEl = document.getElementById("regStatus");
 
@@ -243,16 +266,24 @@
         const dob  = document.getElementById("dob").value;
         const email = document.getElementById("email").value.trim();
         const password = document.getElementById("password").value.trim();
+        const role = document.getElementById("role").value;
 
-        if (!name || !dob || !email || !password) {
-          statusEl.textContent = "সব ঘর পূরণ করুন।";
+        if (!name || !dob || !email || !password || !role) {
+          statusEl.textContent = "সব ঘর পূরণ করুন এবং রোল নির্বাচন করুন।";
           return;
         }
 
         try {
-          await registerUser({ email, password, name, dob });
-          await loginUser(email, password);
-          window.location.href = "/supervisor.html";
+          const user = await registerUser({ email, password, name, dob, role });
+
+          // session set
+          setCurrentUserSession(user);
+
+          statusEl.style.color = "green";
+          statusEl.textContent = "নিবন্ধন সফল হয়েছে, আপনাকে প্যানেলে পাঠানো হচ্ছে।";
+
+          const route = ROLE_ROUTES[role] || "/login/login.html";
+          window.location.href = route;
         } catch (err) {
           statusEl.textContent = err.message || "নিবন্ধন ব্যর্থ হয়েছে।";
         }

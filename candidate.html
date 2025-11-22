@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CampusCast – প্রার্থী লগইন</title>
+  <link rel="stylesheet" href="/assets/style.css" />
+</head>
+<body>
+  <!-- Same background as index -->
+  <div class="hands-bg"></div>
+
+  <div class="container">
+    <!-- Site Header (same as index) -->
+    <header class="site-header">
+      <a href="/index.html" class="logo" aria-label="CampusCast হোমপেজে যান">
+        <div class="logo-text">
+          <span>CampusCast</span>
+          <div class="logo-bars">
+            <div class="bar"></div>
+            <div class="bar alt"></div>
+            <div class="bar"></div>
+            <div class="bar alt"></div>
+          </div>
+        </div>
+        <div class="logo-subtitle">বিশ্ববিদ্যালয় ই-ভোটিং সিস্টেম</div>
+      </a>
+
+      <nav class="site-nav">
+        <a href="/login/login.html" class="nav-link">প্রশাসক</a>
+        <a href="/candidate.html" class="nav-link">প্রার্থী</a>
+        <a href="/login/login.html" class="nav-link">ভোটার</a>
+        <a href="/public.html" class="nav-link">পাবলিক</a>
+         <a href="/dashboard-test.html" class="nav-link">ড্যাশবোর্ড</a>
+        <a class="login-btn" href="/login/login.html" role="button">লগইন</a>
+      </nav>
+    </header>
+
+    <!-- Main content area -->
+    <main class="main-content" style="gap:40px; align-items:flex-start;">
+      <!-- Left: text block -->
+      <section class="content" style="max-width:520px;">
+        <span class="badge">প্রার্থী লগইন</span>
+        <h1>প্রার্থী হিসেবে আপনার প্যানেলে প্রবেশ করুন</h1>
+        <p class="description">
+          অনুমোদিত প্রার্থী হিসেবে লগইন করে আপনার প্রোফাইল, ম্যানিফেস্টো ও ক্যাম্পেইন তথ্য পরিচালনা করুন।
+          এখনও প্রার্থী একাউন্ট না থাকলে আগে নিবন্ধন করুন।
+        </p>
+
+        <div class="button-group" style="margin-top:10px;">
+          <a class="btn btn-secondary" href="/reg/reg.html" role="button">
+            প্রার্থী হিসেবে নিবন্ধন করুন
+          </a>
+        </div>
+
+        <div class="ethereum-note" style="margin-top:12px;">
+          <span class="ethereum-icon">🔐</span>
+          শুধু প্রার্থী রোল যুক্ত একাউন্ট দিয়েই এখানে লগইন করা যাবে।
+        </div>
+      </section>
+
+      <!-- Right: candidate login card -->
+      <section aria-label="প্রার্থী লগইন ফর্ম" style="flex:1; max-width:440px;">
+        <div style="
+          background:#fff;
+          border:1px solid var(--border);
+          border-radius:14px;
+          box-shadow:0 6px 18px rgba(0,0,0,.08);
+          padding:22px;
+        ">
+          <h2 style="margin-bottom:6px; font-size:22px; font-weight:800; color:var(--ink);">
+            প্রার্থী হিসেবে লগইন করুন
+          </h2>
+          <p style="margin-bottom:14px; font-size:14px; color:var(--muted);">
+            নিবন্ধিত প্রার্থী ইমেইল এবং পাসওয়ার্ড ব্যবহার করুন।
+          </p>
+
+          <form id="candidateLoginForm" autocomplete="off" novalidate>
+            <!-- Email -->
+            <div class="form-group" style="margin-bottom:12px;">
+              <label for="email" style="display:block; font-weight:700; margin-bottom:6px;">ইমেইল</label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                placeholder="উদাহরণ: candidate@studentmail.com"
+                required
+                style="width:100%; padding:12px; border:1px solid var(--border); border-radius:10px; font-size:15px;"
+              />
+            </div>
+
+            <!-- Password -->
+            <div class="form-group" style="margin-bottom:6px;">
+              <label for="password" style="display:block; font-weight:700; margin-bottom:6px;">পাসওয়ার্ড</label>
+              <input
+                type="password"
+                id="password"
+                name="password"
+                placeholder="আপনার পাসওয়ার্ড"
+                required
+                style="width:100%; padding:12px; border:1px solid var(--border); border-radius:10px; font-size:15px;"
+              />
+            </div>
+
+            <!-- Status -->
+            <p id="loginStatus" role="status" aria-live="polite" class="status" style="margin:.5rem 0 .25rem;"></p>
+
+            <!-- Submit -->
+            <button type="submit" class="btn btn-primary" style="width:100%;">
+              প্রার্থী হিসেবে লগইন করুন
+            </button>
+
+            <!-- Footer links -->
+            <div class="login-footer" style="margin-top:12px; display:flex; justify-content:space-between;">
+              <a href="/reg/reg.html" style="color:#fff; opacity:.95; text-decoration:none;"
+                 class="nav-link">প্রার্থী একাউন্ট নেই? নিবন্ধন করুন</a>
+              <a href="#" style="color:#fff; opacity:.95; text-decoration:none;"
+                 class="nav-link">পাসওয়ার্ড ভুলে গেছেন?</a>
+            </div>
+          </form>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer (same style) -->
+    <footer class="features">
+      <div class="feature">
+        <div class="feature-icon">🧾</div>
+        <div class="feature-text">
+          <h3>স্বচ্ছ প্রক্রিয়া</h3>
+          <p>সমস্ত রেকর্ড যাচাইযোগ্য ও নিরীক্ষাযোগ্য।</p>
+        </div>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">🔒</div>
+        <div class="feature-text">
+          <h3>এন্ড টু এন্ড এনক্রিপশন</h3>
+          <p>প্রতিটি ধাপে আপনার তথ্য সুরক্ষিত থাকে।</p>
+        </div>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">⚡</div>
+        <div class="feature-text">
+          <h3>দ্রুত ও কার্যকর</h3>
+          <p>রিয়েল টাইমে ফলাফল দেখতে পারবেন।</p>
+        </div>
+      </div>
+
+      <div class="nav-arrows">
+        <button class="arrow-btn" aria-label="পূর্বের স্লাইড">‹</button>
+        <button class="arrow-btn" aria-label="পরবর্তী স্লাইড">›</button>
+      </div>
+
+      <div class="dots" aria-hidden="true">
+        <span class="dot active"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+      </div>
+
+      <div class="footer-credit">
+        <p>© ২০২৫ <strong>FourA</strong> – CampusCast</p>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Candidate Login Logic -->
+  <script>
+    const CC_USERS_KEY = "cc_users";
+    const CC_CURRENT_USER_KEY = "cc_currentUser";
+    const CANDIDATE_URL = "/candidate.html";
+
+    function loadUsers() {
+      try { return JSON.parse(localStorage.getItem(CC_USERS_KEY) || "[]"); }
+      catch { return []; }
+    }
+
+    function getUserByEmail(email) {
+      return loadUsers().find(u => u.email.toLowerCase() === email.toLowerCase()) || null;
+    }
+
+    async function hash(text) {
+      const enc = new TextEncoder().encode(text);
+      const buf = await crypto.subtle.digest("SHA-256", enc);
+      return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, "0")).join("");
+    }
+
+    async function loginCandidate(email, password) {
+      const user = getUserByEmail(email);
+      if (!user) {
+        throw new Error("এই ইমেইলে কোনো প্রার্থী অ্যাকাউন্ট নেই।");
+      }
+
+      if (user.role !== "candidate") {
+        throw new Error("এই পেজে শুধু প্রার্থী একাউন্ট দিয়ে লগইন করা যাবে।");
+      }
+
+      const passHash = await hash(password);
+      if (user.passHash !== passHash) {
+        throw new Error("পাসওয়ার্ড সঠিক নয়।");
+      }
+
+      localStorage.setItem(
+        CC_CURRENT_USER_KEY,
+        JSON.stringify({ email: user.email, role: user.role, name: user.name })
+      );
+      return user;
+    }
+
+    (function initCandidateLogin() {
+      const form = document.getElementById("candidateLoginForm");
+      const statusEl = document.getElementById("loginStatus");
+
+      form.addEventListener("submit", async function(e) {
+        e.preventDefault();
+        statusEl.textContent = "";
+        statusEl.style.color = "crimson";
+
+        const email = document.getElementById("email").value.trim();
+        const password = document.getElementById("password").value.trim();
+
+        if (!email || !password) {
+          statusEl.textContent = "ইমেইল ও পাসওয়ার্ড দিন।";
+          return;
+        }
+
+        try {
+          await loginCandidate(email, password);
+          window.location.href = CANDIDATE_URL;
+        } catch (err) {
+          statusEl.textContent = err.message || "লগইন ব্যর্থ হয়েছে।";
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

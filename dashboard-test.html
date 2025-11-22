@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CampusCast - টেস্ট ড্যাশবোর্ড</title>
+  <link rel="stylesheet" href="/assets/style.css" />
+</head>
+<body>
+  <!-- Same background -->
+  <div class="hands-bg"></div>
+
+  <div class="container">
+    <!-- Header -->
+    <header class="site-header">
+      <a href="/index.html" class="logo" aria-label="CampusCast হোমপেজে যান">
+        <div class="logo-text">
+          <span>CampusCast</span>
+          <div class="logo-bars">
+            <div class="bar"></div>
+            <div class="bar alt"></div>
+            <div class="bar"></div>
+            <div class="bar alt"></div>
+          </div>
+        </div>
+        <div class="logo-subtitle">বিশ্ববিদ্যালয় ই ভোটিং সিস্টেম</div>
+      </a>
+
+      <nav class="site-nav">
+        <a href="/login/login.html" class="nav-link">প্রশাসক</a>
+        <a href="/candidate.html" class="nav-link">প্রার্থী</a>
+        <a href="/login/login.html" class="nav-link">ভোটার</a>
+        <a href="/public.html" class="nav-link">পাবলিক</a>
+         <a href="/dashboard-test.html" class="nav-link">ড্যাশবোর্ড</a>
+        <a class="login-btn" href="/login/login.html" role="button">লগইন</a>
+      </nav>
+    </header>
+
+    <!-- Main content -->
+    <main class="main-content" style="gap:40px; align-items:center;">
+      <!-- Message block -->
+      <section class="content" style="max-width:520px;">
+        <span class="badge">টেস্ট ড্যাশবোর্ড</span>
+        <h1 id="welcomeTitle">লগইন সফল হয়েছে</h1>
+        <p class="description" id="welcomeText">
+          আপনি সফলভাবে লগইন করেছেন। নিচের তথ্য অনুযায়ী সেশন চালু আছে।
+        </p>
+
+        <div style="
+          margin-top:18px;
+          background:#fff;
+          border:1px solid var(--border);
+          border-radius:14px;
+          box-shadow:0 6px 18px rgba(0,0,0,.08);
+          padding:18px;
+        ">
+          <h2 style="font-size:18px; font-weight:800; margin-bottom:10px; color:var(--ink);">
+            আপনার সেশন তথ্য
+          </h2>
+          <p style="margin-bottom:6px; font-size:15px;">
+            <strong>নাম:</strong> <span id="userName">লোড হচ্ছে...</span>
+          </p>
+          <p style="margin-bottom:6px; font-size:15px;">
+            <strong>ইমেইল:</strong> <span id="userEmail">লোড হচ্ছে...</span>
+          </p>
+          <p style="margin-bottom:6px; font-size:15px;">
+            <strong>রোল:</strong> <span id="userRole">লোড হচ্ছে...</span>
+          </p>
+
+          <div class="button-group" style="margin-top:16px;">
+            <a class="btn btn-primary" href="/index.html">হোমে ফিরে যান</a>
+            <button class="btn btn-secondary" type="button" id="logoutBtn">
+              লগআউট করুন
+            </button>
+          </div>
+        </div>
+
+        <div class="ethereum-note" style="margin-top:12px;">
+          <span class="ethereum-icon">🔐</span>
+          শুধুমাত্র লগইনকৃত ব্যবহারকারী এই পেজ দেখতে পারবেন।
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="features">
+      <div class="feature">
+        <div class="feature-icon">🧾</div>
+        <div class="feature-text">
+          <h3>স্বচ্ছ প্রক্রিয়া</h3>
+          <p>সমস্ত রেকর্ড যাচাইযোগ্য ও নিরীক্ষাযোগ্য।</p>
+        </div>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">🔒</div>
+        <div class="feature-text">
+          <h3>এন্ড টু এন্ড এনক্রিপশন</h3>
+          <p>প্রতিটি ধাপে আপনার তথ্য সুরক্ষিত থাকে।</p>
+        </div>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">⚡</div>
+        <div class="feature-text">
+          <h3>দ্রুত ও কার্যকর</h3>
+          <p>রিয়েল টাইমে ফলাফল দেখতে পারবেন।</p>
+        </div>
+      </div>
+
+      <div class="nav-arrows">
+        <button class="arrow-btn" aria-label="পূর্বের স্লাইড">‹</button>
+        <button class="arrow-btn" aria-label="পরবর্তী স্লাইড">›</button>
+      </div>
+
+      <div class="dots" aria-hidden="true">
+        <span class="dot active"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+      </div>
+
+      <div class="footer-credit">
+        <p>© ২০২৫ <strong>FourA</strong> - CampusCast</p>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Simple session guard -->
+  <script>
+    const CC_CURRENT_USER_KEY = "cc_currentUser";
+
+    function getCurrentUser() {
+      try {
+        const raw = localStorage.getItem(CC_CURRENT_USER_KEY);
+        if (!raw) return null;
+        return JSON.parse(raw);
+      } catch {
+        return null;
+      }
+    }
+
+    function requireLogin() {
+      const user = getCurrentUser();
+      if (!user) {
+        // not logged in, go to login page
+        window.location.href = "/login/login.html";
+        return null;
+      }
+      return user;
+    }
+
+    (function initDashboardTest() {
+      const user = requireLogin();
+      if (!user) return; // already redirected
+
+      const nameEl = document.getElementById("userName");
+      const emailEl = document.getElementById("userEmail");
+      const roleEl = document.getElementById("userRole");
+      const titleEl = document.getElementById("welcomeTitle");
+      const textEl = document.getElementById("welcomeText");
+      const logoutBtn = document.getElementById("logoutBtn");
+
+      if (nameEl) nameEl.textContent = user.name || "অজানা";
+      if (emailEl) emailEl.textContent = user.email || "অজানা";
+
+      let roleLabel = user.role;
+      if (user.role === "supervisor") roleLabel = "প্রশাসক";
+      if (user.role === "candidate") roleLabel = "প্রার্থী";
+      if (user.role === "voter") roleLabel = "ভোটার";
+      if (user.role === "public") roleLabel = "পাবলিক";
+
+      if (roleEl) roleEl.textContent = roleLabel;
+
+      if (titleEl) {
+        titleEl.textContent = "স্বাগতম, " + (user.name || "ব্যবহারকারী");
+      }
+      if (textEl) {
+        textEl.textContent = "আপনি সফলভাবে লগইন করেছেন এবং এখন টেস্ট ড্যাশবোর্ড ব্যবহার করতে পারেন।";
+      }
+
+      if (logoutBtn) {
+        logoutBtn.addEventListener("click", () => {
+          localStorage.removeItem(CC_CURRENT_USER_KEY);
+          window.location.href = "/login/login.html";
+        });
+      }
+    })();
+  </script>
+</body>
+</html>

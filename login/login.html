@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CampusCast – লগইন</title>
+  <title>CampusCast - লগইন</title>
   <link rel="stylesheet" href="/assets/style.css" />
 </head>
 <body>
@@ -23,7 +23,7 @@
             <div class="bar alt"></div>
           </div>
         </div>
-        <div class="logo-subtitle">বিশ্ববিদ্যালয় ই-ভোটিং সিস্টেম</div>
+        <div class="logo-subtitle">বিশ্ববিদ্যালয় ই ভোটিং সিস্টেম</div>
       </a>
 
       <nav class="site-nav">
@@ -31,13 +31,14 @@
         <a href="/login/login.html" class="nav-link">প্রার্থী</a>
         <a href="/login/login.html" class="nav-link">ভোটার</a>
         <a href="/public.html" class="nav-link">পাবলিক</a>
+        <a href="/dashboard-test.html" class="nav-link">ড্যাশবোর্ড</a>
         <a class="login-btn" href="/login/login.html" role="button">লগইন</a>
       </nav>
     </header>
 
     <!-- Main content area (styled to match index) -->
     <main class="main-content" style="gap:40px; align-items:flex-start;">
-      <!-- Left: text block (same tone as index) -->
+      <!-- Left: text block -->
       <section class="content" style="max-width:520px;">
         <span class="badge">নিরাপদ লগইন</span>
         <h1>আপনার অ্যাকাউন্টে প্রবেশ করুন</h1>
@@ -51,11 +52,11 @@
 
         <div class="ethereum-note" style="margin-top:12px;">
           <span class="ethereum-icon">🔐</span>
-          এন্ড-টু-এন্ড এনক্রিপশন সক্রিয়
+          এন্ড টু এন্ড এনক্রিপশন সক্রিয়
         </div>
       </section>
 
-      <!-- Right: login card (uses brand colors/shadow like avatars) -->
+      <!-- Right: login card -->
       <section aria-label="লগইন ফর্ম" style="flex:1; max-width:440px;">
         <div style="
           background:#fff;
@@ -81,7 +82,7 @@
             </div>
 
             <!-- Password -->
-            <div class="form-group" style="margin-bottom:6px;">
+            <div class="form-group" style="margin-bottom:12px;">
               <label for="password" style="display:block; font-weight:700; margin-bottom:6px;">পাসওয়ার্ড</label>
               <input
                 type="password"
@@ -93,25 +94,60 @@
               />
             </div>
 
+            <!-- Role select -->
+            <div class="form-group" style="margin-bottom:6px;">
+              <label for="role" style="display:block; font-weight:700; margin-bottom:6px;">লগইন হিসেবে</label>
+              <select
+                id="role"
+                name="role"
+                required
+                style="width:100%; padding:12px; border:1px solid var(--border); border-radius:10px; font-size:15px;"
+              >
+                <option value="">রোল নির্বাচন করুন</option>
+                <option value="supervisor">প্রশাসক</option>
+                <option value="candidate">প্রার্থী</option>
+                <option value="voter">ভোটার</option>
+                <option value="public">পাবলিক</option>
+              </select>
+            </div>
+
             <!-- Status -->
             <p id="loginStatus" role="status" aria-live="polite" class="status" style="margin:.5rem 0 .25rem;"></p>
 
             <!-- Submit -->
             <button type="submit" class="btn btn-primary" style="width:100%;">লগইন</button>
 
-            <!-- Footer links -->
-            <div class="login-footer" style="margin-top:12px; display:flex; justify-content:space-between;">
-              <a href="/reg/reg.html" style="color:#fff; opacity:.95; text-decoration:none;"
-                 class="nav-link">অ্যাকাউন্ট নেই? নিবন্ধন করুন</a>
-              <a href="#" style="color:#fff; opacity:.95; text-decoration:none;"
-                 class="nav-link">পাসওয়ার্ড ভুলে গেছেন?</a>
+            <!-- Footer links (visible on white) -->
+            <div class="login-footer" style="
+              margin-top:12px;
+              display:flex;
+              justify-content:space-between;
+              font-size:14px;
+            ">
+              <a href="/reg/reg.html"
+                 style="
+                   color:var(--brand);
+                   text-decoration:none;
+                   font-weight:600;
+                 ">
+                অ্যাকাউন্ট নেই? নিবন্ধন করুন
+              </a>
+
+              <a href="#"
+                 style="
+                   color:var(--brand);
+                   text-decoration:none;
+                   font-weight:600;
+                 ">
+                পাসওয়ার্ড ভুলে গেছেন?
+              </a>
             </div>
           </form>
         </div>
       </section>
     </main>
 
-    <!-- Footer (same style) -->
+    <!-- Footer -->
     <footer class="features">
       <div class="feature">
         <div class="feature-icon">🧾</div>
@@ -123,7 +159,7 @@
       <div class="feature">
         <div class="feature-icon">🔒</div>
         <div class="feature-text">
-          <h3>এন্ড-টু-এন্ড এনক্রিপশন</h3>
+          <h3>এন্ড টু এন্ড এনক্রিপশন</h3>
           <p>প্রতিটি ধাপে আপনার তথ্য সুরক্ষিত থাকে।</p>
         </div>
       </div>
@@ -131,7 +167,7 @@
         <div class="feature-icon">⚡</div>
         <div class="feature-text">
           <h3>দ্রুত ও কার্যকর</h3>
-          <p>রিয়েল-টাইমে ফলাফল দেখতে পারবেন।</p>
+          <p>রিয়েল টাইমে ফলাফল দেখতে পারবেন।</p>
         </div>
       </div>
 
@@ -147,92 +183,99 @@
       </div>
 
       <div class="footer-credit">
-        <p>© ২০২৫ <strong>FourA</strong> – CampusCast</p>
+        <p>© ২০২৫ <strong>FourA</strong> - CampusCast</p>
       </div>
     </footer>
   </div>
 
-  <!-- Auth / Login Logic (kept from your version) -->
+  <!-- Supabase client -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script>
-    // --- constants -----------------------------------------------------------
-    const SUPERVISOR_URL = "/supervisor.html";
-    const CC_USERS_KEY = "cc_users";
-    const CC_CURRENT_USER_KEY = "cc_currentUser";
+  const SUPABASE_URL = "https://dfniyjbsmznnzklfprsx.supabase.co";
+  const SUPABASE_ANON_KEY = "sb_publishable_XNUFe9_ygaeMfYHd6Z97XQ_UE1-VhGn";
 
-    function loadUsers() {
-      try { return JSON.parse(localStorage.getItem(CC_USERS_KEY) || "[]"); }
-      catch { return []; }
+  const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+  const CC_CURRENT_USER_KEY = "cc_currentUser";
+
+  const ROLE_ROUTES = {
+    supervisor: "/dashboard-test.html",
+    candidate: "/candidate.html",
+    voter: "/dashboard-test.html",
+    public: "/dashboard-test.html"
+  };
+
+  async function hash(text) {
+    const enc = new TextEncoder().encode(text);
+    const buf = await crypto.subtle.digest("SHA-256", enc);
+    return Array.from(new Uint8Array(buf))
+      .map(b => b.toString(16).padStart(2, "0"))
+      .join("");
+  }
+
+  async function loginUser(email, password, role) {
+    if (!email || !password) {
+      throw new Error("ইমেইল ও পাসওয়ার্ড দিন।");
     }
-    function saveUsers(users) {
-      localStorage.setItem(CC_USERS_KEY, JSON.stringify(users));
+
+    const password_hash = await hash(password);
+
+    const { data: user, error } = await supabase
+      .from("users")
+      .select("*")
+      .eq("email", email)
+      .eq("role", role)
+      .single();
+
+    if (error || !user) {
+      throw new Error("এই ইমেইল বা রোল এর কোনো অ্যাকাউন্ট নেই।");
     }
-    function getUserByEmail(email) {
-      return loadUsers().find(u => u.email.toLowerCase() === email.toLowerCase()) || null;
+
+    if (user.password_hash !== password_hash) {
+      throw new Error("পাসওয়ার্ড সঠিক নয়।");
     }
-    async function hash(text) {
-      const enc = new TextEncoder().encode(text);
-      const buf = await crypto.subtle.digest("SHA-256", enc);
-      return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, "0")).join("");
-    }
-    async function ensureDefaultAdmin() {
-      const users = loadUsers();
-      const hasPriv = users.some(u => (u.role === "admin" || u.role === "supervisor"));
-      if (!hasPriv) {
-        const passHash = await hash("admin");
-        users.push({
-          email: "admin",     // username: admin
-          passHash,           // password: admin
-          role: "supervisor",
-          name: "Admin",
-          createdAt: Date.now()
-        });
-        saveUsers(users);
-        console.info("Seeded default admin/admin (supervisor role) for demo.");
+
+    localStorage.setItem(
+      CC_CURRENT_USER_KEY,
+      JSON.stringify({
+        id: user.id,
+        email: user.email,
+        role: user.role,
+        name: user.name
+      })
+    );
+
+    return user;
+  }
+
+  (function initLogin() {
+    const form = document.getElementById("loginForm");
+    const statusEl = document.getElementById("loginStatus");
+
+    form.addEventListener("submit", async function (e) {
+      e.preventDefault();
+      statusEl.textContent = "";
+      statusEl.style.color = "crimson";
+
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value.trim();
+      const role = document.getElementById("role").value;
+
+      if (!role) {
+        statusEl.textContent = "রোল নির্বাচন করুন।";
+        return;
       }
-    }
-    async function loginUser(email, password) {
-      const user = getUserByEmail(email);
-      if (!user) throw new Error("এই ইমেইলে কোনো অ্যাকাউন্ট নেই।");
-      const passHash = await hash(password);
-      if (user.passHash !== passHash) throw new Error("পাসওয়ার্ড সঠিক নয়।");
-      localStorage.setItem(CC_CURRENT_USER_KEY, JSON.stringify({ email: user.email, role: user.role, name: user.name }));
-      return user;
-    }
 
-    (async function initLogin() {
-      await ensureDefaultAdmin();
+      try {
+        const user = await loginUser(email, password, role);
+        const route = ROLE_ROUTES[role] || "/";
+        window.location.href = route;
+      } catch (err) {
+        statusEl.textContent = err.message || "লগইন ব্যর্থ হয়েছে।";
+      }
+    });
+  })();
+</script>
 
-      const form = document.getElementById("loginForm");
-      const statusEl = document.getElementById("loginStatus");
-
-      form.addEventListener("submit", async function(e) {
-        e.preventDefault();
-        statusEl.textContent = "";
-        statusEl.style.color = "crimson";
-
-        const email = document.getElementById("email").value.trim();
-        const password = document.getElementById("password").value.trim();
-
-        if (!email || !password) {
-          statusEl.textContent = "ইমেইল ও পাসওয়ার্ড দিন।";
-          return;
-        }
-
-        // Backdoor for testing: admin/admin
-        if (email === "admin" && password === "admin") {
-          localStorage.setItem(CC_CURRENT_USER_KEY, JSON.stringify({ email: "admin", role: "supervisor", name: "Admin" }));
-          window.location.href = SUPERVISOR_URL;
-          return;
-        }
-
-        try {
-          await loginUser(email, password);
-          window.location.href = SUPERVISOR_URL; // always go to supervisor.html
-        } catch (err) {
-          statusEl.textContent = err.message || "লগইন ব্যর্থ হয়েছে।";
-        }
-      });
-    })();
-  </script>
 </body>
 </html>
