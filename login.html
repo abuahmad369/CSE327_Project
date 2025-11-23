@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CampusCast - লগইন</title>
+  <link rel="stylesheet" href="/assets/style.css" />
+</head>
+<body>
+  <!-- Same background as index -->
+  <div class="hands-bg"></div>
+
+  <div class="container">
+    <!-- Site Header (same as index) -->
+    <header class="site-header">
+      <a href="/index.html" class="logo" aria-label="CampusCast হোমপেজে যান">
+        <div class="logo-text">
+          <span>CampusCast</span>
+          <div class="logo-bars">
+            <div class="bar"></div>
+            <div class="bar alt"></div>
+            <div class="bar"></div>
+            <div class="bar alt"></div>
+          </div>
+        </div>
+        <div class="logo-subtitle">বিশ্ববিদ্যালয় ই ভোটিং সিস্টেম</div>
+      </a>
+
+      <nav class="site-nav">
+        <a href="/login/login.html" class="nav-link">প্রশাসক</a>
+        <a href="/login/login.html" class="nav-link">প্রার্থী</a>
+        <a href="/login/login.html" class="nav-link">ভোটার</a>
+        <a href="/public.html" class="nav-link">পাবলিক</a>
+        <a href="/dashboard-test.html" class="nav-link">ড্যাশবোর্ড</a>
+        <a class="login-btn" href="/login/login.html" role="button">লগইন</a>
+      </nav>
+    </header>
+
+    <!-- Main content area (styled to match index) -->
+    <main class="main-content" style="gap:40px; align-items:flex-start;">
+      <!-- Left: text block -->
+      <section class="content" style="max-width:520px;">
+        <span class="badge">নিরাপদ লগইন</span>
+        <h1>আপনার অ্যাকাউন্টে প্রবেশ করুন</h1>
+        <p class="description">
+          নিবন্ধন করা ইমেইল ও পাসওয়ার্ড ব্যবহার করে লগইন করুন। নতুন হলে আগে নিবন্ধন করুন।
+        </p>
+
+        <div class="button-group" style="margin-top:10px;">
+          <a class="btn btn-secondary" href="/reg/reg.html" role="button">নিবন্ধন করুন</a>
+        </div>
+
+        <div class="ethereum-note" style="margin-top:12px;">
+          <span class="ethereum-icon">🔐</span>
+          এন্ড টু এন্ড এনক্রিপশন সক্রিয়
+        </div>
+      </section>
+
+      <!-- Right: login card -->
+      <section aria-label="লগইন ফর্ম" style="flex:1; max-width:440px;">
+        <div style="
+          background:#fff;
+          border:1px solid var(--border);
+          border-radius:14px;
+          box-shadow:0 6px 18px rgba(0,0,0,.08);
+          padding:22px;
+        ">
+          <h2 style="margin-bottom:14px; font-size:22px; font-weight:800; color:var(--ink);">লগইন</h2>
+
+          <form id="loginForm" autocomplete="off" novalidate>
+            <!-- Email -->
+            <div class="form-group" style="margin-bottom:12px;">
+              <label for="email" style="display:block; font-weight:700; margin-bottom:6px;">ইমেইল</label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                placeholder="উদাহরণ: you@studentmail.com"
+                required
+                style="width:100%; padding:12px; border:1px solid var(--border); border-radius:10px; font-size:15px;"
+              />
+            </div>
+
+            <!-- Password -->
+            <div class="form-group" style="margin-bottom:12px;">
+              <label for="password" style="display:block; font-weight:700; margin-bottom:6px;">পাসওয়ার্ড</label>
+              <input
+                type="password"
+                id="password"
+                name="password"
+                placeholder="আপনার পাসওয়ার্ড"
+                required
+                style="width:100%; padding:12px; border:1px solid var(--border); border-radius:10px; font-size:15px;"
+              />
+            </div>
+
+            <!-- Role select -->
+            <div class="form-group" style="margin-bottom:6px;">
+              <label for="role" style="display:block; font-weight:700; margin-bottom:6px;">লগইন হিসেবে</label>
+              <select
+                id="role"
+                name="role"
+                required
+                style="width:100%; padding:12px; border:1px solid var(--border); border-radius:10px; font-size:15px;"
+              >
+                <option value="">রোল নির্বাচন করুন</option>
+                <option value="supervisor">প্রশাসক</option>
+                <option value="candidate">প্রার্থী</option>
+                <option value="voter">ভোটার</option>
+                <option value="public">পাবলিক</option>
+              </select>
+            </div>
+
+            <!-- Status -->
+            <p id="loginStatus" role="status" aria-live="polite" class="status" style="margin:.5rem 0 .25rem;"></p>
+
+            <!-- Submit -->
+            <button type="submit" class="btn btn-primary" style="width:100%;">লগইন</button>
+
+            <!-- Footer links (visible on white) -->
+            <div class="login-footer" style="
+              margin-top:12px;
+              display:flex;
+              justify-content:space-between;
+              font-size:14px;
+            ">
+              <a href="/reg/reg.html"
+                 style="
+                   color:var(--brand);
+                   text-decoration:none;
+                   font-weight:600;
+                 ">
+                অ্যাকাউন্ট নেই? নিবন্ধন করুন
+              </a>
+
+              <a href="#"
+                 style="
+                   color:var(--brand);
+                   text-decoration:none;
+                   font-weight:600;
+                 ">
+                পাসওয়ার্ড ভুলে গেছেন?
+              </a>
+            </div>
+          </form>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="features">
+      <div class="feature">
+        <div class="feature-icon">🧾</div>
+        <div class="feature-text">
+          <h3>স্বচ্ছ প্রক্রিয়া</h3>
+          <p>সমস্ত রেকর্ড যাচাইযোগ্য ও নিরীক্ষাযোগ্য।</p>
+        </div>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">🔒</div>
+        <div class="feature-text">
+          <h3>এন্ড টু এন্ড এনক্রিপশন</h3>
+          <p>প্রতিটি ধাপে আপনার তথ্য সুরক্ষিত থাকে।</p>
+        </div>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">⚡</div>
+        <div class="feature-text">
+          <h3>দ্রুত ও কার্যকর</h3>
+          <p>রিয়েল টাইমে ফলাফল দেখতে পারবেন।</p>
+        </div>
+      </div>
+
+      <div class="nav-arrows">
+        <button class="arrow-btn" aria-label="পূর্বের স্লাইড">‹</button>
+        <button class="arrow-btn" aria-label="পরবর্তী স্লাইড">›</button>
+      </div>
+
+      <div class="dots" aria-hidden="true">
+        <span class="dot active"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+      </div>
+
+      <div class="footer-credit">
+        <p>© ২০২৫ <strong>FourA</strong> - CampusCast</p>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Supabase client -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script>
+  const SUPABASE_URL = "https://dfniyjbsmznnzklfprsx.supabase.co";
+  const SUPABASE_ANON_KEY = "sb_publishable_XNUFe9_ygaeMfYHd6Z97XQ_UE1-VhGn";
+
+  const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+  const CC_CURRENT_USER_KEY = "cc_currentUser";
+
+  const ROLE_ROUTES = {
+    supervisor: "/dashboard-test.html",
+    candidate: "/dashboard-test.html",
+    voter: "/dashboard-test.html",
+    public: "/dashboard-test.html"
+  };
+
+  async function hash(text) {
+    const enc = new TextEncoder().encode(text);
+    const buf = await crypto.subtle.digest("SHA-256", enc);
+    return Array.from(new Uint8Array(buf))
+      .map(b => b.toString(16).padStart(2, "0"))
+      .join("");
+  }
+
+  async function loginUser(email, password, role) {
+    if (!email || !password) {
+      throw new Error("ইমেইল ও পাসওয়ার্ড দিন।");
+    }
+
+    const password_hash = await hash(password);
+
+    const { data: user, error } = await supabase
+      .from("users")
+      .select("*")
+      .eq("email", email)
+      .eq("role", role)
+      .single();
+
+    if (error || !user) {
+      throw new Error("এই ইমেইল বা রোল এর কোনো অ্যাকাউন্ট নেই।");
+    }
+
+    if (user.password_hash !== password_hash) {
+      throw new Error("পাসওয়ার্ড সঠিক নয়।");
+    }
+
+    localStorage.setItem(
+      CC_CURRENT_USER_KEY,
+      JSON.stringify({
+        id: user.id,
+        email: user.email,
+        role: user.role,
+        name: user.name
+      })
+    );
+
+    return user;
+  }
+
+  (function initLogin() {
+    const form = document.getElementById("loginForm");
+    const statusEl = document.getElementById("loginStatus");
+
+    form.addEventListener("submit", async function (e) {
+      e.preventDefault();
+      statusEl.textContent = "";
+      statusEl.style.color = "crimson";
+
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value.trim();
+      const role = document.getElementById("role").value;
+
+      if (!role) {
+        statusEl.textContent = "রোল নির্বাচন করুন।";
+        return;
+      }
+
+      try {
+        const user = await loginUser(email, password, role);
+        const route = ROLE_ROUTES[role] || "/";
+        window.location.href = route;
+      } catch (err) {
+        statusEl.textContent = err.message || "লগইন ব্যর্থ হয়েছে।";
+      }
+    });
+  })();
+</script>
+
+</body>
+</html>
