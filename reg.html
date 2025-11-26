@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CampusCast – নিবন্ধন</title>
+  <link rel="stylesheet" href="../assets/style.css" />
+</head>
+<body>
+  <div class="hands-bg"></div>
+
+  <div class="container">
+    <header class="site-header">
+      <a href="../index.html" class="logo">
+        <div class="logo-text">
+          <span>CampusCast</span>
+          <div class="logo-bars">
+            <div class="bar"></div>
+            <div class="bar alt"></div>
+            <div class="bar"></div>
+            <div class="bar alt"></div>
+          </div>
+        </div>
+        <div class="logo-subtitle">বিশ্ববিদ্যালয় ই-ভোটিং সিস্টেম</div>
+      </a>
+      <nav class="site-nav">
+        <a href="../login/login.html" class="nav-link">লগইন</a>
+      </nav>
+    </header>
+
+    <main class="main-content" style="gap:40px; align-items:flex-start;">
+      <section aria-label="নিবন্ধন ফর্ম" style="flex:1; max-width:520px;">
+        <div style="background:#fff; border:1px solid var(--border); border-radius:14px; box-shadow:0 6px 18px rgba(0,0,0,.08); padding:22px;">
+          <h2 style="margin-bottom:14px; font-size:22px; font-weight:800; color:var(--ink);">নিবন্ধন</h2>
+
+          <form id="registrationForm" autocomplete="off" novalidate>
+            
+            <div class="form-group" style="margin-bottom:12px;">
+              <label for="name" style="display:block; font-weight:700; margin-bottom:6px;">নাম</label>
+              <input type="text" id="name" name="name" placeholder="আপনার পূর্ণ নাম" required style="width:100%; padding:12px; border:1px solid var(--border); border-radius:10px; font-size:15px;" />
+            </div>
+
+            <div class="form-group" style="margin-bottom:12px;">
+              <label for="role" style="display:block; font-weight:700; margin-bottom:6px;">ভূমিকা (Role)</label>
+              <select id="role" required style="width:100%; padding:12px; border:1px solid var(--border); border-radius:10px; background:white;">
+                <option value="voter">ভোটার (Voter)</option>
+                <option value="candidate">প্রার্থী (Candidate)</option>
+              </select>
+            </div>
+
+            <div class="form-group" style="margin-bottom:12px;">
+              <label for="dept" style="display:block; font-weight:700; margin-bottom:6px;">বিভাগ (Department)</label>
+              <select id="dept" required style="width:100%; padding:12px; border:1px solid var(--border); border-radius:10px; background:white;">
+                <option value="CSE">CSE</option>
+                <option value="EEE">EEE</option>
+                <option value="BBA">BBA</option>
+                <option value="ENG">ENG</option>
+              </select>
+            </div>
+            
+            <div class="form-group" style="margin-bottom:12px;">
+              <label for="dob" style="display:block; font-weight:700; margin-bottom:6px;">জন্মতারিখ</label>
+              <input type="date" id="dob" name="dob" required style="width:100%; padding:12px; border:1px solid var(--border); border-radius:10px; font-size:15px;" />
+            </div>
+
+            <div class="form-group" style="margin-bottom:12px;">
+              <label for="email" style="display:block; font-weight:700; margin-bottom:6px;">ইমেইল</label>
+              <input type="email" id="email" name="email" placeholder="উদাহরণ: you@studentmail.com" required style="width:100%; padding:12px; border:1px solid var(--border); border-radius:10px; font-size:15px;" />
+            </div>
+
+            <div class="form-group" style="margin-bottom:6px;">
+              <label for="password" style="display:block; font-weight:700; margin-bottom:6px;">পাসওয়ার্ড</label>
+              <input type="password" id="password" name="password" placeholder="একটি নিরাপদ পাসওয়ার্ড দিন" required style="width:100%; padding:12px; border:1px solid var(--border); border-radius:10px; font-size:15px;" />
+            </div>
+
+            <p id="regStatus" role="status" aria-live="polite" class="status" style="margin:.5rem 0 .25rem;"></p>
+
+            <button type="submit" class="btn btn-primary" style="width:100%;">নিবন্ধন সম্পন্ন করুন</button>
+
+            <div class="login-footer" style="margin-top:12px; display:flex; justify-content:space-between;">
+              <a href="../login/login.html" class="nav-link" style="text-decoration:none;">ইতিমধ্যে অ্যাকাউন্ট আছে? লগইন</a>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <section class="content" style="max-width:520px;">
+        <span class="badge">দ্রুত নিবন্ধন</span>
+        <h1>CampusCast-এ নতুন অ্যাকাউন্ট তৈরি করুন</h1>
+        <p class="description">
+          কয়েকটি সহজ ধাপেই আপনার অ্যাকাউন্ট তৈরি করুন।
+        </p>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const CC_USERS_KEY = "cc_users";
+    const CC_CURRENT_USER_KEY = "cc_currentUser";
+
+    function loadUsers() {
+      try { return JSON.parse(localStorage.getItem(CC_USERS_KEY) || "[]"); }
+      catch { return []; }
+    }
+    function saveUsers(users) {
+      localStorage.setItem(CC_USERS_KEY, JSON.stringify(users));
+    }
+    function getUserByEmail(email) {
+      return loadUsers().find(u => u.email.toLowerCase() === email.toLowerCase()) || null;
+    }
+    async function hash(text) {
+      const enc = new TextEncoder().encode(text);
+      const buf = await crypto.subtle.digest("SHA-256", enc);
+      return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, "0")).join("");
+    }
+
+    // *** UPDATED HERE: Added role and dept to function arguments ***
+    async function registerUser({ email, password, name, dob, role, dept }) {
+      if (!email || !password || !name || !dob) throw new Error("সব ঘর পূরণ করুন।");
+      const users = loadUsers();
+      if (users.some(u => u.email.toLowerCase() === email.toLowerCase()))
+        throw new Error("এই ইমেইল দিয়ে আগে থেকেই অ্যাকাউন্ট আছে।");
+      
+      const newUser = {
+        email,
+        passHash: await hash(password),
+        role: role || "voter", // *** UPDATED: Saving Role ***
+        dept: dept || "General", // *** UPDATED: Saving Dept ***
+        name,
+        dob,
+        createdAt: Date.now()
+      };
+      users.push(newUser);
+      saveUsers(users);
+      return newUser;
+    }
+
+    async function loginUser(email, password) {
+      const user = getUserByEmail(email);
+      if (!user) throw new Error("অবৈধ লগইন তথ্য।");
+      if (user.passHash !== await hash(password))
+        throw new Error("অবৈধ লগইন তথ্য।");
+      localStorage.setItem(CC_CURRENT_USER_KEY, JSON.stringify(user));
+      return user;
+    }
+
+    (async function init() {
+      const form = document.getElementById("registrationForm");
+      const statusEl = document.getElementById("regStatus");
+
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        statusEl.textContent = "";
+        statusEl.style.color = "crimson";
+
+        const name = document.getElementById("name").value.trim();
+        const dob  = document.getElementById("dob").value;
+        const email = document.getElementById("email").value.trim();
+        const password = document.getElementById("password").value.trim();
+        
+        // *** UPDATED HERE: Getting values from new dropdowns ***
+        const role = document.getElementById("role").value;
+        const dept = document.getElementById("dept").value;
+
+        if (!name || !dob || !email || !password) {
+          statusEl.textContent = "সব ঘর পূরণ করুন।";
+          return;
+        }
+
+        try {
+          // *** UPDATED HERE: Passing role and dept to register function ***
+          await registerUser({ email, password, name, dob, role, dept });
+          await loginUser(email, password);
+          
+          // *** UPDATED HERE: Redirect based on Role ***
+          if (role === 'candidate') {
+              window.location.href = "../supervisor/candidates.html"; 
+          } else {
+              window.location.href = "../supervisor/supervisor.html"; // Or voter dashboard
+          }
+          
+        } catch (err) {
+          statusEl.textContent = err.message || "নিবন্ধন ব্যর্থ হয়েছে।";
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
