@@ -483,3 +483,41 @@ h1 {
   .nav-arrows, .dots { display: none; } /* optional: hide carousel UI on tiny screens */
 }
 
+/* =========================
+   SUPERVISOR DASHBOARD STYLES
+   ========================= */
+
+.supervisor-main {
+  flex-direction: column;
+  gap: 28px;
+}
+
+.supervisor-grid {
+  width: 100%;
+  max-width: 960px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 18px;
+}
+
+.super-card {
+  background: #ffffff;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  padding: 18px 16px;
+  box-shadow: 0 6px 18px rgba(0,0,0,.06);
+}
+
+.super-card h3 {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+
+.super-card p {
+  font-size: 28px;
+  font-weight: 900;
+  color: var(--brand);
+  margin: 0;
+}

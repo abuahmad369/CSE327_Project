@@ -7,11 +7,9 @@
   <link rel="stylesheet" href="/assets/style.css" />
 </head>
 <body>
-  <!-- Same background as index -->
   <div class="hands-bg"></div>
 
   <div class="container">
-    <!-- Site Header (same as index) -->
     <header class="site-header">
       <a href="/index.html" class="logo" aria-label="CampusCast হোমপেজে যান">
         <div class="logo-text">
@@ -36,9 +34,7 @@
       </nav>
     </header>
 
-    <!-- Main content area (styled to match index) -->
     <main class="main-content" style="gap:40px; align-items:flex-start;">
-      <!-- Left: text block -->
       <section class="content" style="max-width:520px;">
         <span class="badge">নিরাপদ লগইন</span>
         <h1>আপনার অ্যাকাউন্টে প্রবেশ করুন</h1>
@@ -56,7 +52,6 @@
         </div>
       </section>
 
-      <!-- Right: login card -->
       <section aria-label="লগইন ফর্ম" style="flex:1; max-width:440px;">
         <div style="
           background:#fff;
@@ -68,7 +63,6 @@
           <h2 style="margin-bottom:14px; font-size:22px; font-weight:800; color:var(--ink);">লগইন</h2>
 
           <form id="loginForm" autocomplete="off" novalidate>
-            <!-- Email -->
             <div class="form-group" style="margin-bottom:12px;">
               <label for="email" style="display:block; font-weight:700; margin-bottom:6px;">ইমেইল</label>
               <input
@@ -81,7 +75,6 @@
               />
             </div>
 
-            <!-- Password -->
             <div class="form-group" style="margin-bottom:12px;">
               <label for="password" style="display:block; font-weight:700; margin-bottom:6px;">পাসওয়ার্ড</label>
               <input
@@ -94,7 +87,6 @@
               />
             </div>
 
-            <!-- Role select -->
             <div class="form-group" style="margin-bottom:6px;">
               <label for="role" style="display:block; font-weight:700; margin-bottom:6px;">লগইন হিসেবে</label>
               <select
@@ -111,13 +103,10 @@
               </select>
             </div>
 
-            <!-- Status -->
             <p id="loginStatus" role="status" aria-live="polite" class="status" style="margin:.5rem 0 .25rem;"></p>
 
-            <!-- Submit -->
             <button type="submit" class="btn btn-primary" style="width:100%;">লগইন</button>
 
-            <!-- Footer links (visible on white) -->
             <div class="login-footer" style="
               margin-top:12px;
               display:flex;
@@ -147,7 +136,6 @@
       </section>
     </main>
 
-    <!-- Footer -->
     <footer class="features">
       <div class="feature">
         <div class="feature-icon">🧾</div>
@@ -188,94 +176,90 @@
     </footer>
   </div>
 
-  <!-- Supabase client -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script>
-  const SUPABASE_URL = "https://dfniyjbsmznnzklfprsx.supabase.co";
-  const SUPABASE_ANON_KEY = "sb_publishable_XNUFe9_ygaeMfYHd6Z97XQ_UE1-VhGn";
+    const SUPABASE_URL = "https://hgxjuxgxgbjjqxxvafhx.supabase.co";
+    const SUPABASE_ANON_KEY = "sb_publishable_RqoNSHsQQOhs8dfL0OXsdA_TfeVyZcn";
 
-  const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-  const CC_CURRENT_USER_KEY = "cc_currentUser";
+    const CC_CURRENT_USER_KEY = "cc_currentUser";
 
-  const ROLE_ROUTES = {
-    supervisor: "/dashboard-test.html",
-    candidate: "/dashboard-test.html",
-    voter: "/dashboard-test.html",
-    public: "/dashboard-test.html"
-  };
+    const ROLE_ROUTES = {
+      supervisor: "/SAL/supervisor.html",
+      candidate: "/dashboard-test.html",
+      voter: "/dashboard-test.html",
+      public: "/SAL/public.html"
+    };
 
-  async function hash(text) {
-    const enc = new TextEncoder().encode(text);
-    const buf = await crypto.subtle.digest("SHA-256", enc);
-    return Array.from(new Uint8Array(buf))
-      .map(b => b.toString(16).padStart(2, "0"))
-      .join("");
-  }
-
-  async function loginUser(email, password, role) {
-    if (!email || !password) {
-      throw new Error("ইমেইল ও পাসওয়ার্ড দিন।");
+    async function hash(text) {
+      const enc = new TextEncoder().encode(text);
+      const buf = await crypto.subtle.digest("SHA-256", enc);
+      return Array.from(new Uint8Array(buf))
+        .map(b => b.toString(16).padStart(2, "0"))
+        .join("");
     }
 
-    const password_hash = await hash(password);
-
-    const { data: user, error } = await supabase
-      .from("users")
-      .select("*")
-      .eq("email", email)
-      .eq("role", role)
-      .single();
-
-    if (error || !user) {
-      throw new Error("এই ইমেইল বা রোল এর কোনো অ্যাকাউন্ট নেই।");
-    }
-
-    if (user.password_hash !== password_hash) {
-      throw new Error("পাসওয়ার্ড সঠিক নয়।");
-    }
-
-    localStorage.setItem(
-      CC_CURRENT_USER_KEY,
-      JSON.stringify({
-        id: user.id,
-        email: user.email,
-        role: user.role,
-        name: user.name
-      })
-    );
-
-    return user;
-  }
-
-  (function initLogin() {
-    const form = document.getElementById("loginForm");
-    const statusEl = document.getElementById("loginStatus");
-
-    form.addEventListener("submit", async function (e) {
-      e.preventDefault();
-      statusEl.textContent = "";
-      statusEl.style.color = "crimson";
-
-      const email = document.getElementById("email").value.trim();
-      const password = document.getElementById("password").value.trim();
-      const role = document.getElementById("role").value;
-
-      if (!role) {
-        statusEl.textContent = "রোল নির্বাচন করুন।";
-        return;
+    // uses users(email, role, password_hash) from your SQL
+    async function loginUser(email, password, role) {
+      if (!email || !password || !role) {
+        throw new Error("ইমেইল, পাসওয়ার্ড এবং রোল দিন।");
       }
 
-      try {
-        const user = await loginUser(email, password, role);
-        const route = ROLE_ROUTES[role] || "/";
-        window.location.href = route;
-      } catch (err) {
-        statusEl.textContent = err.message || "লগইন ব্যর্থ হয়েছে।";
-      }
-    });
-  })();
-</script>
+      const password_hash = await hash(password);
 
+      const { data: user, error } = await supabase
+        .from("users")
+        .select("id, name, email, role")
+        .eq("email", email)
+        .eq("role", role)
+        .eq("password_hash", password_hash)
+        .single();
+
+      if (error || !user) {
+        throw new Error("ইমেইল, পাসওয়ার্ড বা রোল সঠিক নয়।");
+      }
+
+      localStorage.setItem(
+        CC_CURRENT_USER_KEY,
+        JSON.stringify({
+          id: user.id,
+          email: user.email,
+          role: user.role,
+          name: user.name
+        })
+      );
+
+      return user;
+    }
+
+    (function initLogin() {
+      const form = document.getElementById("loginForm");
+      const statusEl = document.getElementById("loginStatus");
+
+      form.addEventListener("submit", async function (e) {
+        e.preventDefault();
+        statusEl.textContent = "";
+        statusEl.style.color = "crimson";
+
+        const email = document.getElementById("email").value.trim();
+        const password = document.getElementById("password").value.trim();
+        const role = document.getElementById("role").value;
+
+        if (!role) {
+          statusEl.textContent = "রোল নির্বাচন করুন।";
+          return;
+        }
+
+        try {
+          const user = await loginUser(email, password, role);
+          const route = ROLE_ROUTES[role] || "/";
+          window.location.href = route;
+        } catch (err) {
+          statusEl.textContent = err.message || "লগইন ব্যর্থ হয়েছে।";
+        }
+      });
+    })();
+  </script>
 </body>
 </html>

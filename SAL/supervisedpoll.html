@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Supervised Polls | CampusCast</title>
+  <link rel="stylesheet" href="../assets/style.css">
+  <style>
+    body { font-family:'Poppins',sans-serif; background:linear-gradient(135deg,#0f2027,#2c5364,#00c97f); color:#fff; margin:0; min-height:100vh; display:flex; flex-direction:column;}
+    header{background: rgba(0,0,0,0.3); display:flex; justify-content:space-between; align-items:center; padding:1rem 2rem; backdrop-filter: blur(8px);}
+    header h1{color:#00ffae; font-size:1.6rem;}
+    nav a, nav button{color:white; margin-left:1rem; background:none; border:none; cursor:pointer; transition:0.3s;}
+    nav a:hover, nav button:hover{color:#00ffae;}
+    main{flex:1; padding:2rem;}
+    .polls-container{display:grid; grid-template-columns:repeat(auto-fit,minmax(320px,1fr)); gap:1.5rem;}
+    .poll-card{background: rgba(255,255,255,0.1); border-radius:15px; padding:1.5rem; box-shadow:0 4px 10px rgba(0,0,0,0.3); transition:0.3s;}
+    .poll-card:hover{transform:translateY(-5px);}
+    .poll-header{display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;}
+    .poll-header h3{color:#00ffae;}
+    .status{padding:0.3rem 0.7rem; border-radius:5px; font-weight:600;}
+    .status.ongoing{background:#00ffae;color:#000;}
+    .status.upcoming{background:#ffc107;color:#000;}
+    .status.completed{background:#ff3b3b;color:#fff;}
+    .poll-actions{margin-top:1rem; display:flex; gap:0.5rem; flex-wrap:wrap;}
+    .poll-actions button{border:none;border-radius:6px;padding:0.5rem 0.8rem; cursor:pointer; font-weight:600; transition:0.3s;}
+    .view-btn{background:#00ffae;color:#000;}
+    .start-btn{background:#1e90ff;color:#fff;}
+    .stop-btn{background:#ff9800;color:#fff;}
+    .delete-btn{background:#e53935;color:#fff;}
+    .poll-actions button:hover{opacity:0.85; transform:translateY(-2px);}
+    footer{text-align:center;background:rgba(0,0,0,0.3);padding:1rem;}
+  </style>
+</head>
+<body>
+<header>
+  <h1>🗳️ Supervised Polls</h1>
+  <nav>
+    <a href="../index.html">🏠 Home</a>
+    <a href="supervisor.html">Supervisor Dashboard</a>
+    <a href="registervoters.html">Registered Voters</a>
+    <button onclick="logout()">Logout</button>
+  </nav>
+</header>
+
+<main>
+  <h2>Manage and Monitor Polls</h2>
+  <div class="polls-container" id="pollContainer">
+    <!-- Polls will be loaded here -->
+  </div>
+</main>
+
+<footer>
+  <p>© 2025 <strong>CampusCast</strong> | Supervised Poll Management by 𝙁𝙤𝙪𝙧𝘼</p>
+</footer>
+
+<!-- Supabase -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL = "https://yhhypbrmwlkelikrxbvs.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InloaHlwYnJtd2xrZWxpa3J4YnZzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM5MDY1MDMsImV4cCI6MjA3OTQ4MjUwM30.PMNqc_nqU2D5MJDSGrxwgITAmqEg7X3OozshJq5hnkA";
+
+const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+async function loadPolls() {
+  const { data, error } = await supabase.from('polls').select('*');
+  const container = document.getElementById("pollContainer");
+  container.innerHTML = "";
+  if (error) {
+    container.innerHTML = "<p>Error loading polls</p>";
+    console.error(error);
+    return;
+  }
+
+  data.forEach(poll => {
+    const card = document.createElement("div");
+    card.className = "poll-card";
+    card.innerHTML = `
+      <div class="poll-header">
+        <h3>${poll.title}</h3>
+        <span class="status ${poll.status.toLowerCase()}">${poll.status}</span>
+      </div>
+      <div class="poll-details">
+        <p><strong>Total Candidates:</strong> ${poll.total_candidates}</p>
+        <p><strong>Total Voters:</strong> ${poll.total_voters}</p>
+        <p><strong>Start Date:</strong> ${poll.start_date}</p>
+        <p><strong>End Date:</strong> ${poll.end_date}</p>
+      </div>
+      <div class="poll-actions">
+        <button class="view-btn">View Details</button>
+        ${poll.status === "Ongoing" ? '<button class="stop-btn">Stop Poll</button>' : ''}
+        ${poll.status === "Upcoming" ? '<button class="start-btn">Start Poll</button><button class="delete-btn">Delete</button>' : ''}
+        ${poll.status === "Completed" ? '<button class="delete-btn">Remove</button>' : ''}
+      </div>
+    `;
+    container.appendChild(card);
+  });
+}
+
+function logout() {
+  alert("Logging out Supervisor...");
+  window.location.href = "../index.html";
+}
+
+loadPolls();
+</script>
+</body>
+</html>

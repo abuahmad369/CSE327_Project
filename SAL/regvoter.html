@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Registered Voters | CampusCast</title>
+  <link rel="stylesheet" href="../assets/style.css">
+  <style>
+    body { font-family: 'Poppins', sans-serif; background: linear-gradient(135deg,#0f2027,#2c5364,#00c97f); color: #fff; margin:0; min-height:100vh; display:flex; flex-direction:column;}
+    header{background: rgba(0,0,0,0.35); display:flex; justify-content:space-between; align-items:center; padding:1rem 2rem; backdrop-filter: blur(8px);}
+    header h1{color:#00ffae; font-size:1.6rem;}
+    nav a, nav button{color:#fff; margin-left:1rem; background:none; border:none; cursor:pointer; transition:0.3s;}
+    nav a:hover, nav button:hover{color:#00ffae;}
+    main{flex:1; padding:2rem;}
+    table{width:100%; border-collapse:collapse; color:#fff;}
+    th, td{padding:0.7rem; border-bottom:1px solid rgba(255,255,255,0.2); text-align:left;}
+    th{color:#00ffae;}
+    footer{text-align:center; background:rgba(0,0,0,0.35); padding:1rem;}
+  </style>
+</head>
+<body>
+<header>
+  <h1>📝 Registered Voters</h1>
+  <nav>
+    <a href="../index.html">🏠 Home</a>
+    <a href="supervisor.html">Dashboard</a>
+    <button onclick="logout()">Logout</button>
+  </nav>
+</header>
+
+<main>
+  <h2>All Voters</h2>
+  <table id="votersTable">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Department</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Voters will be populated here -->
+    </tbody>
+  </table>
+</main>
+
+<footer>
+  <p>© 2025 <strong>CampusCast</strong> | Registered Voters Panel by 𝙁𝙤𝙪𝙧𝘼</p>
+</footer>
+
+<!-- Supabase -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL = "https://yhhypbrmwlkelikrxbvs.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InloaHlwYnJtd2xrZWxpa3J4YnZzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM5MDY1MDMsImV4cCI6MjA3OTQ4MjUwM30.PMNqc_nqU2D5MJDSGrxwgITAmqEg7X3OozshJq5hnkA";
+
+const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+async function loadVoters() {
+  const { data, error } = await supabase.from('voters').select('*');
+  const tbody = document.querySelector("#votersTable tbody");
+  tbody.innerHTML = "";
+  if (error) {
+    tbody.innerHTML = `<tr><td colspan="4">Error fetching voters</td></tr>`;
+    console.error(error);
+    return;
+  }
+  data.forEach(voter => {
+    const row = `<tr>
+      <td>${voter.id}</td>
+      <td>${voter.name}</td>
+      <td>${voter.email}</td>
+      <td>${voter.department}</td>
+    </tr>`;
+    tbody.innerHTML += row;
+  });
+}
+
+function logout() {
+  alert("Logging out Supervisor...");
+  window.location.href = "../index.html";
+}
+
+loadVoters();
+</script>
+</body>
+</html>

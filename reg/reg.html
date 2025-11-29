@@ -7,11 +7,9 @@
   <link rel="stylesheet" href="/assets/style.css" />
 </head>
 <body>
-  <!-- Same background as index -->
   <div class="hands-bg"></div>
 
   <div class="container">
-    <!-- Site Header (same as index) -->
     <header class="site-header">
       <a href="/index.html" class="logo" aria-label="CampusCast হোমপেজে যান">
         <div class="logo-text">
@@ -31,14 +29,12 @@
         <a href="/candidate.html" class="nav-link">প্রার্থী</a>
         <a href="/login/login.html" class="nav-link">ভোটার</a>
         <a href="/public.html" class="nav-link">পাবলিক</a>
-         <a href="/dashboard-test.html" class="nav-link">ড্যাশবোর্ড</a>
+        <a href="/SAL/supervisor.html" class="nav-link">ড্যাশবোর্ড</a>
         <a class="login-btn" href="/login/login.html" role="button">লগইন</a>
       </nav>
     </header>
 
-    <!-- Main Content -->
     <main class="main-content" style="gap:40px; align-items:flex-start;">
-      <!-- Left: Registration form card -->
       <section aria-label="নিবন্ধন ফর্ম" style="flex:1; max-width:520px;">
         <div style="
           background:#fff;
@@ -50,7 +46,6 @@
           <h2 style="margin-bottom:14px; font-size:22px; font-weight:800; color:var(--ink);">নিবন্ধন</h2>
 
           <form id="registrationForm" autocomplete="off" novalidate>
-            <!-- Name -->
             <div class="form-group" style="margin-bottom:12px;">
               <label for="name" style="display:block; font-weight:700; margin-bottom:6px;">নাম</label>
               <input
@@ -61,7 +56,6 @@
               />
             </div>
 
-            <!-- DOB -->
             <div class="form-group" style="margin-bottom:12px;">
               <label for="dob" style="display:block; font-weight:700; margin-bottom:6px;">জন্মতারিখ</label>
               <input
@@ -70,7 +64,6 @@
               />
             </div>
 
-            <!-- Email -->
             <div class="form-group" style="margin-bottom:12px;">
               <label for="email" style="display:block; font-weight:700; margin-bottom:6px;">ইমেইল</label>
               <input
@@ -81,7 +74,6 @@
               />
             </div>
 
-            <!-- Password -->
             <div class="form-group" style="margin-bottom:12px;">
               <label for="password" style="display:block; font-weight:700; margin-bottom:6px;">পাসওয়ার্ড</label>
               <input
@@ -92,7 +84,7 @@
               />
             </div>
 
-            <!-- Role Selection -->
+            <!-- Roles except supervisor -->
             <div class="form-group" style="margin-bottom:6px;">
               <label for="role" style="display:block; font-weight:700; margin-bottom:6px;">রোল নির্বাচন করুন</label>
               <select id="role" name="role" required
@@ -104,13 +96,10 @@
               </select>
             </div>
 
-            <!-- Status -->
             <p id="regStatus" role="status" aria-live="polite" class="status" style="margin:.5rem 0 .25rem;"></p>
 
-            <!-- Submit -->
             <button type="submit" class="btn btn-primary" style="width:100%;">নিবন্ধন সম্পন্ন করুন</button>
 
-            <!-- Footer links -->
             <div class="login-footer" style="margin-top:12px; display:flex; justify-content:space-between; font-size:14px;">
               <a href="/login/login.html" class="nav-link" style="text-decoration:none; color:var(--brand); font-weight:600;">
                 ইতিমধ্যে অ্যাকাউন্ট আছে? লগইন
@@ -123,7 +112,6 @@
         </div>
       </section>
 
-      <!-- Right: Info block (matches index tone) -->
       <section class="content" style="max-width:520px;">
         <span class="badge">দ্রুত নিবন্ধন</span>
         <h1>CampusCast এ নতুন অ্যাকাউন্ট তৈরি করুন</h1>
@@ -143,7 +131,6 @@
       </section>
     </main>
 
-    <!-- Footer (same style as index) -->
     <footer class="features">
       <div class="feature">
         <div class="feature-icon">🧾</div>
@@ -187,15 +174,14 @@
   <!-- Supabase client -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script>
-    const SUPABASE_URL = "https://dfniyjbsmznnzklfprsx.supabase.co";
-    const SUPABASE_ANON_KEY = "sb_publishable_XNUFe9_ygaeMfYHd6Z97XQ_UE1-VhGn";
+    const SUPABASE_URL = "https://hgxjuxgxgbjjqxxvafhx.supabase.co";
+    const SUPABASE_ANON_KEY = "sb_publishable_RqoNSHsQQOhs8dfL0OXsdA_TfeVyZcn";
 
     const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
     const CC_CURRENT_USER_KEY = "cc_currentUser";
 
     const ROLE_ROUTES = {
-      supervisor: "/done.html",
       candidate: "/done.html",
       voter: "/done.html",
       public: "/done.html"
@@ -231,7 +217,6 @@
         .single();
 
       if (error) {
-        // 23505 = unique_violation in Postgres
         if (error.code === "23505") {
           throw new Error("এই ইমেইল দিয়ে আগে থেকেই অ্যাকাউন্ট আছে।");
         }
@@ -264,7 +249,7 @@
 
         const name = document.getElementById("name").value.trim();
         const dob  = document.getElementById("dob").value;
-        const email = document.getElementById("email").value.trim();
+        const email = document.getElementById("email").value.trim().toLowerCase();
         const password = document.getElementById("password").value.trim();
         const role = document.getElementById("role").value;
 
@@ -276,7 +261,8 @@
         try {
           const user = await registerUser({ email, password, name, dob, role });
 
-          // session set
+          // SQL trigger will now also create row in:
+          // candidates / voters / public_users depending on role
           setCurrentUserSession(user);
 
           statusEl.style.color = "green";

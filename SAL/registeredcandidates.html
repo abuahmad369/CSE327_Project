@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>নিবন্ধিত প্রার্থী - Supervisor | CampusCast</title>
+  <link rel="stylesheet" href="../assets/style.css" />
+</head>
+<body>
+  <div class="hands-bg"></div>
+
+  <div class="container">
+    <!-- Header -->
+    <header class="site-header">
+      <a href="../index.html" class="logo" aria-label="CampusCast হোমপেজে যান">
+        <div class="logo-text">
+          <span>CampusCast</span>
+          <div class="logo-bars">
+            <div class="bar"></div>
+            <div class="bar alt"></div>
+            <div class="bar"></div>
+            <div class="bar alt"></div>
+          </div>
+        </div>
+        <div class="logo-subtitle">বিশ্ববিদ্যালয় ই ভোটিং সিস্টেম</div>
+      </a>
+
+   <nav class="site-nav">
+  <a href="supervisor.html" class="nav-link">ড্যাশবোর্ড</a>
+  <a href="totalelection.html" class="nav-link">মোট নির্বাচন</a>
+  <a href="supervisedpoll.html" class="nav-link">তত্ত্বাবধায়ক পোল</a>
+  <a href="registervoters.html" class="nav-link">নিবন্ধিত ভোটার</a>
+  <a href="registeredcandidates.html" class="nav-link">নিবন্ধিত প্রার্থী</a>
+  <button class="login-btn" type="button" onclick="logout()">লগআউট</button>
+</nav>
+
+    </header>
+
+    <main class="main-content supervisor-main" style="flex-direction:column; gap:24px;">
+      <section class="content" style="max-width:900px;">
+        <span class="badge">সুপারভাইজার প্যানেল</span>
+        <h1>নিবন্ধিত প্রার্থীর তালিকা</h1>
+        <p class="description">
+          এখানে সকল নিবন্ধিত প্রার্থী দেখা যাবে। এখান থেকে আপনি তাদের অনুমোদন করতে পারবেন এবং কোন
+          নির্বাচনে অংশ নেবে তা নির্বাচন করতে পারবেন।
+        </p>
+        <p id="candStatus" style="font-size:14px; margin-top:6px;"></p>
+      </section>
+
+      <section style="width:100%; max-width:900px;">
+        <div style="
+          background:#fff;
+          border:1px solid var(--border);
+          border-radius:14px;
+          box-shadow:0 6px 18px rgba(0,0,0,.08);
+          padding:16px;
+          overflow-x:auto;
+        ">
+          <table style="width:100%; border-collapse:collapse; font-size:14px;">
+            <thead>
+              <tr style="text-align:left; border-bottom:1px solid var(--border);">
+                <th style="padding:8px;">নাম</th>
+                <th style="padding:8px;">ইমেইল</th>
+                <th style="padding:8px;">নির্বাচন</th>
+                <th style="padding:8px; text-align:center;">অনুমোদিত?</th>
+                <th style="padding:8px; text-align:center;">একশন</th>
+              </tr>
+            </thead>
+            <tbody id="candidatesBody">
+              <!-- rows will be injected here -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer same as other pages -->
+    <footer class="features">
+      <div class="feature">
+        <div class="feature-icon">🧾</div>
+        <div class="feature-text">
+          <h3>স্বচ্ছ প্রক্রিয়া</h3>
+          <p>সমস্ত রেকর্ড যাচাইযোগ্য ও নিরীক্ষাযোগ্য।</p>
+        </div>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">🔒</div>
+        <div class="feature-text">
+          <h3>এন্ড টু এন্ড এনক্রিপশন</h3>
+          <p>প্রতিটি ধাপে আপনার তথ্য সুরক্ষিত থাকে।</p>
+        </div>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">⚡</div>
+        <div class="feature-text">
+          <h3>দ্রুত ও কার্যকর</h3>
+          <p>রিয়েল টাইমে ফলাফল দেখতে পারবেন।</p>
+        </div>
+      </div>
+
+      <div class="nav-arrows">
+        <button class="arrow-btn" aria-label="পূর্বের স্লাইড">‹</button>
+        <button class="arrow-btn" aria-label="পরবর্তী স্লাইড">›</button>
+      </div>
+
+      <div class="dots" aria-hidden="true">
+        <span class="dot active"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+      </div>
+
+      <div class="footer-credit">
+        <p>© ২০২৫ <strong>FourA</strong> – CampusCast</p>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Supabase client -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script>
+    const SUPABASE_URL = "https://hgxjuxgxgbjjqxxvafhx.supabase.co";
+    const SUPABASE_ANON_KEY = "sb_publishable_RqoNSHsQQOhs8dfL0OXsdA_TfeVyZcn";
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    const CC_CURRENT_USER_KEY = "cc_currentUser";
+    let ELECTIONS_CACHE = [];
+
+    function getCurrentUser() {
+      try {
+        const raw = localStorage.getItem(CC_CURRENT_USER_KEY);
+        if (!raw) return null;
+        return JSON.parse(raw);
+      } catch (e) {
+        console.error("Failed to parse current user", e);
+        return null;
+      }
+    }
+
+    function ensureSupervisor() {
+      const user = getCurrentUser();
+      if (!user || user.role !== "supervisor") {
+        alert("শুধুমাত্র সুপারভাইজার এই পেজে প্রবেশ করতে পারবেন।");
+        window.location.href = "../login/login.html";
+        return null;
+      }
+      return user;
+    }
+
+    function logout() {
+      localStorage.removeItem(CC_CURRENT_USER_KEY);
+      window.location.href = "../index.html";
+    }
+
+    function setStatus(message, isError = false) {
+      const el = document.getElementById("candStatus");
+      el.style.color = isError ? "crimson" : "green";
+      el.textContent = message;
+    }
+
+    function renderCandidates(candidates) {
+      const tbody = document.getElementById("candidatesBody");
+      if (!tbody) return;
+
+      if (!candidates || candidates.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="5" style="padding:10px; text-align:center; color:#6b7280;">
+              এখনো কোনো প্রার্থী নিবন্ধিত নেই।
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      const rowsHtml = candidates.map(c => {
+        const name = c.user?.name || "নাম নেই";
+        const email = c.user?.email || "";
+        const approvedChecked = c.is_approved ? "checked" : "";
+        const electionId = c.election_id || "";
+
+        const optionsHtml = [
+          '<option value="">নির্বাচন নির্বাচন করুন</option>',
+          ...ELECTIONS_CACHE.map(e => {
+            const title = e.title || "(শিরোনাম নেই)";
+            const selected = e.id === electionId ? "selected" : "";
+            return `<option value="${e.id}" ${selected}>${title}</option>`;
+          })
+        ].join("");
+
+        return `
+          <tr data-id="${c.id}">
+            <td style="padding:8px;">${name}</td>
+            <td style="padding:8px;">${email}</td>
+            <td style="padding:8px; min-width:180px;">
+              <select class="election-select" style="width:100%; padding:6px; border-radius:6px; border:1px solid var(--border);">
+                ${optionsHtml}
+              </select>
+            </td>
+            <td style="padding:8px; text-align:center;">
+              <input type="checkbox" class="approved-checkbox" ${approvedChecked} />
+            </td>
+            <td style="padding:8px; text-align:center;">
+              <button type="button"
+                      onclick="saveCandidate('${c.id}')"
+                      style="padding:6px 12px; border-radius:6px; border:none; background:var(--brand); color:#fff; font-size:13px; cursor:pointer;">
+                সংরক্ষণ
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join("");
+
+      tbody.innerHTML = rowsHtml;
+    }
+
+    async function loadCandidatesPage() {
+      const user = ensureSupervisor();
+      if (!user) return;
+
+      setStatus("প্রার্থীদের তথ্য লোড হচ্ছে...");
+
+      // 1) load elections for dropdown
+      const { data: elections, error: electionsError } = await supabase
+        .from("elections")
+        .select("id, title, status")
+        .order("created_at", { ascending: false });
+
+      if (electionsError) {
+        console.error("Elections error:", electionsError);
+        setStatus("elections টেবিল থেকে ডাটা আনতে সমস্যা হচ্ছে।", true);
+        ELECTIONS_CACHE = [];
+      } else {
+        ELECTIONS_CACHE = elections || [];
+      }
+
+      // 2) load candidates joined with users
+      const { data: candidates, error: candidatesError } = await supabase
+        .from("candidates")
+        .select(`
+          id,
+          is_approved,
+          election_id,
+          user:users (
+            name,
+            email
+          )
+        `)
+        .order("created_at", { ascending: false });
+
+      if (candidatesError) {
+        console.error("Candidates error:", candidatesError);
+        setStatus("candidates টেবিল থেকে ডাটা আনতে সমস্যা হচ্ছে।", true);
+        return;
+      }
+
+      renderCandidates(candidates);
+      setStatus("প্রার্থীদের তথ্য লোড সম্পন্ন হয়েছে।", false);
+    }
+
+    async function saveCandidate(id) {
+      const row = document.querySelector(`tr[data-id="${id}"]`);
+      if (!row) return;
+
+      const select = row.querySelector(".election-select");
+      const checkbox = row.querySelector(".approved-checkbox");
+
+      const electionId = select.value || null;
+      const approved = checkbox.checked;
+
+      setStatus("প্রার্থীর তথ্য সংরক্ষণ হচ্ছে...");
+
+      const { error } = await supabase
+        .from("candidates")
+        .update({
+          election_id: electionId,
+          is_approved: approved
+        })
+        .eq("id", id);
+
+      if (error) {
+        console.error("Update candidate error:", error);
+        setStatus("সংরক্ষণ ব্যর্থ হয়েছে। আবার চেষ্টা করুন।", true);
+        return;
+      }
+
+      setStatus("прার্থীর তথ্য সফলভাবে সংরক্ষিত হয়েছে।", false);
+      // Reload to reflect any changes
+      loadCandidatesPage();
+    }
+
+    window.saveCandidate = saveCandidate;
+
+    loadCandidatesPage();
+  </script>
+</body>
+</html>

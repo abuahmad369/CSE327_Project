@@ -1,0 +1,46 @@
+<!-- Example snippet for public.html or voter dashboard -->
+<section id="approvedCandidatesSection">
+  <h2>অনুমোদিত প্রার্থী</h2>
+  <ul id="approvedCandidatesList" style="list-style:none; padding:0; margin:0;"></ul>
+</section>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script>
+  const SUPABASE_URL = "https://hgxjuxgxgbjjqxxvafhx.supabase.co";
+  const SUPABASE_ANON_KEY = "sb_publishable_RqoNSHsQQOhs8dfL0OXsdA_TfeVyZcn";
+  const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+  async function loadApprovedCandidates() {
+    const listEl = document.getElementById("approvedCandidatesList");
+
+    const { data, error } = await supabase
+      .from("candidates")
+      .select(`
+        id,
+        is_approved,
+        election_id,
+        user:users ( name ),
+        election:elections ( title )
+      `)
+      .eq("is_approved", true);
+
+    if (error) {
+      console.error("Approved candidates error:", error);
+      listEl.innerHTML = "<li>প্রার্থী তালিকা লোড করা যাচ্ছে না।</li>";
+      return;
+    }
+
+    if (!data || data.length === 0) {
+      listEl.innerHTML = "<li>এখনো কোনো প্রার্থী অনুমোদিত হয়নি।</li>";
+      return;
+    }
+
+    listEl.innerHTML = data.map(c => {
+      const name = c.user?.name || "নাম নেই";
+      const electionTitle = c.election?.title || "নির্বাচন নির্ধারিত নয়";
+      return `<li style="margin-bottom:6px;">${name} - <small>${electionTitle}</small></li>`;
+    }).join("");
+  }
+
+  loadApprovedCandidates();
+</script>

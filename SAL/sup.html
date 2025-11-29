@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Supervisor Dashboard | CampusCast</title>
+  <link rel="stylesheet" href="../assets/style.css" />
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #0f2027, #2c5364, #00c97f);
+      color: #fff;
+      min-height: 100vh;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      background: rgba(0, 0, 0, 0.35);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      backdrop-filter: blur(8px);
+    }
+
+    header h1 {
+      font-size: 1.6rem;
+      letter-spacing: 0.5px;
+      font-weight: 600;
+      color: #00ffae;
+    }
+
+    nav a, nav button {
+      color: white;
+      text-decoration: none;
+      margin-left: 1rem;
+      font-weight: 500;
+      transition: color 0.3s;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+
+    nav a:hover, nav button:hover {
+      color: #00ffae;
+    }
+
+    main {
+      flex: 1;
+      padding: 2rem;
+    }
+
+    /* Dashboard Cards */
+    .dashboard {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      text-align: center;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+      transition: transform 0.3s;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+    }
+
+    .card h3 {
+      font-weight: 500;
+      color: #fff;
+      margin-bottom: 0.5rem;
+    }
+
+    .card h2 {
+      font-size: 2.2rem;
+      color: #00ffae;
+      margin: 0;
+    }
+
+    footer {
+      text-align: center;
+      padding: 1rem;
+      background: rgba(0, 0, 0, 0.35);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>👁 Supervisor Dashboard</h1>
+    <nav>
+      <a href="../index.html">🏠 Home</a>
+      <a href="totalelection.html">Total Elections</a>
+      <a href="supervisedpoll.html">Supervised Polls</a>
+      <a href="registervoters.html">Registered Voters</a>
+      <button onclick="logout()">Logout</button>
+    </nav>
+  </header>
+
+  <main>
+    <section class="dashboard">
+      <div class="card">
+        <h3>Total Elections</h3>
+        <h2 id="totalElections">0</h2>
+      </div>
+      <div class="card">
+        <h3>Active Election</h3>
+        <h2 id="activeElections">0</h2>
+      </div>
+      <div class="card">
+        <h3>Registered Voters</h3>
+        <h2 id="registeredVoters">0</h2>
+      </div>
+      <div class="card">
+        <h3>Supervised Polls</h3>
+        <h2 id="supervisedPolls">0</h2>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>© 2025 <strong>CampusCast</strong> | Supervisor Panel by 𝙁𝙤𝙪𝙧𝘼</p>
+  </footer>
+
+  <!-- Supabase -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const SUPABASE_URL = "https://yhhypbrmwlkelikrxbvs.supabase.co";
+    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InloaHlwYnJtd2xrZWxpa3J4YnZzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM5MDY1MDMsImV4cCI6MjA3OTQ4MjUwM30.PMNqc_nqU2D5MJDSGrxwgITAmqEg7X3OozshJq5hnkA";
+
+    const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    async function loadDashboard() {
+      // Total Elections
+      const { data: elections, error: electionsError } = await supabase.from('elections').select('*');
+      if(electionsError){ console.error(electionsError); }
+      document.getElementById('totalElections').innerText = elections ? elections.length : 0;
+
+      // Active Elections
+      const active = elections ? elections.filter(e => e.status.toLowerCase() === 'active') : [];
+      document.getElementById('activeElections').innerText = active.length;
+
+      // Registered Voters
+      const { data: voters, error: votersError } = await supabase.from('voters').select('*');
+      if(votersError){ console.error(votersError); }
+      document.getElementById('registeredVoters').innerText = voters ? voters.length : 0;
+
+      // Supervised Polls
+      const { data: polls, error: pollsError } = await supabase.from('polls').select('*');
+      if(pollsError){ console.error(pollsError); }
+      document.getElementById('supervisedPolls').innerText = polls ? polls.length : 0;
+    }
+
+    function logout() {
+      alert("Logging out Supervisor...");
+      window.location.href = "../index.html";
+    }
+
+    loadDashboard();
+  </script>
+</body>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  // Your Supabase credentials
+  const SUPABASE_URL = "https://yhhypbrmwlkelikrxbvs.supabase.co";
+  const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InloaHlwYnJtd2xrZWxpa3J4YnZzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM5MDY1MDMsImV4cCI6MjA3OTQ4MjUwM30.PMNqc_nqU2D5MJDSGrxwgITAmqEg7X3OozshJq5hnkA";
+
+  const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+  async function testSupabase() {
+    console.log("Testing Supabase connection...");
+
+    // Fetch elections
+    const { data: elections, error: electionsError } = await supabase
+      .from('elections')
+      .select('*');
+    if (electionsError) console.error("Elections Error:", electionsError);
+    else console.log("Elections table:", elections);
+
+    // Fetch voters
+    const { data: voters, error: votersError } = await supabase
+      .from('voters')
+      .select('*');
+    if (votersError) console.error("Voters Error:", votersError);
+    else console.log("Voters table:", voters);
+
+    // Fetch polls
+    const { data: polls, error: pollsError } = await supabase
+      .from('polls')
+      .select('*');
+    if (pollsError) console.error("Polls Error:", pollsError);
+    else console.log("Polls table:", polls);
+
+    alert("Check the console for Supabase data output!");
+  }
+
+  // Run the test
+  testSupabase();
+</script>
+
+</html>
