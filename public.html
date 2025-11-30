@@ -2,18 +2,17 @@
 <html lang="bn">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>CampusCast: Public Profiles</title>
-  <link rel="stylesheet" href="assets/style.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CampusCast - পাবলিক ফলাফল</title>
+  <link rel="stylesheet" href="./assets/style.css" />
 </head>
 <body>
-  <!-- Same animated background to match your style -->
   <div class="hands-bg"></div>
 
   <div class="container">
-    <!-- Site Header -->
+    <!-- Header same style as login/reg -->
     <header class="site-header">
-      <a href="index.html" class="logo" aria-label="Go to CampusCast homepage">
+      <a href="./index.html" class="logo" aria-label="CampusCast হোমপেজে যান">
         <div class="logo-text">
           <span>CampusCast</span>
           <div class="logo-bars">
@@ -23,158 +22,523 @@
             <div class="bar alt"></div>
           </div>
         </div>
-        <div class="logo-subtitle">বিশ্ববিদ্যালয় ই-ভোটিং সিস্টেম</div>
+        <div class="logo-subtitle">বিশ্ববিদ্যালয় ই ভোটিং সিস্টেম</div>
       </a>
 
-      <nav class="site-nav">
+   <nav class="site-nav">
         <a href="/login/login.html" class="nav-link">প্রশাসক</a>
-        <a href="/candidate.html" class="nav-link">প্রার্থী</a>
+        <a href="/login/login.html" class="nav-link">প্রার্থী</a>
         <a href="/login/login.html" class="nav-link">ভোটার</a>
-        <a href="/public.html" class="nav-link">পাবলিক</a>
-         <a href="/dashboard-test.html" class="nav-link">ড্যাশবোর্ড</a>
+        <a href="public.html" class="nav-link">পাবলিক</a>
+         <!-- <a href="/dashboard-test.html" class="nav-link">ড্যাশবোর্ড</a> -->
         <a class="login-btn" href="/login/login.html" role="button">লগইন</a>
       </nav>
     </header>
 
-    <!-- Main Content -->
-    <main class="main-content" style="align-items:flex-start;">
-      <!-- People grid (reusing your .illustration + .avatar styles) -->
-      <div class="illustration" aria-label="Public profiles">
-        <!-- Person 1 -->
-        <figure class="avatar">
-          <picture>
-            <source srcset="assets/img/avatar_1a.png" type="image/png" />
-            <img src="assets/img/avatar_1a.png" alt="আরিফুল ইসলাম" width="256" height="256" loading="lazy" />
-          </picture>
-          <figcaption class="avatar-label">আরিফুল ইসলাম</figcaption>
-        </figure>
-
-        <!-- Person 2 -->
-        <figure class="avatar">
-          <picture>
-            <source srcset="assets/img/avatar_2a.png" type="image/png" />
-            <img src="assets/img/avatar_2a.png" alt="সাবিনা ইয়াসমিন" width="256" height="256" loading="lazy" />
-          </picture>
-          <figcaption class="avatar-label">সাবিনা ইয়াসমিন</figcaption>
-        </figure>
-
-        <!-- Person 3 -->
-        <figure class="avatar">
-          <picture>
-            <source srcset="assets/img/avatar_3a.png" type="image/png" />
-            <img src="assets/img/avatar_3a.png" alt="মোহাম্মদ কামাল" width="256" height="256" loading="lazy" />
-          </picture>
-          <figcaption class="avatar-label">মোহাম্মদ কামাল</figcaption>
-        </figure>
-
-        <!-- Person 4 -->
-        <figure class="avatar">
-          <picture>
-            <source srcset="assets/img/avatar_4a.png" type="image/png" />
-            <img src="assets/img/avatar_4a.png" alt="তানজিনা আক্তার" width="256" height="256" loading="lazy" />
-          </picture>
-          <figcaption class="avatar-label">তানজিনা আক্তার</figcaption>
-        </figure>
-
-        <!-- Person 5 -->
-        <figure class="avatar">
-          <picture>
-            <source srcset="assets/img/avatar_1a.png" type="image/png" />
-            <img src="assets/img/avatar_1a.png" alt="নাসিম আহমেদ" width="256" height="256" loading="lazy" />
-          </picture>
-          <figcaption class="avatar-label">নাসিম আহমেদ</figcaption>
-        </figure>
-
-        <!-- Person 6 -->
-        <figure class="avatar">
-          <picture>
-            <source srcset="assets/img/avatar_2a.png" type="image/png" />
-            <img src="assets/img/avatar_2a.png" alt="রিমা খাতুন" width="256" height="256" loading="lazy" />
-          </picture>
-          <figcaption class="avatar-label">রিমা খাতুন</figcaption>
-        </figure>
-
-        <!-- Person 7 -->
-        <figure class="avatar">
-          <picture>
-            <source srcset="assets/img/avatar_3a.png" type="image/png" />
-            <img src="assets/img/avatar_3a.png" alt="সাকিবুল হাসান" width="256" height="256" loading="lazy" />
-          </picture>
-          <figcaption class="avatar-label">সাকিবুল হাসান</figcaption>
-        </figure>
-
-        <!-- Person 8 -->
-        <figure class="avatar">
-          <picture>
-            <source srcset="assets/img/avatar_4a.png" type="image/png" />
-            <img src="assets/img/avatar_4a.png" alt="মেহজাবিন চৌধুরী" width="256" height="256" loading="lazy" />
-          </picture>
-          <figcaption class="avatar-label">মেহজাবিন চৌধুরী</figcaption>
-        </figure>
-      </div>
-
-      <!-- Right-side text -->
-      <section class="content" style="max-width:480px;">
-        <span class="badge">জনপ্রিয় প্রোফাইল</span>
-        <h1>পাবলিক প্রোফাইল তালিকা</h1>
+    <main class="main-content" style="gap:40px; align-items:flex-start;">
+      <!-- Left info column -->
+      <section class="content" style="max-width:460px;">
+        <span class="badge">পাবলিক ভিউ</span>
+        <h1>নির্বাচনের ফলাফল ও প্রার্থীর তথ্য</h1>
         <p class="description">
-          এখানে ক্যাম্পাসের বিভিন্ন সদস্যদের প্রোফাইল দেখা যাবে। প্রার্থীদের সম্পর্কে জানুন
-          এবং ভোট দেওয়ার আগে তথ্য যাচাই করুন।
+          এখানে আপনি কোন নির্বাচনে কোন প্রার্থী কোন প্রতীক/চিহ্ন নিয়ে অংশ নিয়েছেন
+          এবং কতটুকু ভোট পেয়েছেন তা দেখতে পারবেন।
         </p>
 
-        <div class="button-group">
-          <a class="btn btn-primary" href="/reg/reg.html" role="button">রেজিস্টার করুন</a>
-          <a class="btn btn-secondary" href="/login/login.html" role="button">লগইন</a>
+        <div class="ethereum-note" style="margin-top:12px;">
+          <span class="ethereum-icon">📊</span>
+          তথ্যগুলি Supabase ডাটাবেস থেকে রিয়েল টাইমে লোড হয়।
         </div>
+      </section>
 
-        <div class="ethereum-note">
-          <span class="ethereum-icon">🔐</span>
-          প্রোফাইল তথ্য সুরক্ষিতভাবে সংরক্ষিত।
+      <!-- Right results column -->
+      <section aria-label="পাবলিক ফলাফল" style="flex:1; max-width:540px;">
+        <div style="
+          background:#fff;
+          border:1px solid var(--border);
+          border-radius:14px;
+          box-shadow:0 6px 18px rgba(0,0,0,.08);
+          padding:22px;
+        ">
+          <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:16px;">
+            <div>
+              <h2 style="margin:0 0 6px; font-size:20px; font-weight:800; color:var(--ink);">
+                প্রার্থী ও ভোটের সারাংশ
+              </h2>
+              <p style="margin:0; font-size:14px; color:#4b5563;">
+                নিচের তালিকায় নির্বাচিত প্রার্থীদের অনুমোদিত প্রতীক, নির্বাচন এবং মোট ভোট দেখানো হয়েছে।
+              </p>
+            </div>
+
+            <!-- Filters -->
+            <div style="display:flex; flex-direction:column; gap:6px; align-items:flex-end;">
+              <select
+                id="electionFilter"
+                style="
+                  padding:6px 10px;
+                  border-radius:999px;
+                  border:1px solid var(--border);
+                  font-size:13px;
+                "
+              >
+                <option value="all">সব নির্বাচন</option>
+              </select>
+
+              <input
+                type="text"
+                id="searchInput"
+                placeholder="নাম বা ইমেইল দিয়ে খুঁজুন"
+                style="
+                  padding:6px 10px;
+                  border-radius:999px;
+                  border:1px solid var(--border);
+                  font-size:13px;
+                "
+              />
+            </div>
+          </div>
+
+          <div id="publicStatus" style="margin-top:10px; font-size:14px; color:#4b5563;">
+            ফলাফল লোড হচ্ছে...
+          </div>
+
+          <div id="resultsContainer" style="margin-top:14px; display:flex; flex-direction:column; gap:10px;">
+            <!-- Cards injected by JS -->
+          </div>
         </div>
       </section>
     </main>
 
-    <!-- Footer -->
     <footer class="features">
       <div class="feature">
         <div class="feature-icon">🧾</div>
         <div class="feature-text">
           <h3>স্বচ্ছ প্রক্রিয়া</h3>
-          <p>সব রেকর্ড যাচাইযোগ্য ও নিরীক্ষাযোগ্য।</p>
+          <p>সমস্ত রেকর্ড যাচাইযোগ্য ও নিরীক্ষাযোগ্য।</p>
         </div>
       </div>
-
       <div class="feature">
         <div class="feature-icon">🔒</div>
         <div class="feature-text">
-          <h3>এন্ড-টু-এন্ড এনক্রিপশন</h3>
+          <h3>এন্ড টু এন্ড এনক্রিপশন</h3>
           <p>প্রতিটি ধাপে আপনার তথ্য সুরক্ষিত থাকে।</p>
         </div>
       </div>
-
       <div class="feature">
         <div class="feature-icon">⚡</div>
         <div class="feature-text">
           <h3>দ্রুত ও কার্যকর</h3>
-          <p>রিয়েল-টাইমে ফলাফল দেখতে পারবেন।</p>
+          <p>রিয়েল টাইমে ফলাফল দেখতে পারবেন।</p>
         </div>
       </div>
 
-      <div class="nav-arrows">
-        <button class="arrow-btn" aria-label="Previous slide">‹</button>
-        <button class="arrow-btn" aria-label="Next slide">›</button>
-      </div>
-
-      <div class="dots" aria-hidden="true">
-        <span class="dot active"></span>
-        <span class="dot"></span>
-        <span class="dot"></span>
-      </div>
-
       <div class="footer-credit">
-        <p>© ২০২৫ <strong>FourA</strong> – CampusCast</p>
+        <p>© ২০২৫ <strong>FourA</strong> - CampusCast</p>
       </div>
     </footer>
   </div>
+
+  <!-- Supabase client -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+
+  <script>
+    /**
+     * Supabase configuration for public read access.
+     * Must match your project settings.
+     * @type {string}
+     */
+    const SUPABASE_URL = "https://hgxjuxgxgbjjqxxvafhx.supabase.co";
+    const SUPABASE_ANON_KEY = "sb_publishable_RqoNSHsQQOhs8dfL0OXsdA_TfeVyZcn";
+
+    /**
+     * Supabase client instance.
+     * @type {import('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js').SupabaseClient}
+     */
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    /**
+     * Raw candidate row with joined election and user.
+     * Matches your candidates schema plus extra columns.
+     *
+     * @typedef {Object} CandidateRow
+     * @property {string} id
+     * @property {string} user_id
+     * @property {string|null} election_id
+     * @property {string|null} manifesto
+     * @property {string|null} symbol
+     * @property {string|null} requested_symbol
+     * @property {string|null} approved_symbol
+     * @property {boolean} is_approved
+     * @property {"draft"|"submitted"|"under_review"|"approved"|"rejected"} status
+     * @property {Object|null} user
+     * @property {string} [user.name]
+     * @property {string} [user.email]
+     * @property {string|null} [user.dept]
+     * @property {Object|null} election
+     * @property {string} [election.id]
+     * @property {string} [election.title]
+     * @property {string|null} [election.status]
+     */
+
+    /**
+     * Vote row subset.
+     *
+     * @typedef {Object} VoteRow
+     * @property {string} candidate_id
+     * @property {string} election_id
+     */
+
+    /**
+     * Aggregated public view for one candidate in one election.
+     *
+     * @typedef {Object} PublicResult
+     * @property {string} candidateId
+     * @property {string} candidateName
+     * @property {string} candidateEmail
+     * @property {string|null} candidateDept
+     * @property {string} electionId
+     * @property {string} electionTitle
+     * @property {string|null} electionStatus
+     * @property {string} symbol
+     * @property {number} votes
+     * @property {number} voteSharePercent
+     */
+
+    /**
+     * Cached list of results.
+     * @type {PublicResult[]}
+     */
+    let publicResults = [];
+
+    /**
+     * Fetch approved candidates with their election and user info.
+     *
+     * @returns {Promise<CandidateRow[]>}
+     */
+    async function fetchApprovedCandidates() {
+      const { data, error } = await supabase
+        .from("candidates")
+        .select(`
+          id,
+          user_id,
+          election_id,
+          manifesto,
+          symbol,
+          requested_symbol,
+          approved_symbol,
+          is_approved,
+          status,
+          user:user_id (
+            name,
+            email,
+            dept
+          ),
+          election:election_id (
+            id,
+            title,
+            status
+          )
+        `)
+        .eq("is_approved", true);
+
+      if (error) {
+        console.error("Error fetching candidates:", error);
+        throw new Error("প্রার্থীর তথ্য লোড করতে সমস্যা হয়েছে।");
+      }
+
+      return data || [];
+    }
+
+    /**
+     * Fetch all votes (candidate and election ids only).
+     *
+     * @returns {Promise<VoteRow[]>}
+     */
+    async function fetchVotes() {
+      const { data, error } = await supabase
+        .from("votes")
+        .select("candidate_id, election_id");
+
+      if (error) {
+        console.error("Error fetching votes:", error);
+        throw new Error("ভোটের তথ্য লোড করতে সমস্যা হয়েছে।");
+      }
+
+      return data || [];
+    }
+
+    /**
+     * Build aggregated public results from candidates and votes.
+     *
+     * @param {CandidateRow[]} candidates
+     * @param {VoteRow[]} votes
+     * @returns {PublicResult[]}
+     */
+    function buildPublicResults(candidates, votes) {
+      /** @type {Record<string, number>} */
+      const candidateVoteCount = {};
+      /** @type {Record<string, number>} */
+      const electionTotals = {};
+
+      // Count votes per candidate and per election
+      votes.forEach((vote) => {
+        const cKey = vote.candidate_id;
+        const eKey = vote.election_id;
+
+        candidateVoteCount[cKey] = (candidateVoteCount[cKey] || 0) + 1;
+        electionTotals[eKey] = (electionTotals[eKey] || 0) + 1;
+      });
+
+      /** @type {PublicResult[]} */
+      const results = [];
+
+      candidates.forEach((c) => {
+        if (!c.election || !c.election.id) {
+          return;
+        }
+
+        const electionId = c.election.id;
+        const totalInElection = electionTotals[electionId] || 0;
+        const votesForCandidate = candidateVoteCount[c.id] || 0;
+        const share =
+          totalInElection > 0 ? (votesForCandidate / totalInElection) * 100 : 0;
+
+        const symbol =
+          c.approved_symbol ||
+          c.requested_symbol ||
+          c.symbol ||
+          "নির্ধারিত নয়";
+
+        results.push({
+          candidateId: c.id,
+          candidateName: c.user?.name || "অজানা প্রার্থী",
+          candidateEmail: c.user?.email || "",
+          candidateDept: c.user?.dept || null,
+          electionId,
+          electionTitle: c.election.title || "নির্বাচনের নাম নেই",
+          electionStatus: c.election.status || null,
+          symbol,
+          votes: votesForCandidate,
+          voteSharePercent: Math.round(share * 10) / 10 // one decimal
+        });
+      });
+
+      // sort by election then votes desc
+      results.sort((a, b) => {
+        if (a.electionTitle < b.electionTitle) return -1;
+        if (a.electionTitle > b.electionTitle) return 1;
+        return b.votes - a.votes;
+      });
+
+      return results;
+    }
+
+    /**
+     * Populate election filter options using current results.
+     *
+     * @returns {void}
+     */
+    function populateElectionFilter() {
+      const select = /** @type {HTMLSelectElement} */ (
+        document.getElementById("electionFilter")
+      );
+      if (!select) return;
+
+      // clear and add "all"
+      select.innerHTML = "";
+      const allOpt = document.createElement("option");
+      allOpt.value = "all";
+      allOpt.textContent = "সব নির্বাচন";
+      select.appendChild(allOpt);
+
+      /** @type {Set<string>} */
+      const seen = new Set();
+
+      publicResults.forEach((r) => {
+        if (seen.has(r.electionId)) return;
+        seen.add(r.electionId);
+
+        const opt = document.createElement("option");
+        opt.value = r.electionId;
+        const statusLabel =
+          r.electionStatus === "active"
+            ? "চলমান"
+            : r.electionStatus === "closed"
+            ? "সমাপ্ত"
+            : r.electionStatus || "";
+        opt.textContent = statusLabel
+          ? `${r.electionTitle} (${statusLabel})`
+          : r.electionTitle;
+        select.appendChild(opt);
+      });
+    }
+
+    /**
+     * Render results based on filters.
+     *
+     * @returns {void}
+     */
+    function renderResults() {
+      const container = document.getElementById("resultsContainer");
+      const status = document.getElementById("publicStatus");
+      const electionFilter = /** @type {HTMLSelectElement} */ (
+        document.getElementById("electionFilter")
+      );
+      const searchInput = /** @type {HTMLInputElement} */ (
+        document.getElementById("searchInput")
+      );
+
+      if (!container || !status || !electionFilter || !searchInput) return;
+
+      container.innerHTML = "";
+
+      if (!publicResults.length) {
+        status.textContent =
+          "এখনো কোনো অনুমোদিত প্রার্থী বা ভোটের তথ্য পাওয়া যায়নি।";
+        return;
+      }
+
+      const selectedElection = electionFilter.value;
+      const search = searchInput.value.trim().toLowerCase();
+
+      const filtered = publicResults.filter((r) => {
+        if (selectedElection !== "all" && r.electionId !== selectedElection) {
+          return false;
+        }
+        if (search) {
+          const name = r.candidateName.toLowerCase();
+          const email = r.candidateEmail.toLowerCase();
+          if (!name.includes(search) && !email.includes(search)) {
+            return false;
+          }
+        }
+        return true;
+      });
+
+      if (!filtered.length) {
+        status.textContent = "এই ফিল্টার অনুযায়ী কোনো ফলাফল পাওয়া যায়নি।";
+        return;
+      }
+
+      status.textContent = `মোট ${filtered.length} টি প্রার্থী রেকর্ড দেখানো হচ্ছে।`;
+
+      filtered.forEach((r) => {
+        const card = document.createElement("div");
+        card.style.border = "1px solid var(--border)";
+        card.style.borderRadius = "12px";
+        card.style.padding = "12px 14px";
+        card.style.backgroundColor = "#f9fafb";
+
+        const header = document.createElement("div");
+        header.style.display = "flex";
+        header.style.justifyContent = "space-between";
+        header.style.alignItems = "flex-start";
+        header.style.marginBottom = "4px";
+
+        const left = document.createElement("div");
+        const nameP = document.createElement("p");
+        nameP.style.margin = "0 0 2px";
+        nameP.style.fontWeight = "700";
+        nameP.textContent = r.candidateName;
+
+        const subP = document.createElement("p");
+        subP.style.margin = "0";
+        subP.style.fontSize = "13px";
+        subP.style.color = "#4b5563";
+        const dept = r.candidateDept ? " · " + r.candidateDept : "";
+        subP.textContent = (r.candidateEmail || "no-email") + dept;
+
+        left.appendChild(nameP);
+        left.appendChild(subP);
+
+        const symbolTag = document.createElement("span");
+        symbolTag.textContent = r.symbol;
+        symbolTag.style.fontSize = "12px";
+        symbolTag.style.fontWeight = "600";
+        symbolTag.style.padding = "4px 10px";
+        symbolTag.style.borderRadius = "999px";
+        symbolTag.style.backgroundColor = "#e0f2fe";
+        symbolTag.style.color = "#0369a1";
+
+        header.appendChild(left);
+        header.appendChild(symbolTag);
+        card.appendChild(header);
+
+        const electionP = document.createElement("p");
+        electionP.style.margin = "2px 0 4px";
+        electionP.style.fontSize = "13px";
+        const statusLabel =
+          r.electionStatus === "active"
+            ? "চলমান"
+            : r.electionStatus === "closed"
+            ? "সমাপ্ত"
+            : r.electionStatus || "";
+        electionP.innerHTML =
+          "<strong>নির্বাচন:</strong> " +
+          (statusLabel ? `${r.electionTitle} (${statusLabel})` : r.electionTitle);
+        card.appendChild(electionP);
+
+        const votesP = document.createElement("p");
+        votesP.style.margin = "0";
+        votesP.style.fontSize = "13px";
+        votesP.innerHTML =
+          "<strong>মোট ভোট:</strong> " +
+          r.votes +
+          ` (${r.voteSharePercent.toFixed(1)}%)`;
+        card.appendChild(votesP);
+
+        container.appendChild(card);
+      });
+    }
+
+    /**
+     * Initialize public results page:
+     *  - fetch candidates and votes
+     *  - build aggregates
+     *  - setup filters
+     *
+     * @returns {Promise<void>}
+     */
+    async function initPublicPage() {
+      const status = document.getElementById("publicStatus");
+      if (status) {
+        status.textContent = "ডাটাবেস থেকে তথ্য লোড করা হচ্ছে...";
+      }
+
+      try {
+        const [candidates, votes] = await Promise.all([
+          fetchApprovedCandidates(),
+          fetchVotes()
+        ]);
+
+        publicResults = buildPublicResults(candidates, votes);
+        populateElectionFilter();
+
+        const electionFilter = document.getElementById("electionFilter");
+        const searchInput = document.getElementById("searchInput");
+
+        if (electionFilter) {
+          electionFilter.addEventListener("change", renderResults);
+        }
+        if (searchInput) {
+          searchInput.addEventListener("input", renderResults);
+        }
+
+        renderResults();
+      } catch (err) {
+        console.error(err);
+        if (status) {
+          status.textContent =
+            err && err.message
+              ? err.message
+              : "তথ্য লোড করতে সমস্যা হয়েছে।";
+          status.style.color = "crimson";
+        }
+      }
+    }
+
+    // Run on load
+    initPublicPage();
+  </script>
 </body>
 </html>

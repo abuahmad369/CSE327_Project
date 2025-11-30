@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Public Dashboard | CampusCast</title>
+  <link rel="stylesheet" href="../assets/style.css" />
+</head>
+<body>
+  <div class="hands-bg"></div>
+
+  <div class="container">
+    <!-- Header same style as others -->
+    <header class="site-header">
+      <a href="../index.html" class="logo" aria-label="CampusCast হোমপেজে যান">
+        <div class="logo-text">
+          <span>CampusCast</span>
+          <div class="logo-bars">
+            <div class="bar"></div>
+            <div class="bar alt"></div>
+            <div class="bar"></div>
+            <div class="bar alt"></div>
+          </div>
+        </div>
+        <div class="logo-subtitle">বিশ্ববিদ্যালয় ই ভোটিং সিস্টেম</div>
+      </a>
+
+      <nav class="site-nav">
+        <a href="../index.html" class="nav-link">হোম</a>
+        <a href="../login/login.html" class="nav-link">লগইন</a>
+        <a href="../reg/reg.html" class="nav-link">নিবন্ধন</a>
+        <button class="login-btn" onclick="logout()">লগআউট</button>
+      </nav>
+    </header>
+
+    <main class="main-content supervisor-main">
+      <!-- Intro block -->
+      <section class="content" style="max-width:720px;">
+        <span class="badge">পাবলিক প্যানেল</span>
+        <h1>পাবলিক ড্যাশবোর্ড</h1>
+        <p class="description" id="welcomeText">
+          শুধুমাত্র public রোল এ লগইন করা ব্যবহারকারীরাই এই প্যানেল দেখতে পারবেন।
+        </p>
+      </section>
+
+      <!-- Metric cards -->
+      <section aria-label="Public overview" style="width:100%; max-width:960px; margin:0 auto;">
+        <div class="supervisor-grid">
+          <article class="super-card">
+            <h3>মোট নির্বাচন</h3>
+            <p id="totalElections">0</p>
+          </article>
+
+          <article class="super-card">
+            <h3>চলমান নির্বাচন</h3>
+            <p id="activeElections">0</p>
+          </article>
+
+          <article class="super-card">
+            <h3>মোট প্রার্থী</h3>
+            <p id="totalCandidates">0</p>
+          </article>
+
+          <article class="super-card">
+            <h3>মোট কাস্ট ভোট</h3>
+            <p id="totalVotes">0</p>
+          </article>
+        </div>
+      </section>
+
+      <!-- Elections summary block -->
+      <section
+        aria-label="Elections summary"
+        style="
+          margin-top:32px;
+          width:100%;
+          max-width:960px;
+          margin-left:auto;
+          margin-right:auto;
+        "
+      >
+        <div style="
+          background:#fff;
+          border:1px solid var(--border);
+          border-radius:14px;
+          box-shadow:0 6px 18px rgba(0,0,0,.08);
+          padding:22px;
+          width:100%;
+        ">
+          <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:16px;">
+            <div>
+              <h2 style="margin:0 0 6px; font-size:20px; font-weight:800; color:var(--ink);">
+                নির্বাচনের সারাংশ
+              </h2>
+              <p style="margin:0; font-size:14px; color:#4b5563;">
+                প্রতিটি নির্বাচনে কতজন প্রার্থী অংশ নিয়েছেন, কত ভোট কাস্ট হয়েছে এবং শীর্ষ প্রার্থীর তথ্য এখানে দেখা যাবে।
+              </p>
+            </div>
+
+            <!-- Filters -->
+            <div style="display:flex; flex-direction:column; gap:6px; align-items:flex-end;">
+              <select
+                id="statusFilter"
+                style="padding:6px 10px; border-radius:999px; border:1px solid var(--border); font-size:13px;"
+              >
+                <option value="all">সব স্ট্যাটাস</option>
+                <option value="active">শুধু চলমান</option>
+                <option value="closed">শুধু সমাপ্ত</option>
+              </select>
+
+              <input
+                type="text"
+                id="searchInput"
+                placeholder="নির্বাচনের নাম দিয়ে খুঁজুন"
+                style="padding:6px 10px; border-radius:999px; border:1px solid var(--border); font-size:13px;"
+              />
+            </div>
+          </div>
+
+          <div id="summaryStatus" style="margin-top:10px; font-size:14px; color:#4b5563;">
+            নির্বাচনগুলোর তথ্য লোড হচ্ছে...
+          </div>
+
+          <div id="electionsContainer" style="margin-top:14px; display:flex; flex-direction:column; gap:10px;">
+            <!-- Cards injected by JS -->
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="features">
+      <div class="feature">
+        <div class="feature-icon">🧾</div>
+        <div class="feature-text">
+          <h3>স্বচ্ছ প্রক্রিয়া</h3>
+          <p>সমস্ত রেকর্ড যাচাইযোগ্য ও নিরীক্ষাযোগ্য।</p>
+        </div>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">🔒</div>
+        <div class="feature-text">
+          <h3>এন্ড টু এন্ড এনক্রিপশন</h3>
+          <p>প্রতিটি ধাপে আপনার তথ্য সুরক্ষিত থাকে।</p>
+        </div>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">⚡</div>
+        <div class="feature-text">
+          <h3>দ্রুত ও কার্যকর</h3>
+          <p>রিয়েল টাইমে ফলাফল দেখতে পারবেন।</p>
+        </div>
+      </div>
+
+      <div class="footer-credit">
+        <p>© ২০২৫ <strong>FourA</strong> - CampusCast</p>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Supabase client -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+
+  <script>
+    /**
+     * Supabase config, same as other pages.
+     * @type {string}
+     */
+    const SUPABASE_URL = "https://hgxjuxgxgbjjqxxvafhx.supabase.co";
+    const SUPABASE_ANON_KEY = "sb_publishable_RqoNSHsQQOhs8dfL0OXsdA_TfeVyZcn";
+
+    /**
+     * LocalStorage key used by login page.
+     * @type {string}
+     */
+    const CC_CURRENT_USER_KEY = "cc_currentUser";
+
+    /**
+     * Supabase client instance.
+     * @type {import('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js').SupabaseClient}
+     */
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    /**
+     * Logged in user object.
+     * @typedef {Object} PublicUser
+     * @property {string} id
+     * @property {string} email
+     * @property {string} name
+     * @property {"public"|"candidate"|"voter"|"supervisor"} role
+     */
+
+    /**
+     * Simple election overview shape.
+     * @typedef {Object} ElectionOverview
+     * @property {string} id
+     * @property {string} title
+     * @property {string|null} status
+     * @property {string|null} start_at
+     * @property {string|null} end_at
+     * @property {number} candidateCount
+     * @property {number} totalVotes
+     * @property {string|null} topCandidateName
+     * @property {string|null} topCandidateSymbol
+     * @property {number} topCandidateVotes
+     * @property {number} topCandidateShare
+     */
+
+    /**
+     * Cached overview list.
+     * @type {ElectionOverview[]}
+     */
+    let electionOverviews = [];
+
+    /**
+     * Read current user from localStorage.
+     * @returns {PublicUser|null}
+     */
+    function getCurrentUser() {
+      try {
+        const raw = localStorage.getItem(CC_CURRENT_USER_KEY);
+        if (!raw) return null;
+        return JSON.parse(raw);
+      } catch (e) {
+        console.error("Failed to parse current user", e);
+        return null;
+      }
+    }
+
+    /**
+     * Ensure role is public, otherwise redirect to login.
+     * Also sets welcome text.
+     * @returns {PublicUser|null}
+     */
+    function ensurePublicUser() {
+      const user = getCurrentUser();
+      if (!user || user.role !== "public") {
+        alert("শুধুমাত্র public রোল এর ব্যবহারকারীরাই এই প্যানেল দেখতে পারবেন।");
+        window.location.href = "../login/login.html";
+        return null;
+      }
+
+      const welcome = document.getElementById("welcomeText");
+      if (welcome) {
+        welcome.textContent = `স্বাগতম, ${user.name} (Public Viewer)।`;
+      }
+      return user;
+    }
+
+    /**
+     * Show a small error text under intro.
+     * @param {string} message
+     * @returns {void}
+     */
+    function showError(message) {
+      let box = document.getElementById("dashboardError");
+      if (!box) {
+        box = document.createElement("p");
+        box.id = "dashboardError";
+        box.style.color = "crimson";
+        box.style.marginTop = "8px";
+        box.style.fontSize = "14px";
+        const content = document.querySelector(".content");
+        if (content) content.appendChild(box);
+      }
+      box.textContent = message;
+    }
+
+    /**
+     * Load top level numbers for the metric cards.
+     * @returns {Promise<void>}
+     */
+    async function loadMetrics() {
+      // Elections
+      const { data: elections, error: electionsError } = await supabase
+        .from("elections")
+        .select("id, status");
+
+      if (electionsError) {
+        console.error("Elections error:", electionsError);
+        showError("elections টেবিল পড়তে সমস্যা হচ্ছে: " + electionsError.message);
+      }
+
+      const totalElections = elections ? elections.length : 0;
+      const activeElections = elections
+        ? elections.filter((e) => (e.status || "").toLowerCase() === "active").length
+        : 0;
+
+      document.getElementById("totalElections").textContent = totalElections;
+      document.getElementById("activeElections").textContent = activeElections;
+
+      // Approved candidates
+      const { data: candidates, error: candidatesError } = await supabase
+        .from("candidates")
+        .select("id")
+        .eq("is_approved", true);
+
+      if (candidatesError) {
+        console.error("Candidates error:", candidatesError);
+        showError("candidates টেবিল পড়তে সমস্যা হচ্ছে: " + candidatesError.message);
+      }
+
+      document.getElementById("totalCandidates").textContent =
+        candidates ? candidates.length : 0;
+
+      // Votes
+      const { data: votes, error: votesError } = await supabase
+        .from("votes")
+        .select("id");
+
+      if (votesError) {
+        console.error("Votes error:", votesError);
+        showError("votes টেবিল পড়তে সমস্যা হচ্ছে: " + votesError.message);
+      }
+
+      document.getElementById("totalVotes").textContent =
+        votes ? votes.length : 0;
+    }
+
+    /**
+     * Fetch all elections, approved candidates with user info, and votes.
+     * Then build overview.
+     * @returns {Promise<void>}
+     */
+    async function loadElectionOverview() {
+      const summaryStatus = document.getElementById("summaryStatus");
+      if (summaryStatus) {
+        summaryStatus.textContent = "নির্বাচনের তথ্য সংগ্রহ করা হচ্ছে...";
+      }
+
+      const [electionsRes, candidatesRes, votesRes] = await Promise.all([
+        supabase.from("elections").select("id, title, status, start_at, end_at"),
+        supabase
+          .from("candidates")
+          .select(`
+            id,
+            election_id,
+            approved_symbol,
+            requested_symbol,
+            symbol,
+            is_approved,
+            user:user_id (name)
+          `)
+          .eq("is_approved", true),
+        supabase.from("votes").select("election_id, candidate_id")
+      ]);
+
+      if (electionsRes.error) {
+        console.error("Elections fetch error:", electionsRes.error);
+        throw new Error("elections টেবিল থেকে তথ্য আনা যায়নি।");
+      }
+      if (candidatesRes.error) {
+        console.error("Candidates fetch error:", candidatesRes.error);
+        throw new Error("candidates টেবিল থেকে তথ্য আনা যায়নি।");
+      }
+      if (votesRes.error) {
+        console.error("Votes fetch error:", votesRes.error);
+        throw new Error("votes টেবিল থেকে তথ্য আনা যায়নি।");
+      }
+
+      const elections = electionsRes.data || [];
+      const candidates = candidatesRes.data || [];
+      const votes = votesRes.data || [];
+
+      /** @type {Record<string, {candidateId:string, votes:number}[]>} */
+      const votesByElection = {};
+      votes.forEach((v) => {
+        const list = votesByElection[v.election_id] || [];
+        list.push({ candidateId: v.candidate_id, votes: 1 });
+        votesByElection[v.election_id] = list;
+      });
+
+      // aggregate per candidate per election
+      Object.keys(votesByElection).forEach((eId) => {
+        /** @type {Record<string, number>} */
+        const agg = {};
+        votesByElection[eId].forEach((entry) => {
+          agg[entry.candidateId] = (agg[entry.candidateId] || 0) + entry.votes;
+        });
+        const outList = [];
+        Object.keys(agg).forEach((cid) => {
+          outList.push({ candidateId: cid, votes: agg[cid] });
+        });
+        votesByElection[eId] = outList;
+      });
+
+      /** @type {ElectionOverview[]} */
+      const overviews = [];
+
+      elections.forEach((election) => {
+        const eId = election.id;
+
+        const electionCandidates = candidates.filter(
+          (c) => c.election_id === eId
+        );
+
+        const voteList = votesByElection[eId] || [];
+        const totalVotes = voteList.reduce((sum, v) => sum + v.votes, 0);
+
+        // find top candidate
+        let topCandidateName = null;
+        let topCandidateSymbol = null;
+        let topCandidateVotes = 0;
+        let topCandidateShare = 0;
+
+        voteList.forEach((v) => {
+          if (v.votes > topCandidateVotes) {
+            const candidate = electionCandidates.find(
+              (c) => c.id === v.candidateId
+            );
+            if (candidate) {
+              topCandidateVotes = v.votes;
+              topCandidateName = candidate.user?.name || "অজানা প্রার্থী";
+              topCandidateSymbol =
+                candidate.approved_symbol ||
+                candidate.requested_symbol ||
+                candidate.symbol ||
+                null;
+              topCandidateShare =
+                totalVotes > 0
+                  ? Math.round((v.votes / totalVotes) * 1000) / 10
+                  : 0;
+            }
+          }
+        });
+
+        overviews.push({
+          id: eId,
+          title: election.title,
+          status: election.status || null,
+          start_at: election.start_at || null,
+          end_at: election.end_at || null,
+          candidateCount: electionCandidates.length,
+          totalVotes,
+          topCandidateName,
+          topCandidateSymbol,
+          topCandidateVotes,
+          topCandidateShare
+        });
+      });
+
+      // sort: active first, then by start date
+      overviews.sort((a, b) => {
+        const aActive = a.status === "active" ? 0 : 1;
+        const bActive = b.status === "active" ? 0 : 1;
+        if (aActive !== bActive) return aActive - bActive;
+        const aTime = a.start_at ? Date.parse(a.start_at) : 0;
+        const bTime = b.start_at ? Date.parse(b.start_at) : 0;
+        return aTime - bTime;
+      });
+
+      electionOverviews = overviews;
+    }
+
+    /**
+     * Render election cards with filters.
+     * @returns {void}
+     */
+    function renderElectionCards() {
+      const container = document.getElementById("electionsContainer");
+      const summaryStatus = document.getElementById("summaryStatus");
+      const statusFilter = /** @type {HTMLSelectElement} */ (
+        document.getElementById("statusFilter")
+      );
+      const searchInput = /** @type {HTMLInputElement} */ (
+        document.getElementById("searchInput")
+      );
+
+      if (!container || !summaryStatus || !statusFilter || !searchInput) return;
+
+      container.innerHTML = "";
+
+      if (!electionOverviews.length) {
+        summaryStatus.textContent = "এখনো কোনো নির্বাচন তৈরি করা হয়নি।";
+        return;
+      }
+
+      const statusValue = statusFilter.value;
+      const search = searchInput.value.trim().toLowerCase();
+
+      const filtered = electionOverviews.filter((e) => {
+        if (statusValue === "active" && e.status !== "active") return false;
+        if (statusValue === "closed" && e.status !== "closed") return false;
+
+        if (search) {
+          if (!e.title.toLowerCase().includes(search)) return false;
+        }
+        return true;
+      });
+
+      if (!filtered.length) {
+        summaryStatus.textContent = "এই ফিল্টার অনুযায়ী কোনো নির্বাচন পাওয়া যায়নি।";
+        return;
+      }
+
+      summaryStatus.textContent = `মোট ${filtered.length} টি নির্বাচন দেখানো হচ্ছে।`;
+
+      filtered.forEach((e) => {
+        const card = document.createElement("div");
+        card.style.border = "1px solid var(--border)";
+        card.style.borderRadius = "12px";
+        card.style.padding = "12px 14px";
+        card.style.backgroundColor = "#f9fafb";
+
+        const header = document.createElement("div");
+        header.style.display = "flex";
+        header.style.justifyContent = "space-between";
+        header.style.alignItems = "flex-start";
+        header.style.marginBottom = "4px";
+
+        const left = document.createElement("div");
+        const titleP = document.createElement("p");
+        titleP.style.margin = "0 0 2px";
+        titleP.style.fontWeight = "700";
+        titleP.textContent = e.title;
+
+        const subP = document.createElement("p");
+        subP.style.margin = "0";
+        subP.style.fontSize = "13px";
+        subP.style.color = "#4b5563";
+        const start = e.start_at
+          ? new Date(e.start_at).toLocaleString()
+          : "শুরু নির্ধারিত নয়";
+        const end = e.end_at
+          ? new Date(e.end_at).toLocaleString()
+          : "শেষ নির্ধারিত নয়";
+        subP.textContent = `${start} থেকে ${end}`;
+
+        left.appendChild(titleP);
+        left.appendChild(subP);
+
+        const pill = document.createElement("span");
+        const statusLabel =
+          e.status === "active"
+            ? "চলমান"
+            : e.status === "closed"
+            ? "সমাপ্ত"
+            : e.status || "অজানা";
+        pill.textContent = statusLabel;
+        pill.style.fontSize = "12px";
+        pill.style.fontWeight = "600";
+        pill.style.padding = "4px 10px";
+        pill.style.borderRadius = "999px";
+        pill.style.backgroundColor =
+          e.status === "active"
+            ? "#dcfce7"
+            : e.status === "closed"
+            ? "#fee2e2"
+            : "#e5e7eb";
+        pill.style.color =
+          e.status === "active"
+            ? "#166534"
+            : e.status === "closed"
+            ? "#b91c1c"
+            : "#4b5563";
+
+        header.appendChild(left);
+        header.appendChild(pill);
+        card.appendChild(header);
+
+        const line1 = document.createElement("p");
+        line1.style.margin = "2px 0 4px";
+        line1.style.fontSize = "13px";
+        line1.innerHTML =
+          "<strong>প্রার্থী সংখ্যা:</strong> " + e.candidateCount;
+        card.appendChild(line1);
+
+        const line2 = document.createElement("p");
+        line2.style.margin = "0 0 4px";
+        line2.style.fontSize = "13px";
+        line2.innerHTML =
+          "<strong>মোট কাস্ট ভোট:</strong> " + e.totalVotes;
+        card.appendChild(line2);
+
+        const line3 = document.createElement("p");
+        line3.style.margin = "0";
+        line3.style.fontSize = "13px";
+        if (e.topCandidateName && e.totalVotes > 0) {
+          const symbolText = e.topCandidateSymbol
+            ? ` (প্রতীক: ${e.topCandidateSymbol})`
+            : "";
+          line3.innerHTML =
+            "<strong>শীর্ষ প্রার্থী:</strong> " +
+            e.topCandidateName +
+            symbolText +
+            ` - ${e.topCandidateVotes} ভোট (${e.topCandidateShare.toFixed(
+              1
+            )}%)`;
+        } else {
+          line3.textContent = "এখনো কোনো ভোট কাস্ট হয়নি বা কোনো প্রার্থী নেই।";
+        }
+        card.appendChild(line3);
+
+        container.appendChild(card);
+      });
+    }
+
+    /**
+     * Logout and go back home.
+     * @returns {void}
+     */
+    function logout() {
+      localStorage.removeItem(CC_CURRENT_USER_KEY);
+      window.location.href = "../index.html";
+    }
+
+    /**
+     * Init entire public dashboard.
+     * @returns {Promise<void>}
+     */
+    async function initPublicDashboard() {
+      const user = ensurePublicUser();
+      if (!user) return;
+
+      const statusFilter = document.getElementById("statusFilter");
+      const searchInput = document.getElementById("searchInput");
+
+      if (statusFilter) {
+        statusFilter.addEventListener("change", renderElectionCards);
+      }
+      if (searchInput) {
+        searchInput.addEventListener("input", renderElectionCards);
+      }
+
+      try {
+        await loadMetrics();
+        await loadElectionOverview();
+        renderElectionCards();
+      } catch (err) {
+        console.error(err);
+        showError(err.message || "ড্যাশবোর্ড ডেটা লোড করতে সমস্যা হয়েছে।");
+      }
+    }
+
+    // run on load
+    initPublicDashboard();
+  </script>
+</body>
+</html>

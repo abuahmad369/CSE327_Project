@@ -25,16 +25,14 @@
         <div class="logo-subtitle">বিশ্ববিদ্যালয় ই ভোটিং সিস্টেম</div>
       </a>
 
-<nav class="site-nav">
-  <a href="../index.html" class="nav-link">হোম</a>
-  <a href="totalelection.html" class="nav-link">মোট নির্বাচন</a>
-  <a href="create_election.html" class="nav-link">নির্বাচন তৈরি</a>
-  <a href="registeredcandidates.html" class="nav-link">নিবন্ধিত প্রার্থী</a>
-  <a href="registervoters.html" class="nav-link">নিবন্ধিত ভোটার</a>
-  <button class="login-btn" onclick="logout()">লগআউট</button>
-</nav>
-
-
+      <nav class="site-nav">
+        <a href="../index.html" class="nav-link">হোম</a>
+        <a href="totalelection.html" class="nav-link">মোট নির্বাচন</a>
+        <a href="create_election.html" class="nav-link">নির্বাচন তৈরি</a>
+        <a href="registeredcandidates.html" class="nav-link">নিবন্ধিত প্রার্থী</a>
+        <a href="registervoters.html" class="nav-link">নিবন্ধিত ভোটার</a>
+        <button class="login-btn" onclick="logout()">লগআউট</button>
+      </nav>
     </header>
 
     <main class="main-content supervisor-main">
@@ -48,7 +46,7 @@
       </section>
 
       <!-- Metric cards -->
-      <section aria-label="Supervisor overview">
+      <section aria-label="Supervisor overview" style="width:100%; max-width:960px; margin:0 auto;">
         <div class="supervisor-grid">
           <article class="super-card">
             <h3>মোট নির্বাচন</h3>
@@ -74,6 +72,75 @@
             <h3>আপনার তত্ত্বাবধানে পোল</h3>
             <p id="supervisedPolls">0</p>
           </article>
+        </div>
+      </section>
+
+      <!-- Candidate applications block -->
+      <section
+        aria-label="Candidate applications"
+        style="
+          margin-top:32px;
+          width:100%;
+          max-width:960px;
+          margin-left:auto;
+          margin-right:auto;
+        "
+      >
+        <div style="
+          background:#fff;
+          border:1px solid var(--border);
+          border-radius:14px;
+          box-shadow:0 6px 18px rgba(0,0,0,.08);
+          padding:22px;
+          width:100%;
+        ">
+          <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:16px;">
+            <div>
+              <h2 style="margin:0 0 6px; font-size:20px; font-weight:800; color:var(--ink);">
+                নির্বাচনে অংশগ্রহণের আবেদনসমূহ
+              </h2>
+              <p style="margin:0; font-size:14px; color:#4b5563;">
+                এখানে প্রার্থীদের সাবমিট করা আবেদন দেখবেন এবং অনুমোদন বা বাতিল করতে পারবেন।
+              </p>
+            </div>
+
+            <!-- Filter controls -->
+            <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+              <select id="statusFilter" style="
+                padding:8px 10px;
+                border-radius:999px;
+                border:1px solid var(--border);
+                font-size:13px;
+              ">
+                <option value="pending">শুধু pending (submitted / review)</option>
+                <option value="all">সকল অবস্থা</option>
+                <option value="draft">Draft</option>
+                <option value="submitted">Submitted</option>
+                <option value="under_review">Under review</option>
+                <option value="approved">Approved</option>
+                <option value="rejected">Rejected</option>
+              </select>
+
+              <input
+                type="text"
+                id="searchInput"
+                placeholder="নাম বা ইমেইল দিয়ে খুঁজুন"
+                style="
+                  padding:8px 10px;
+                  border-radius:999px;
+                  border:1px solid var(--border);
+                  font-size:13px;
+                "
+              />
+            </div>
+          </div>
+
+          <div id="applicationsContainer" style="margin-top:16px; display:flex; flex-direction:column; gap:12px;">
+            <!-- Cards will be injected here -->
+            <p id="applicationsEmpty" style="font-size:14px; color:#4b5563; margin:4px 0 0;">
+              আবেদন লোড হচ্ছে...
+            </p>
+          </div>
         </div>
       </section>
     </main>
@@ -114,154 +181,521 @@
       </div>
 
       <div class="footer-credit">
-        <p>© ২০২৫ <strong>FourA</strong> – CampusCast</p>
+        <p>© ২০২৫ <strong>FourA</strong> - CampusCast</p>
       </div>
     </footer>
   </div>
 
-  <!-- Supabase client, using your current database -->
+  <!-- Supabase client -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
-<script>
-  // EXACTLY your current database
-  const SUPABASE_URL = "https://hgxjuxgxgbjjqxxvafhx.supabase.co";
-  const SUPABASE_ANON_KEY = "sb_publishable_RqoNSHsQQOhs8dfL0OXsdA_TfeVyZcn";
 
-  const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  <script>
+    /**
+     * Supabase config, same as login and candidate pages.
+     * @type {string}
+     */
+    const SUPABASE_URL = "https://hgxjuxgxgbjjqxxvafhx.supabase.co";
+    const SUPABASE_ANON_KEY = "sb_publishable_RqoNSHsQQOhs8dfL0OXsdA_TfeVyZcn";
 
-  const CC_CURRENT_USER_KEY = "cc_currentUser";
+    /**
+     * LocalStorage key for logged in user.
+     * @type {string}
+     */
+    const CC_CURRENT_USER_KEY = "cc_currentUser";
 
-  function getCurrentUser() {
-    try {
-      const raw = localStorage.getItem(CC_CURRENT_USER_KEY);
-      if (!raw) return null;
-      return JSON.parse(raw);
-    } catch (e) {
-      console.error("Failed to parse current user", e);
-      return null;
-    }
-  }
+    /**
+     * Supabase client instance.
+     * @type {import('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js').SupabaseClient}
+     */
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-  function ensureSupervisor() {
-    const user = getCurrentUser();
+    /**
+     * @typedef {Object} SupervisorUser
+     * @property {string} id
+     * @property {string} email
+     * @property {string} name
+     * @property {"supervisor"|"candidate"|"voter"|"public"} role
+     */
 
-    if (!user || user.role !== "supervisor") {
-      alert("শুধুমাত্র সুপারভাইজার এই প্যানেলে প্রবেশ করতে পারবেন।");
-      window.location.href = "../login/login.html";
-      return null;
-    }
+    /**
+     * @typedef {Object} CandidateApplication
+     * @property {string} id
+     * @property {string} user_id
+     * @property {string|null} election_id
+     * @property {string|null} requested_symbol
+     * @property {string|null} manifesto
+     * @property {boolean} is_approved
+     * @property {"draft"|"submitted"|"under_review"|"approved"|"rejected"} status
+     * @property {string} created_at
+     * @property {string|null} submitted_at
+     * @property {string|null} approved_at
+     * @property {Object|null} user
+     * @property {string} [user.name]
+     * @property {string} [user.email]
+     * @property {string|null} [user.dept]
+     * @property {Object|null} election
+     * @property {string} [election.title]
+     * @property {string|null} [election.status]
+     */
 
-    const welcome = document.getElementById("welcomeText");
-    if (welcome) {
-      welcome.textContent = `স্বাগতম, ${user.name} (Supervisor)।`;
-    }
+    /**
+     * Cached applications list in memory.
+     * @type {CandidateApplication[]}
+     */
+    let candidateApplications = [];
 
-    return user;
-  }
-
-  // Small helper to show errors on screen so we can see what is wrong
-  function showError(message) {
-    let box = document.getElementById("dashboardError");
-    if (!box) {
-      box = document.createElement("p");
-      box.id = "dashboardError";
-      box.style.color = "crimson";
-      box.style.marginTop = "8px";
-      box.style.fontSize = "14px";
-      const content = document.querySelector(".content");
-      if (content) content.appendChild(box);
-    }
-    box.textContent = message;
-  }
-
-  async function loadDashboard() {
-    const user = ensureSupervisor();
-    if (!user) return;
-
-    // 1) Elections: total and active
-    const { data: elections, error: electionsError } = await supabase
-      .from("elections")
-      .select("id, status");
-
-    if (electionsError) {
-      console.error("Elections error:", electionsError);
-      showError("elections টেবিল পড়তে সমস্যা হচ্ছে: " + electionsError.message);
-    }
-
-    const totalElections = elections ? elections.length : 0;
-    const activeElections = elections
-      ? elections.filter(e => (e.status || "").toLowerCase() === "active").length
-      : 0;
-
-    document.getElementById("totalElections").textContent = totalElections;
-    document.getElementById("activeElections").textContent = activeElections;
-
-    // 2) Candidates: মোট নিবন্ধিত প্রার্থী
-    const { data: candidates, error: candidatesError } = await supabase
-      .from("candidates")
-      .select("id");
-
-    console.log("Candidates data:", candidates);
-    console.log("Candidates error:", candidatesError);
-
-    if (candidatesError) {
-      showError("candidates টেবিল পড়তে সমস্যা হচ্ছে: " + candidatesError.message);
+    /**
+     * Read current user from localStorage.
+     * @returns {SupervisorUser|null}
+     */
+    function getCurrentUser() {
+      try {
+        const raw = localStorage.getItem(CC_CURRENT_USER_KEY);
+        if (!raw) return null;
+        return JSON.parse(raw);
+      } catch (e) {
+        console.error("Failed to parse current user", e);
+        return null;
+      }
     }
 
-    document.getElementById("registeredCandidates").textContent =
-      candidates ? candidates.length : 0;
+    /**
+     * Ensure the user is a supervisor and update welcome text.
+     * Redirect to login page if not.
+     * @returns {SupervisorUser|null}
+     */
+    function ensureSupervisor() {
+      const user = getCurrentUser();
+      if (!user || user.role !== "supervisor") {
+        alert("শুধুমাত্র সুপারভাইজার এই প্যানেলে প্রবেশ করতে পারবেন।");
+        window.location.href = "../login/login.html";
+        return null;
+      }
 
-    // 3) Voters: মোট নিবন্ধিত ভোটার
-    const { data: voters, error: votersError } = await supabase
-      .from("voters")
-      .select("id");
-
-    if (votersError) {
-      console.error("Voters error:", votersError);
-      showError("voters টেবিল পড়তে সমস্যা হচ্ছে: " + votersError.message);
+      const welcome = document.getElementById("welcomeText");
+      if (welcome) {
+        welcome.textContent = `স্বাগতম, ${user.name} (Supervisor)।`;
+      }
+      return user;
     }
 
-    document.getElementById("registeredVoters").textContent =
-      voters ? voters.length : 0;
-
-    // 4) Polls: supervised by this supervisor
-    const { data: polls, error: pollsError } = await supabase
-      .from("polls")
-      .select("id")
-      .eq("supervisor_id", user.id);
-
-    if (pollsError) {
-      console.error("Polls error:", pollsError);
-      showError("polls টেবিল পড়তে সমস্যা হচ্ছে: " + pollsError.message);
+    /**
+     * Show an error message near the top content.
+     * @param {string} message
+     * @returns {void}
+     */
+    function showError(message) {
+      let box = document.getElementById("dashboardError");
+      if (!box) {
+        box = document.createElement("p");
+        box.id = "dashboardError";
+        box.style.color = "crimson";
+        box.style.marginTop = "8px";
+        box.style.fontSize = "14px";
+        const content = document.querySelector(".content");
+        if (content) content.appendChild(box);
+      }
+      box.textContent = message;
     }
 
-    document.getElementById("supervisedPolls").textContent =
-      polls ? polls.length : 0;
-  }
+    /**
+     * Load top level metrics for supervisor.
+     * @param {SupervisorUser} user
+     * @returns {Promise<void>}
+     */
+    async function loadMetrics(user) {
+      // Elections
+      const { data: elections, error: electionsError } = await supabase
+        .from("elections")
+        .select("id, status");
 
-  function logout() {
-    localStorage.removeItem(CC_CURRENT_USER_KEY);
-    window.location.href = "../index.html";
-  }
+      if (electionsError) {
+        console.error("Elections error:", electionsError);
+        showError("elections টেবিল পড়তে সমস্যা হচ্ছে: " + electionsError.message);
+      }
 
-  // Optional debug helper
-  async function testSupabase() {
-    const user = ensureSupervisor();
-    if (!user) return;
+      const totalElections = elections ? elections.length : 0;
+      const activeElections = elections
+        ? elections.filter((e) => (e.status || "").toLowerCase() === "active").length
+        : 0;
 
-    console.log("Testing Supabase connection as supervisor...");
+      document.getElementById("totalElections").textContent = totalElections;
+      document.getElementById("activeElections").textContent = activeElections;
 
-    const { data: candidates, error } = await supabase
-      .from("candidates")
-      .select("*");
+      // Candidates
+      const { data: candidates, error: candidatesError } = await supabase
+        .from("candidates")
+        .select("id");
 
-    console.log("testSupabase candidates data:", candidates);
-    console.log("testSupabase candidates error:", error);
-  }
+      if (candidatesError) {
+        console.error("Candidates error:", candidatesError);
+        showError("candidates টেবিল পড়তে সমস্যা হচ্ছে: " + candidatesError.message);
+      }
 
-  loadDashboard();
-  window.testSupabase = testSupabase;
-</script>
+      document.getElementById("registeredCandidates").textContent =
+        candidates ? candidates.length : 0;
 
+      // Voters
+      const { data: voters, error: votersError } = await supabase
+        .from("voters")
+        .select("id");
 
+      if (votersError) {
+        console.error("Voters error:", votersError);
+        showError("voters টেবিল পড়তে সমস্যা হচ্ছে: " + votersError.message);
+      }
+
+      document.getElementById("registeredVoters").textContent =
+        voters ? voters.length : 0;
+
+      // Polls supervised by this user
+      const { data: polls, error: pollsError } = await supabase
+        .from("polls")
+        .select("id")
+        .eq("supervisor_id", user.id);
+
+      if (pollsError) {
+        console.error("Polls error:", pollsError);
+        showError("polls টেবিল পড়তে সমস্যা হচ্ছে: " + pollsError.message);
+      }
+
+      document.getElementById("supervisedPolls").textContent =
+        polls ? polls.length : 0;
+    }
+
+    /**
+     * Fetch candidate applications with joined user and election.
+     * @returns {Promise<CandidateApplication[]>}
+     */
+    async function fetchCandidateApplications() {
+      const { data, error } = await supabase
+        .from("candidates")
+        .select(`
+          id,
+          user_id,
+          election_id,
+          requested_symbol,
+          manifesto,
+          is_approved,
+          status,
+          created_at,
+          submitted_at,
+          approved_at,
+          user:user_id (
+            name,
+            email,
+            dept
+          ),
+          election:election_id (
+            title,
+            status
+          )
+        `)
+        .order("created_at", { ascending: false });
+
+      if (error) {
+        console.error("Applications fetch error:", error);
+        throw new Error("প্রার্থীর আবেদন লোড করতে সমস্যা হচ্ছে: " + error.message);
+      }
+      return data || [];
+    }
+
+    /**
+     * Convert status to Bangla text.
+     * @param {"draft"|"submitted"|"under_review"|"approved"|"rejected"} status
+     * @returns {string}
+     */
+    function statusText(status) {
+      switch (status) {
+        case "submitted":
+          return "সাবমিট করা হয়েছে";
+        case "under_review":
+          return "পর্যালোচনাধীন";
+        case "approved":
+          return "অনুমোদিত";
+        case "rejected":
+          return "বাতিল";
+        default:
+          return "ড্রাফট";
+      }
+    }
+
+    /**
+     * Colors for status pill.
+     * @param {"draft"|"submitted"|"under_review"|"approved"|"rejected"} status
+     * @returns {{bg: string, color: string}}
+     */
+    function statusColors(status) {
+      switch (status) {
+        case "submitted":
+        case "under_review":
+          return { bg: "#fef3c7", color: "#92400e" };
+        case "approved":
+          return { bg: "#dcfce7", color: "#166534" };
+        case "rejected":
+          return { bg: "#fee2e2", color: "#b91c1c" };
+        default:
+          return { bg: "#e5e7eb", color: "#4b5563" };
+      }
+    }
+
+    /**
+     * Render candidate applications list applying filters.
+     * @returns {void}
+     */
+    function renderApplications() {
+      const container = document.getElementById("applicationsContainer");
+      const emptyText = document.getElementById("applicationsEmpty");
+      const statusFilter = /** @type {HTMLSelectElement} */ (document.getElementById("statusFilter"));
+      const searchInput = /** @type {HTMLInputElement} */ (document.getElementById("searchInput"));
+
+      if (!container || !statusFilter || !searchInput) return;
+
+      container.innerHTML = "";
+      if (!candidateApplications.length) {
+        if (emptyText) {
+          emptyText.textContent = "এখনো কোনো প্রার্থীর আবেদন পাওয়া যায়নি।";
+        }
+        return;
+      }
+
+      const filterStatus = statusFilter.value;
+      const search = searchInput.value.trim().toLowerCase();
+
+      /** @type {CandidateApplication[]} */
+      const filtered = candidateApplications.filter((app) => {
+        // status filter
+        if (filterStatus === "pending") {
+          if (app.status !== "submitted" && app.status !== "under_review") {
+            return false;
+          }
+        } else if (filterStatus !== "all") {
+          if (app.status !== filterStatus) return false;
+        }
+
+        // search filter
+        if (search) {
+          const name = (app.user?.name || "").toLowerCase();
+          const email = (app.user?.email || "").toLowerCase();
+          if (!name.includes(search) && !email.includes(search)) {
+            return false;
+          }
+        }
+        return true;
+      });
+
+      if (!filtered.length) {
+        const p = document.createElement("p");
+        p.textContent = "এই ফিল্টার অনুযায়ী কোনো আবেদন পাওয়া যায়নি।";
+        p.style.fontSize = "14px";
+        p.style.color = "#4b5563";
+        container.appendChild(p);
+        return;
+      }
+
+      filtered.forEach((app) => {
+        const card = document.createElement("div");
+        card.style.border = "1px solid var(--border)";
+        card.style.borderRadius = "12px";
+        card.style.padding = "14px 16px";
+        card.style.backgroundColor = "#f9fafb";
+
+        const header = document.createElement("div");
+        header.style.display = "flex";
+        header.style.justifyContent = "space-between";
+        header.style.alignItems = "flex-start";
+        header.style.marginBottom = "6px";
+
+        const left = document.createElement("div");
+        const nameP = document.createElement("p");
+        nameP.style.margin = "0 0 2px";
+        nameP.style.fontWeight = "700";
+        nameP.textContent = app.user?.name || "Unknown candidate";
+
+        const subP = document.createElement("p");
+        subP.style.margin = "0";
+        subP.style.fontSize = "13px";
+        subP.style.color = "#4b5563";
+        const dept = app.user?.dept ? " · " + app.user.dept : "";
+        subP.textContent = (app.user?.email || "no-email") + dept;
+
+        left.appendChild(nameP);
+        left.appendChild(subP);
+
+        const pill = document.createElement("span");
+        const colors = statusColors(app.status);
+        pill.textContent = statusText(app.status);
+        pill.style.fontSize = "12px";
+        pill.style.fontWeight = "600";
+        pill.style.padding = "4px 10px";
+        pill.style.borderRadius = "999px";
+        pill.style.backgroundColor = colors.bg;
+        pill.style.color = colors.color;
+
+        header.appendChild(left);
+        header.appendChild(pill);
+        card.appendChild(header);
+
+        const electionP = document.createElement("p");
+        electionP.style.margin = "4px 0";
+        electionP.style.fontSize = "13px";
+        electionP.innerHTML =
+          "<strong>নির্বাচন:</strong> " +
+          (app.election?.title || "কোনো নির্বাচন নির্বাচন করা হয়নি");
+        card.appendChild(electionP);
+
+        const symbolP = document.createElement("p");
+        symbolP.style.margin = "0 0 4px";
+        symbolP.style.fontSize = "13px";
+        symbolP.innerHTML =
+          "<strong>প্রতীক (requested):</strong> " +
+          (app.requested_symbol || app.symbol || "নির্ধারিত নয়");
+        card.appendChild(symbolP);
+
+        if (app.manifesto) {
+          const manP = document.createElement("p");
+          manP.style.margin = "0 0 6px";
+          manP.style.fontSize = "13px";
+          manP.innerHTML =
+            "<strong>ইশতেহার:</strong> " + app.manifesto;
+          card.appendChild(manP);
+        }
+
+        const actionsRow = document.createElement("div");
+        actionsRow.style.display = "flex";
+        actionsRow.style.justifyContent = "flex-end";
+        actionsRow.style.gap = "8px";
+        actionsRow.style.marginTop = "6px";
+
+        const approveBtn = document.createElement("button");
+        approveBtn.type = "button";
+        approveBtn.textContent = "Approve";
+        approveBtn.style.padding = "6px 10px";
+        approveBtn.style.fontSize = "12px";
+        approveBtn.style.borderRadius = "999px";
+        approveBtn.style.border = "none";
+        approveBtn.style.cursor = "pointer";
+        approveBtn.style.backgroundColor = "#16a34a";
+        approveBtn.style.color = "#ffffff";
+
+        const rejectBtn = document.createElement("button");
+        rejectBtn.type = "button";
+        rejectBtn.textContent = "Reject";
+        rejectBtn.style.padding = "6px 10px";
+        rejectBtn.style.fontSize = "12px";
+        rejectBtn.style.borderRadius = "999px";
+        rejectBtn.style.border = "none";
+        rejectBtn.style.cursor = "pointer";
+        rejectBtn.style.backgroundColor = "#b91c1c";
+        rejectBtn.style.color = "#ffffff";
+
+        // disable buttons if already final
+        if (app.status === "approved" || app.status === "rejected") {
+          approveBtn.disabled = true;
+          rejectBtn.disabled = true;
+          approveBtn.style.opacity = "0.6";
+          rejectBtn.style.opacity = "0.6";
+          approveBtn.style.cursor = "default";
+          rejectBtn.style.cursor = "default";
+        }
+
+        approveBtn.addEventListener("click", () => {
+          handleStatusChange(app.id, "approved");
+        });
+        rejectBtn.addEventListener("click", () => {
+          handleStatusChange(app.id, "rejected");
+        });
+
+        actionsRow.appendChild(approveBtn);
+        actionsRow.appendChild(rejectBtn);
+        card.appendChild(actionsRow);
+
+        container.appendChild(card);
+      });
+    }
+
+    /**
+     * Update candidate status in Supabase and refresh cached list.
+     * @param {string} candidateId
+     * @param {"approved"|"rejected"} newStatus
+     * @returns {Promise<void>}
+     */
+    async function handleStatusChange(candidateId, newStatus) {
+      const confirmText =
+        newStatus === "approved"
+          ? "আপনি কি সত্যি এই প্রার্থীকে approve করতে চান?"
+          : "আপনি কি সত্যি এই প্রার্থীকে reject করতে চান?";
+      if (!window.confirm(confirmText)) return;
+
+      const approved = newStatus === "approved";
+      const payload = {
+        status: newStatus,
+        is_approved: approved,
+        approved_at: new Date().toISOString()
+      };
+
+      const { error } = await supabase
+        .from("candidates")
+        .update(payload)
+        .eq("id", candidateId);
+
+      if (error) {
+        console.error("Status update error:", error);
+        alert("স্ট্যাটাস আপডেট করতে সমস্যা হয়েছে: " + error.message);
+        return;
+      }
+
+      // update cached item
+      candidateApplications = candidateApplications.map((app) =>
+        app.id === candidateId
+          ? { ...app, ...payload }
+          : app
+      );
+
+      renderApplications();
+    }
+
+    /**
+     * Logout and go back to home.
+     * @returns {void}
+     */
+    function logout() {
+      localStorage.removeItem(CC_CURRENT_USER_KEY);
+      window.location.href = "../index.html";
+    }
+
+    /**
+     * Initialize full supervisor dashboard.
+     * @returns {Promise<void>}
+     */
+    async function initSupervisorDashboard() {
+      const user = ensureSupervisor();
+      if (!user) return;
+
+      await loadMetrics(user);
+
+      const statusFilter = document.getElementById("statusFilter");
+      const searchInput = document.getElementById("searchInput");
+
+      if (statusFilter) {
+        statusFilter.addEventListener("change", renderApplications);
+      }
+      if (searchInput) {
+        searchInput.addEventListener("input", renderApplications);
+      }
+
+      try {
+        candidateApplications = await fetchCandidateApplications();
+      } catch (err) {
+        showError(err.message || "প্রার্থীর আবেদন লোড করতে ব্যর্থ হয়েছে।");
+        candidateApplications = [];
+      }
+
+      renderApplications();
+    }
+
+    // Run on load
+    initSupervisorDashboard();
+  </script>
 </body>
 </html>
