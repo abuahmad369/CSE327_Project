@@ -11,3 +11,4 @@ A secure, transparent, and user-friendly **web-based electronic voting platform*
 It enables administrators to create and manage elections, students to vote online once anonymously, and the public to view results all through a centralized and protected system.
 
 ---
+<img src="https://github.com/user-attachments/assets/e9f027a7-9186-4b46-949d-873ee6a29859" />
