@@ -29,7 +29,7 @@
         <a href="/login/login.html" class="nav-link">প্রার্থী</a>
         <a href="/login/login.html" class="nav-link">ভোটার</a>
         <a href="/public.html" class="nav-link">পাবলিক</a>
-        <a href="/dashboard-test.html" class="nav-link">ড্যাশবোর্ড</a>
+        <!-- <a href="/dashboard-test.html" class="nav-link">ড্যাশবোর্ড</a> -->
         <a class="login-btn" href="/login/login.html" role="button">লগইন</a>
       </nav>
     </header>
@@ -178,7 +178,10 @@
 
  <script src="/login/loginValidation.js"></script>
 
+
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+
+  <script src="/js/login.js"></script>
   <script>
     const SUPABASE_URL = "https://hgxjuxgxgbjjqxxvafhx.supabase.co";
     const SUPABASE_ANON_KEY = "sb_publishable_RqoNSHsQQOhs8dfL0OXsdA_TfeVyZcn";
@@ -189,9 +192,9 @@
 
     const ROLE_ROUTES = {
       supervisor: "/SAL/supervisor.html",
-      candidate: "/dashboard-test.html",
-      voter: "/dashboard-test.html",
-      public: "/SAL/public.html"
+      candidate: "/IAH/candidates.html",
+      voter: "",
+      public: "/publicDash.html"
     };
 
     async function hash(text) {
@@ -202,7 +205,7 @@
         .join("");
     }
 
-    // uses users(email, role, password_hash) from your SQL
+    // uses users(email, role, password_hash) from Supabase
     async function loginUser(email, password, role) {
       if (!email || !password || !role) {
         throw new Error("ইমেইল, পাসওয়ার্ড এবং রোল দিন।");

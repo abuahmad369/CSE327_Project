@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CampusCast – লগইন</title>
+  <link rel="stylesheet" href="../assets/style.css" />
+</head>
+<body>
+  <div class="hands-bg"></div>
+
+  <div class="container">
+    <header class="site-header">
+      <a href="../index.html" class="logo">
+        <div class="logo-text">
+          <span>CampusCast</span>
+          <div class="logo-bars">
+            <div class="bar"></div>
+            <div class="bar alt"></div>
+            <div class="bar"></div>
+            <div class="bar alt"></div>
+          </div>
+        </div>
+        <div class="logo-subtitle">বিশ্ববিদ্যালয় ই-ভোটিং সিস্টেম</div>
+      </a>
+      <nav class="site-nav">
+        <a href="../reg/reg.html" class="nav-link">নিবন্ধন করুন</a>
+      </nav>
+    </header>
+
+    <main class="main-content" style="gap:40px; align-items:flex-start;">
+      <section class="content" style="max-width:520px;">
+        <span class="badge">নিরাপদ লগইন</span>
+        <h1>আপনার অ্যাকাউন্টে প্রবেশ করুন</h1>
+        <p class="description">নিবন্ধন করা ইমেইল ও পাসওয়ার্ড ব্যবহার করে লগইন করুন।</p>
+      </section>
+
+      <section aria-label="লগইন ফর্ম" style="flex:1; max-width:440px;">
+        <div style="background:#fff; border:1px solid var(--border); border-radius:14px; box-shadow:0 6px 18px rgba(0,0,0,.08); padding:22px;">
+          <h2 style="margin-bottom:14px; font-size:22px; font-weight:800; color:var(--ink);">লগইন</h2>
+
+          <form id="loginForm" autocomplete="off" novalidate>
+            <div class="form-group" style="margin-bottom:12px;">
+              <label for="email" style="display:block; font-weight:700; margin-bottom:6px;">ইমেইল</label>
+              <input type="email" id="email" name="email" required style="width:100%; padding:12px; border:1px solid var(--border); border-radius:10px; font-size:15px;" />
+            </div>
+
+            <div class="form-group" style="margin-bottom:6px;">
+              <label for="password" style="display:block; font-weight:700; margin-bottom:6px;">পাসওয়ার্ড</label>
+              <input type="password" id="password" name="password" required style="width:100%; padding:12px; border:1px solid var(--border); border-radius:10px; font-size:15px;" />
+            </div>
+
+            <p id="loginStatus" role="status" aria-live="polite" class="status" style="margin:.5rem 0 .25rem;"></p>
+
+            <button type="submit" class="btn btn-primary" style="width:100%;">লগইন</button>
+
+            <div class="login-footer" style="margin-top:12px; display:flex; justify-content:space-between;">
+              <a href="../reg/reg.html" style="color:#fff; opacity:.95; text-decoration:none;" class="nav-link">অ্যাকাউন্ট নেই? নিবন্ধন করুন</a>
+            </div>
+          </form>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const SUPERVISOR_URL = "../supervisor/supervisor.html";
+    // *** UPDATED HERE: Added Candidate URL ***
+    const CANDIDATE_URL = "../supervisor/candidates.html"; 
+    const CC_USERS_KEY = "cc_users";
+    const CC_CURRENT_USER_KEY = "cc_currentUser";
+
+    function loadUsers() {
+      try { return JSON.parse(localStorage.getItem(CC_USERS_KEY) || "[]"); }
+      catch { return []; }
+    }
+    function getUserByEmail(email) {
+      return loadUsers().find(u => u.email.toLowerCase() === email.toLowerCase()) || null;
+    }
+    async function hash(text) {
+      const enc = new TextEncoder().encode(text);
+      const buf = await crypto.subtle.digest("SHA-256", enc);
+      return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, "0")).join("");
+    }
+    async function loginUser(email, password) {
+      const user = getUserByEmail(email);
+      if (!user) throw new Error("এই ইমেইলে কোনো অ্যাকাউন্ট নেই।");
+      const passHash = await hash(password);
+      if (user.passHash !== passHash) throw new Error("পাসওয়ার্ড সঠিক নয়।");
+      // Save full user object including role
+      localStorage.setItem(CC_CURRENT_USER_KEY, JSON.stringify(user));
+      return user;
+    }
+
+    (async function initLogin() {
+      const form = document.getElementById("loginForm");
+      const statusEl = document.getElementById("loginStatus");
+
+      form.addEventListener("submit", async function(e) {
+        e.preventDefault();
+        statusEl.textContent = "";
+        statusEl.style.color = "crimson";
+
+        const email = document.getElementById("email").value.trim();
+        const password = document.getElementById("password").value.trim();
+
+        if (!email || !password) {
+          statusEl.textContent = "ইমেইল ও পাসওয়ার্ড দিন।";
+          return;
+        }
+
+        // Backdoor for testing: admin/admin
+        if (email === "admin" && password === "admin") {
+          localStorage.setItem(CC_CURRENT_USER_KEY, JSON.stringify({ email: "admin", role: "supervisor", name: "Admin" }));
+          window.location.href = SUPERVISOR_URL;
+          return;
+        }
+
+        try {
+          const user = await loginUser(email, password);
+          
+          // ============================================================
+          // UPDATED PART START: Check Role and Redirect accordingly
+          // ============================================================
+          if (user.role === 'candidate') {
+            window.location.href = CANDIDATE_URL;
+          } else if (user.role === 'admin' || user.role === 'supervisor') {
+            window.location.href = SUPERVISOR_URL;
+          } else {
+            // Default for voters or others
+            window.location.href = "../index.html";
+          }
+
+        } catch (err) {
+          statusEl.textContent = err.message || "লগইন ব্যর্থ হয়েছে।";
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

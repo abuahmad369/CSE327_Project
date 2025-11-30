@@ -39,8 +39,7 @@ function validateLoginInput(email, password, role) {
   };
 }
 
-// optional export for Node or Jest
-// uncomment if you ever use Node tests
+
 // if (typeof module !== "undefined") {
 //   module.exports = { validateLoginInput };
 // }

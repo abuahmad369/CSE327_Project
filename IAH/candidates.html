@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CampusCast - প্রার্থী ড্যাশবোর্ড</title>
+  <link rel="stylesheet" href="../assets/style.css" />
+</head>
+<body>
+  <div class="hands-bg"></div>
+
+  <div class="container">
+    <!-- Header like login/reg -->
+    <header class="site-header">
+      <a href="../index.html" class="logo" aria-label="CampusCast হোমপেজে যান">
+        <div class="logo-text">
+          <span>CampusCast</span>
+          <div class="logo-bars">
+            <div class="bar"></div>
+            <div class="bar alt"></div>
+            <div class="bar"></div>
+            <div class="bar alt"></div>
+          </div>
+        </div>
+        <div class="logo-subtitle">বিশ্ববিদ্যালয় ই ভোটিং সিস্টেম</div>
+      </a>
+
+      <nav class="site-nav">
+        <a href="../index.html" class="nav-link">হোম</a>
+        <a id="logoutBtn" class="login-btn" role="button">লগআউট</a>
+      </nav>
+    </header>
+
+    <main class="main-content" style="gap:40px; align-items:flex-start;">
+      <!-- Left text column -->
+      <section class="content" style="max-width:460px;">
+        <span class="badge">প্রার্থী প্যানেল</span>
+        <h1>স্বাগতম আপনার প্রার্থী ড্যাশবোর্ডে</h1>
+        <p class="description" id="candidateGreeting">
+          আপনার তথ্য লোড হচ্ছে...
+        </p>
+
+        <div class="ethereum-note" style="margin-top:12px;">
+          <span class="ethereum-icon">🔐</span>
+          কেবল লগইনকৃত প্রার্থীর তথ্যই এখানে দেখা যাবে।
+        </div>
+      </section>
+
+      <!-- Right cards column -->
+      <section aria-label="প্রার্থী তথ্য" style="flex:1; max-width:540px;">
+        <div style="
+          background:#fff;
+          border:1px solid var(--border);
+          border-radius:14px;
+          box-shadow:0 6px 18px rgba(0,0,0,.08);
+          padding:22px;
+          margin-bottom:18px;
+        ">
+          <h2 style="margin-bottom:10px; font-size:22px; font-weight:800; color:var(--ink);">
+            প্রফাইল ও বর্তমান অবস্থা
+          </h2>
+
+          <div id="candidateMeta" style="margin-bottom:10px; font-size:14px; line-height:1.6;">
+            <!-- Filled by JS -->
+          </div>
+        </div>
+
+        <!-- Application card -->
+        <div style="
+          background:#fff;
+          border:1px solid var(--border);
+          border-radius:14px;
+          box-shadow:0 6px 18px rgba(0,0,0,.08);
+          padding:22px;
+        ">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+            <h2 style="margin:0; font-size:20px; font-weight:800; color:var(--ink);">
+              নির্বাচনে অংশগ্রহণের আবেদন
+            </h2>
+            <span id="statusPill"
+                  style="font-size:12px; padding:4px 10px; border-radius:999px; font-weight:600; background:#f3f4f6; color:#4b5563;">
+              লোড হচ্ছে...
+            </span>
+          </div>
+
+          <form id="applicationForm" autocomplete="off" novalidate>
+            <!-- Election select -->
+            <div class="form-group" style="margin-bottom:10px;">
+              <label for="electionSelect" style="display:block; font-weight:700; margin-bottom:6px;">
+                নির্বাচন নির্বাচন করুন
+              </label>
+              <select
+                id="electionSelect"
+                required
+                style="width:100%; padding:10px; border:1px solid var(--border); border-radius:10px; font-size:14px;"
+              >
+                <option value="">উপলভ্য নির্বাচন লোড হচ্ছে...</option>
+              </select>
+              <small id="electionHelp" style="display:block; margin-top:4px; font-size:12px; color:#6b7280;">
+                কেবল সক্রিয় বা নির্ধারিত নির্বাচনে আবেদন করা যাবে।
+              </small>
+            </div>
+
+            <!-- Symbol input -->
+            <div class="form-group" style="margin-bottom:10px;">
+              <label for="symbolInput" style="display:block; font-weight:700; margin-bottom:6px;">
+                প্রতীক / চিহ্ন
+              </label>
+              <input
+                type="text"
+                id="symbolInput"
+                name="symbol"
+                placeholder="উদাহরণ: বই, ল্যাপটপ, কলম ইত্যাদি"
+                style="width:100%; padding:10px; border:1px solid var(--border); border-radius:10px; font-size:14px;"
+              />
+              <small style="display:block; margin-top:4px; font-size:12px; color:#6b7280;">
+                আপনি যে প্রতীকে দাঁড়াতে চান, তা লিখুন। চূড়ান্ত প্রতীক সুপারভাইজার অনুমোদন করবেন।
+              </small>
+            </div>
+
+            <!-- Manifesto -->
+            <div class="form-group" style="margin-bottom:10px;">
+              <label for="manifestoInput" style="display:block; font-weight:700; margin-bottom:6px;">
+                আপনার ইশতেহার
+              </label>
+              <textarea
+                id="manifestoInput"
+                rows="4"
+                placeholder="সংক্ষেপে লিখুন কেন আপনি প্রার্থী হতে চান এবং কী কী কাজ করবেন..."
+                style="width:100%; padding:10px; border:1px solid var(--border); border-radius:10px; font-size:14px; resize:vertical;"
+              ></textarea>
+            </div>
+
+            <p id="formStatus" style="margin:.5rem 0 .25rem; font-size:14px;"></p>
+
+            <button type="submit" class="btn btn-primary" style="width:100%; margin-top:4px;">
+              আবেদন সাবমিট করুন
+            </button>
+          </form>
+        </div>
+      </section>
+    </main>
+
+    <footer class="features">
+      <div class="feature">
+        <div class="feature-icon">🧾</div>
+        <div class="feature-text">
+          <h3>স্বচ্ছ প্রক্রিয়া</h3>
+          <p>আপনার প্রার্থিতা ও ভোট প্রক্রিয়া রিয়েল টাইমে ট্র্যাকযোগ্য।</p>
+        </div>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">🔒</div>
+        <div class="feature-text">
+          <h3>নিরাপদ ডেটা</h3>
+          <p>আপনার ব্যক্তিগত তথ্য সুরক্ষিত রাখা হয়।</p>
+        </div>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">⚡</div>
+        <div class="feature-text">
+          <h3>দ্রুত আপডেট</h3>
+          <p>নির্বাচনের অবস্থা ও ফলাফল দ্রুত আপডেট হয়।</p>
+        </div>
+      </div>
+
+      <div class="footer-credit">
+        <p>© ২০২৫ <strong>FourA</strong> - CampusCast</p>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Supabase client -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+
+  <script>
+    /**
+     * Supabase configuration and localStorage keys.
+     * These must match your login page.
+     * @type {string}
+     */
+    const SUPABASE_URL = "https://hgxjuxgxgbjjqxxvafhx.supabase.co";
+    const SUPABASE_ANON_KEY = "sb_publishable_RqoNSHsQQOhs8dfL0OXsdA_TfeVyZcn";
+    const CC_CURRENT_USER_KEY = "cc_currentUser";
+
+    /**
+     * Supabase client instance.
+     * @type {import('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js').SupabaseClient}
+     */
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    /**
+     * Current logged in user shape stored by login page.
+     * @typedef {Object} CurrentUser
+     * @property {string} id
+     * @property {string} email
+     * @property {string} name
+     * @property {"candidate"|"voter"|"public"|"supervisor"} role
+     */
+
+    /**
+     * Candidate row with joined election.
+     * @typedef {Object} CandidateWithElection
+     * @property {string} id
+     * @property {string} user_id
+     * @property {string|null} election_id
+     * @property {string|null} manifesto
+     * @property {string|null} symbol
+     * @property {string|null} requested_symbol
+     * @property {string|null} approved_symbol
+     * @property {boolean} is_approved
+     * @property {"draft"|"submitted"|"under_review"|"approved"|"rejected"} status
+     * @property {string} created_at
+     * @property {string|null} submitted_at
+     * @property {string|null} approved_at
+     * @property {Object|null} election
+     * @property {string} [election.id]
+     * @property {string} [election.title]
+     * @property {string|null} [election.description]
+     * @property {"draft"|"scheduled"|"active"|"closed"} [election.status]
+     * @property {string|null} [election.start_at]
+     * @property {string|null} [election.end_at]
+     */
+
+    /**
+     * Election row used for dropdown.
+     * @typedef {Object} ElectionSummary
+     * @property {string} id
+     * @property {string} title
+     * @property {"draft"|"scheduled"|"active"|"closed"} status
+     * @property {string|null} start_at
+     * @property {string|null} end_at
+     */
+
+    /**
+     * Ensure there is a logged in user with role candidate.
+     * If not, redirect to login or home.
+     * @returns {CurrentUser}
+     */
+    function requireCurrentUser() {
+      const raw = localStorage.getItem(CC_CURRENT_USER_KEY);
+      if (!raw) {
+        alert("প্রথমে লগইন করুন।");
+        window.location.href = "../login/login.html";
+        throw new Error("No logged in user");
+      }
+
+      /** @type {CurrentUser} */
+      const user = JSON.parse(raw);
+
+      if (user.role !== "candidate") {
+        alert("শুধু প্রার্থীরাই এই পেইজ দেখতে পারবে।");
+        window.location.href = "../index.html";
+        throw new Error("User is not candidate");
+      }
+
+      return user;
+    }
+
+    /**
+     * Fetch candidate record plus joined election by user id.
+     * @param {string} userId
+     * @returns {Promise<CandidateWithElection|null>}
+     */
+    async function fetchCandidateForUser(userId) {
+      const { data, error } = await supabase
+        .from("candidates")
+        .select(`
+          id,
+          user_id,
+          election_id,
+          manifesto,
+          symbol,
+          requested_symbol,
+          approved_symbol,
+          is_approved,
+          status,
+          created_at,
+          submitted_at,
+          approved_at,
+          election:election_id (
+            id,
+            title,
+            description,
+            status,
+            start_at,
+            end_at
+          )
+        `)
+        .eq("user_id", userId)
+        .maybeSingle();
+
+      if (error) {
+        console.error("Error fetching candidate:", error);
+        throw new Error("প্রার্থীর তথ্য লোড করা যায়নি।");
+      }
+
+      return data;
+    }
+
+    /**
+     * Fetch list of elections candidate can apply to.
+     * Simple rule: status in scheduled or active.
+     * @returns {Promise<ElectionSummary[]>}
+     */
+    async function fetchAvailableElections() {
+      const { data, error } = await supabase
+        .from("elections")
+        .select("id, title, status, start_at, end_at")
+        .in("status", ["scheduled", "active"])
+        .order("start_at", { ascending: true });
+
+      if (error) {
+        console.error("Error fetching elections:", error);
+        throw new Error("উপলভ্য নির্বাচন লোড করা যায়নি।");
+      }
+
+      return data || [];
+    }
+
+    /**
+     * Map candidate status to human readable text in Bangla.
+     * @param {"draft"|"submitted"|"under_review"|"approved"|"rejected"|null} status
+     * @returns {string}
+     */
+    function statusText(status) {
+      switch (status) {
+        case "submitted":
+          return "সাবমিট করা হয়েছে";
+        case "under_review":
+          return "পর্যালোচনাধীন";
+        case "approved":
+          return "অনুমোদিত";
+        case "rejected":
+          return "বাতিল";
+        default:
+          return "ড্রাফট";
+      }
+    }
+
+    /**
+     * Return badge colors for candidate status pill.
+     * @param {"draft"|"submitted"|"under_review"|"approved"|"rejected"|null} status
+     * @returns {{bg: string, color: string}}
+     */
+    function statusColors(status) {
+      switch (status) {
+        case "submitted":
+        case "under_review":
+          return { bg: "#fef3c7", color: "#92400e" };
+        case "approved":
+          return { bg: "#dcfce7", color: "#166534" };
+        case "rejected":
+          return { bg: "#fee2e2", color: "#b91c1c" };
+        default:
+          return { bg: "#e5e7eb", color: "#4b5563" };
+      }
+    }
+
+    /**
+     * Render profile block and status.
+     * @param {CurrentUser} user
+     * @param {CandidateWithElection|null} candidate
+     * @returns {void}
+     */
+    function renderCandidateProfile(user, candidate) {
+      const greetEl = document.getElementById("candidateGreeting");
+      const metaEl = document.getElementById("candidateMeta");
+      const statusPill = document.getElementById("statusPill");
+
+      if (!greetEl || !metaEl || !statusPill) return;
+
+      greetEl.textContent = `${user.name || user.email} প্রার্থী হিসাবে লগইন করেছেন।`;
+
+      if (!candidate) {
+        metaEl.innerHTML = `
+          <p style="margin:0 0 6px;">
+            আপনার জন্য কোনো প্রার্থী রেকর্ড পাওয়া যায়নি।
+          </p>
+          <p style="margin:0;">
+            নিবন্ধনের সময় আপনি candidate রোল নির্বাচন করেছেন কিনা তা নিশ্চিত করুন,
+            অথবা সুপারভাইজারের সাথে যোগাযোগ করুন।
+          </p>
+        `;
+        const colors = statusColors(null);
+        statusPill.textContent = statusText(null);
+        statusPill.style.backgroundColor = colors.bg;
+        statusPill.style.color = colors.color;
+        return;
+      }
+
+      const createdDate = candidate.created_at
+        ? new Date(candidate.created_at).toLocaleString()
+        : "N/A";
+
+      metaEl.innerHTML = `
+        <p style="margin:0 0 6px;"><strong>নাম:</strong> ${user.name || "N/A"}</p>
+        <p style="margin:0 0 6px;"><strong>ইমেইল:</strong> ${user.email}</p>
+        <p style="margin:0 0 6px;">
+          <strong>প্রার্থী হিসাবে রেজিস্ট্রেশন:</strong> ${createdDate}
+        </p>
+        <p style="margin:0 0 6px;">
+          <strong>অনুমোদন অবস্থা:</strong>
+          <span style="font-weight:600; color:${candidate.is_approved ? "#16a34a" : "#eab308"};">
+            ${candidate.is_approved ? "অনুমোদিত" : "রিভিউতে আছে"}
+          </span>
+        </p>
+      `;
+
+      if (candidate.manifesto) {
+        metaEl.insertAdjacentHTML(
+          "beforeend",
+          `
+          <div style="margin-top:10px;">
+            <strong>আপনার ইশতেহার:</strong>
+            <p style="margin:4px 0 0;">${candidate.manifesto}</p>
+          </div>
+        `
+        );
+      }
+
+      const colors = statusColors(candidate.status);
+      statusPill.textContent = statusText(candidate.status);
+      statusPill.style.backgroundColor = colors.bg;
+      statusPill.style.color = colors.color;
+    }
+
+    /**
+     * Populate election dropdown with available elections
+     * and select current assigned one if exists.
+     * @param {HTMLSelectElement} selectEl
+     * @param {ElectionSummary[]} elections
+     * @param {CandidateWithElection|null} candidate
+     * @returns {void}
+     */
+    function renderElectionOptions(selectEl, elections, candidate) {
+      selectEl.innerHTML = "";
+
+      if (!elections.length) {
+        const opt = document.createElement("option");
+        opt.value = "";
+        opt.textContent = "কোনো উপলভ্য নির্বাচন নেই";
+        selectEl.appendChild(opt);
+        selectEl.disabled = true;
+        return;
+      }
+
+      const placeholder = document.createElement("option");
+      placeholder.value = "";
+      placeholder.textContent = "একটি নির্বাচন নির্বাচন করুন";
+      selectEl.appendChild(placeholder);
+
+      elections.forEach((election) => {
+        const opt = document.createElement("option");
+        opt.value = election.id;
+        const labelStatus = election.status === "scheduled" ? "নির্ধারিত" : "চলমান";
+        opt.textContent = `${election.title} (${labelStatus})`;
+        selectEl.appendChild(opt);
+      });
+
+      if (candidate && candidate.election_id) {
+        selectEl.value = candidate.election_id;
+      }
+    }
+
+    /**
+     * Fill the form fields (symbol and manifesto) with existing candidate data.
+     * @param {CandidateWithElection|null} candidate
+     * @returns {void}
+     */
+    function fillFormFromCandidate(candidate) {
+      const symbolInput = /** @type {HTMLInputElement} */ (document.getElementById("symbolInput"));
+      const manifestoInput = /** @type {HTMLTextAreaElement} */ (document.getElementById("manifestoInput"));
+
+      if (!symbolInput || !manifestoInput) return;
+
+      if (!candidate) {
+        symbolInput.value = "";
+        manifestoInput.value = "";
+        return;
+      }
+
+      symbolInput.value = candidate.requested_symbol || candidate.symbol || "";
+      manifestoInput.value = candidate.manifesto || "";
+    }
+
+    /**
+     * Submit application update to Supabase.
+     * Sets election_id, requested_symbol, manifesto, status, submitted_at.
+     * @param {string} candidateId
+     * @param {string} electionId
+     * @param {string} requestedSymbol
+     * @param {string} manifesto
+     * @returns {Promise<void>}
+     */
+    async function submitApplication(candidateId, electionId, requestedSymbol, manifesto) {
+      const payload = {
+        election_id: electionId,
+        requested_symbol: requestedSymbol || null,
+        manifesto: manifesto || null,
+        status: "submitted",
+        submitted_at: new Date().toISOString()
+      };
+
+      const { error } = await supabase
+        .from("candidates")
+        .update(payload)
+        .eq("id", candidateId);
+
+      if (error) {
+        console.error("Error updating candidate:", error);
+        throw new Error("আবেদন সাবমিট করা যায়নি।");
+      }
+    }
+
+    /**
+     * Logout the current user.
+     * @returns {void}
+     */
+    function logout() {
+      localStorage.removeItem(CC_CURRENT_USER_KEY);
+      window.location.href = "../login/login.html";
+    }
+
+    /**
+     * Initialize candidate dashboard.
+     * Loads data, renders UI, binds form submit.
+     * @returns {Promise<void>}
+     */
+    async function initDashboard() {
+      const user = requireCurrentUser();
+
+      const logoutBtn = document.getElementById("logoutBtn");
+      if (logoutBtn) {
+        logoutBtn.addEventListener("click", logout);
+      }
+
+      const form = /** @type {HTMLFormElement} */ (document.getElementById("applicationForm"));
+      const electionSelect = /** @type {HTMLSelectElement} */ (document.getElementById("electionSelect"));
+      const symbolInput = /** @type {HTMLInputElement} */ (document.getElementById("symbolInput"));
+      const manifestoInput = /** @type {HTMLTextAreaElement} */ (document.getElementById("manifestoInput"));
+      const formStatus = /** @type {HTMLParagraphElement} */ (document.getElementById("formStatus"));
+
+      if (!form || !electionSelect || !symbolInput || !manifestoInput || !formStatus) {
+        console.warn("Form elements not found");
+        return;
+      }
+
+      try {
+        const [candidate, elections] = await Promise.all([
+          fetchCandidateForUser(user.id),
+          fetchAvailableElections()
+        ]);
+
+        renderCandidateProfile(user, candidate);
+        renderElectionOptions(electionSelect, elections, candidate);
+        fillFormFromCandidate(candidate);
+
+        form.addEventListener("submit", async function (event) {
+          event.preventDefault();
+          formStatus.textContent = "";
+          formStatus.style.color = "crimson";
+
+          const electionId = electionSelect.value;
+          const requestedSymbol = symbolInput.value.trim();
+          const manifesto = manifestoInput.value.trim();
+
+          if (!candidate || !candidate.id) {
+            formStatus.textContent = "আপনার প্রার্থী প্রোফাইল পাওয়া যায়নি।";
+            return;
+          }
+          if (!electionId) {
+            formStatus.textContent = "একটি নির্বাচন নির্বাচন করুন।";
+            return;
+          }
+
+          try {
+            await submitApplication(candidate.id, electionId, requestedSymbol, manifesto);
+            formStatus.style.color = "green";
+            formStatus.textContent = "আবেদন সফলভাবে সাবমিট হয়েছে।";
+
+            // refresh candidate info to update status display
+            const updatedCandidate = await fetchCandidateForUser(user.id);
+            renderCandidateProfile(user, updatedCandidate);
+          } catch (err) {
+            formStatus.textContent =
+              err && err.message ? err.message : "আবেদন সাবমিট করতে সমস্যা হয়েছে।";
+          }
+        });
+      } catch (err) {
+        console.error(err);
+        const greetEl = document.getElementById("candidateGreeting");
+        if (greetEl) {
+          greetEl.textContent = "সার্ভার থেকে তথ্য লোড করা যায়নি।";
+        }
+        if (formStatus) {
+          formStatus.textContent = "ড্যাশবোর্ড ডেটা লোড করতে সমস্যা হয়েছে।";
+          formStatus.style.color = "crimson";
+        }
+      }
+    }
+
+    // Run once on page load
+    initDashboard();
+  </script>
+</body>
+</html>
