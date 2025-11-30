@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <title>CampusCast Login Unit Tests</title>
+
+  <style>
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+
+    h1 {
+      font-size: 22px;
+      margin-bottom: 12px;
+    }
+
+    #output {
+      white-space: pre-wrap;
+      background: #ffffff;
+      padding: 16px;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+      font-size: 14px;
+      line-height: 20px;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>CampusCast - Login Unit Tests</h1>
+  <pre id="output"></pre>
+
+  <!-- Your login validation file -->
+  <script src="/login/loginValidation.js"></script>
+
+  <script>
+    // Write formatted output
+    function log(text) {
+      document.getElementById("output").textContent += text + "\n";
+    }
+
+    // Improved readable test output
+    function printResult(name, expected, actual) {
+      const status = expected === actual ? "PASS" : "FAIL";
+      log(status + "  " + name);
+      log("      Expected: " + expected);
+      log("      Got:      " + actual);
+      log("");
+    }
+
+    function runLoginTests() {
+      log("Running login validation tests");
+      log("------------------------------\n");
+
+      // TC-L1: Missing email
+      {
+        const result = validateLoginInput("", "secret123", "voter");
+
+        printResult("TC-L1: ok value for missing email", false, result.ok);
+        printResult("TC-L1: error message for email", "ইমেইল দিন।", result.errors.email);
+      }
+
+      // TC-L2: Missing password
+      {
+        const result = validateLoginInput("user@example.com", "", "voter");
+
+        printResult("TC-L2: ok value for missing password", false, result.ok);
+        printResult("TC-L2: error message for password", "পাসওয়ার্ড দিন।", result.errors.password);
+      }
+
+      // TC-L3: Missing role
+      {
+        const result = validateLoginInput("user@example.com", "secret123", "");
+
+        printResult("TC-L3: ok value for missing role", false, result.ok);
+        printResult("TC-L3: error message for role", "রোল নির্বাচন করুন।", result.errors.role);
+      }
+
+      // TC-L4: All fields empty
+      {
+        const result = validateLoginInput("", "", "");
+
+        printResult("TC-L4: ok value for all empty", false, result.ok);
+        printResult("TC-L4: email error exists", "string", typeof result.errors.email);
+        printResult("TC-L4: password error exists", "string", typeof result.errors.password);
+        printResult("TC-L4: role error exists", "string", typeof result.errors.role);
+      }
+
+      // TC-L5: Valid inputs
+      {
+        const result = validateLoginInput("user@example.com", "secret123", "voter");
+
+        printResult("TC-L5: ok value for valid input", true, result.ok);
+      }
+
+      log("All login validation tests completed.");
+    }
+
+    runLoginTests();
+  </script>
+
+</body>
+</html>

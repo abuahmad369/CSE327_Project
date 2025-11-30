@@ -108,7 +108,7 @@ function ccApplyLanguage(lang) {
       bnBtn.style.borderColor = "rgba(255,255,255,0.8)";
       enBtn.style.background = "transparent";
       enBtn.style.borderColor = "rgba(255,255,255,0.3)";
-    } else {
+    {"}"} else {
       enBtn.style.background = "rgba(255,255,255,0.2)";
       enBtn.style.borderColor = "rgba(255,255,255,0.8)";
       bnBtn.style.background = "transparent";
@@ -127,6 +127,5 @@ function ccInitLang() {
   if (bnBtn) bnBtn.addEventListener("click", () => ccApplyLanguage("bn"));
   if (enBtn) enBtn.addEventListener("click", () => ccApplyLanguage("en"));
 }
-
 document.addEventListener("DOMContentLoaded", ccInitLang);
 </script>
