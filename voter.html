@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <title>CampusCast - ভোটার ড্যাশবোর্ড</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<header class="site-header">
+    <div class="container header-inner">
+        <div class="logo">
+            <span>CampusCast</span>
+        </div>
+        <nav class="nav">
+            <a href="{{ url_for('voter_dashboard') }}" class="active">ড্যাশবোর্ড</a>
+            <a href="{{ url_for('vote_history') }}">ভোট হিস্ট্রি</a>
+            <a href="{{ url_for('voter_profile') }}">প্রোফাইল</a>
+            <form action="{{ url_for('logout') }}" method="post" class="inline-form">
+                <button class="btn danger-btn" type="submit">লগআউট</button>
+            </form>
+        </nav>
+    </div>
+</header>
+
+<main class="container">
+    <h1 class="page-title">স্বাগতম, {{ user.full_name }}</h1>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="flash-container">
+          {% for category, msg in messages %}
+            <div class="flash flash-{{ category }}">{{ msg }}</div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    <section class="card">
+        <h2>চলমান / আসন্ন নির্বাচন</h2>
+        <table class="table">
+            <thead>
+            <tr>
+                <th>নির্বাচন</th>
+                <th>বর্ণনা</th>
+                <th>সময়</th>
+                <th>অবস্থা</th>
+                <th>অপশন</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for e in elections %}
+                <tr>
+                    <td>{{ e.title }}</td>
+                    <td>{{ e.description }}</td>
+                    <td>
+                        {{ e.start_time.strftime('%d-%m-%Y %H:%M') }}
+                        -
+                        {{ e.end_time.strftime('%d-%m-%Y %H:%M') }}
+                    </td>
+                    <td>{{ "চলমান" if e.is_active else "বন্ধ" }}</td>
+                    <td>
+                        {% if e.id in voted_ids %}
+                            <span class="tag tag-success">ভোট দিয়েছেন</span>
+                            <a class="btn secondary-btn btn-sm"
+                               href="{{ url_for('voter_result', election_id=e.id) }}">
+                                ফলাফল
+                            </a>
+                        {% else %}
+                            {% if e.is_active %}
+                                <a class="btn primary-btn btn-sm"
+                                   href="{{ url_for('vote', election_id=e.id) }}">
+                                    ভোট দিন
+                                </a>
+                            {% else %}
+                                <span class="tag tag-warning">শেষ</span>
+                            {% endif %}
+                        {% endif %}
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="5">কোনো নির্বাচন পাওয়া যায়নি।</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </section>
+</main>
+
+<footer class="site-footer">
+    <div class="container">
+        © ২০২৫ CampusCast
+    </div>
+</footer>
+</body>
+</html>

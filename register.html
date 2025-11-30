@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <title>CampusCast - ভোটার নিবন্ধন</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<header class="site-header">
+    <div class="container header-inner">
+        <div class="logo">
+            <span>CampusCast</span>
+        </div>
+        <nav class="nav">
+            <a href="{{ url_for('login') }}">লগইন</a>
+            <a href="{{ url_for('register') }}" class="active">নিবন্ধন</a>
+        </nav>
+    </div>
+</header>
+
+<main class="container">
+    <h1 class="page-title">ভোটার নিবন্ধন</h1>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="flash-container">
+          {% for category, msg in messages %}
+            <div class="flash flash-{{ category }}">{{ msg }}</div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    <form method="post" class="card form-card">
+        <div class="form-group">
+            <label for="full_name">পূর্ণ নাম</label>
+            <input type="text" id="full_name" name="full_name" required>
+        </div>
+        <div class="form-group">
+            <label for="student_id">শিক্ষার্থী আইডি</label>
+            <input type="text" id="student_id" name="student_id" required>
+        </div>
+        <div class="form-group">
+            <label for="email">ইমেইল</label>
+            <input type="email" id="email" name="email" required>
+        </div>
+        <div class="form-group">
+            <label for="department">ডিপার্টমেন্ট</label>
+            <input type="text" id="department" name="department" required>
+        </div>
+        <div class="form-group">
+            <label for="password">পাসওয়ার্ড</label>
+            <input type="password" id="password" name="password" required>
+        </div>
+        <div class="form-group">
+            <label for="confirm_password">কনফার্ম পাসওয়ার্ড</label>
+            <input type="password" id="confirm_password" name="confirm_password" required>
+        </div>
+
+        <button class="btn primary-btn" type="submit">নিবন্ধন করুন</button>
+        <p class="form-extra">
+            আগে থেকেই একাউন্ট আছে?
+            <a href="{{ url_for('login') }}">লগইন করুন</a>
+        </p>
+    </form>
+</main>
+
+<footer class="site-footer">
+    <div class="container">
+        © ২০২৫ CampusCast
+    </div>
+</footer>
+</body>
+</html>
