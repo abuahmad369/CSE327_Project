@@ -49,7 +49,6 @@ function validateRegistrationInput(name, dob, email, password, role) {
   };
 }
 
-// export for Node (optional)
 // if (typeof module !== "undefined") {
 //   module.exports = { validateRegistrationInput };
 // }

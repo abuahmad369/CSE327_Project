@@ -32,16 +32,16 @@
   <h1>CampusCast - Login Unit Tests</h1>
   <pre id="output"></pre>
 
-  <!-- Your login validation file -->
+  <!-- login validation file -->
   <script src="/login/loginValidation.js"></script>
 
   <script>
-    // Write formatted output
+    // 
     function log(text) {
       document.getElementById("output").textContent += text + "\n";
     }
 
-    // Improved readable test output
+    // 
     function printResult(name, expected, actual) {
       const status = expected === actual ? "PASS" : "FAIL";
       log(status + "  " + name);
