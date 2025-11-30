@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <title>CampusCast - ভোটার লগইন</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<header class="site-header">
+    <div class="container header-inner">
+        <div class="logo">
+            <span>CampusCast</span>
+        </div>
+        <nav class="nav">
+            <a href="{{ url_for('login') }}" class="active">লগইন</a>
+            <a href="{{ url_for('register') }}">নিবন্ধন</a>
+        </nav>
+    </div>
+</header>
+
+<main class="container">
+    <h1 class="page-title">ভোটার লগইন</h1>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="flash-container">
+          {% for category, msg in messages %}
+            <div class="flash flash-{{ category }}">{{ msg }}</div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    <form method="post" class="card form-card">
+        <div class="form-group">
+            <label for="student_id">শিক্ষার্থী আইডি</label>
+            <input type="text" id="student_id" name="student_id" required>
+        </div>
+        <div class="form-group">
+            <label for="password">পাসওয়ার্ড</label>
+            <input type="password" id="password" name="password" required>
+        </div>
+        <button class="btn primary-btn" type="submit">লগইন</button>
+
+        <p class="form-extra">
+            নতুন ব্যবহারকারী?
+            <a href="{{ url_for('register') }}">এখনই নিবন্ধন করুন</a>
+        </p>
+    </form>
+</main>
+
+<footer class="site-footer">
+    <div class="container">
+        © ২০২৫ CampusCast
+    </div>
+</footer>
+</body>
+</html>

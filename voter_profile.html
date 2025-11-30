@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <title>CampusCast - ভোটার প্রোফাইল</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<header class="site-header">
+    <div class="container header-inner">
+        <div class="logo">
+            <span>CampusCast</span>
+        </div>
+        <nav class="nav">
+            <a href="{{ url_for('voter_dashboard') }}">ড্যাশবোর্ড</a>
+            <a href="{{ url_for('vote_history') }}">ভোট হিস্ট্রি</a>
+        </nav>
+    </div>
+</header>
+
+<main class="container">
+    <h1 class="page-title">ভোটার প্রোফাইল</h1>
+
+    <section class="card">
+        <p><strong>নাম:</strong> {{ user.full_name }}</p>
+        <p><strong>শিক্ষার্থী আইডি:</strong> {{ user.student_id }}</p>
+        <p><strong>ইমেইল:</strong> {{ user.email }}</p>
+        <p><strong>ডিপার্টমেন্ট:</strong> {{ user.department }}</p>
+    </section>
+
+    <a class="btn secondary-btn" href="{{ url_for('voter_dashboard') }}">ড্যাশবোর্ডে ফিরে যান</a>
+</main>
+
+<footer class="site-footer">
+    <div class="container">
+        © ২০২৫ CampusCast
+    </div>
+</footer>
+</body>
+</html>
