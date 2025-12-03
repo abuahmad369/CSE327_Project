@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CampusCast – ভোটার প্রোফাইল</title>
+  <link rel="stylesheet" href="assets/style.css" />
+</head>
+<body>
+  <!-- background image -->
+  <div class="hands-bg"></div>
+
+  <div class="container">
+    <!-- Header (same as index.html) -->
+    <header class="site-header">
+      <a href="index.html" class="logo" aria-label="CampusCast হোমপেজে যান">
+        <div class="logo-text">
+          <span>CampusCast</span>
+          <div class="logo-bars">
+            <div class="bar"></div>
+            <div class="bar alt"></div>
+            <div class="bar"></div>
+            <div class="bar alt"></div>
+          </div>
+        </div>
+        <div class="logo-subtitle">বিশ্ববিদ্যালয় ই-ভোটিং সিস্টেম</div>
+      </a>
+
+      <nav class="site-nav">
+        <a href="login/login.html" class="nav-link">প্রশাসক</a>
+        <a href="candidate.html" class="nav-link">প্রার্থী</a>
+        <a href="voter.html" class="nav-link">ভোটার</a>
+        <a href="public.html" class="nav-link">পাবলিক</a>
+        <a class="login-btn" href="login/login.html" role="button">লগইন</a>
+      </nav>
+    </header>
+
+    <!-- Main content -->
+    <main class="main-content" style="gap:40px; align-items:flex-start;">
+      <!-- Left text -->
+      <section class="content" style="max-width:520px;">
+        <span class="badge">ভোটার প্রোফাইল</span>
+        <h1 id="profileTitle">আপনার অ্যাকাউন্টের তথ্য</h1>
+        <p class="description">
+          এখানে আপনার নাম, ইমেইল এবং রোল সহ প্রাথমিক প্রোফাইল তথ্য দেখানো হয়েছে।
+          এই তথ্যগুলো লগইনের সময় CampusCast সিস্টেম থেকে নেওয়া হয়েছে।
+        </p>
+
+        <div class="button-group" style="margin-top:10px;">
+          <a class="btn btn-secondary" href="voter.html" role="button">ড্যাশবোর্ড</a>
+          <a class="btn btn-secondary" href="vote-history.html" role="button">ভোটের ইতিহাস</a>
+        </div>
+
+        <div class="ethereum-note" style="margin-top:12px;">
+          <span class="ethereum-icon">ℹ️</span>
+          প্রোফাইল তথ্য শুধুমাত্র আপনার এবং সিস্টেম প্রশাসকের জন্য দৃশ্যমান।
+        </div>
+
+        <p id="profileError" style="margin-top:8px; font-size:14px; color:crimson;"></p>
+      </section>
+
+      <!-- Right profile card -->
+      <section aria-label="প্রোফাইল তথ্য" style="flex:1; max-width:540px;">
+        <div class="super-card">
+          <h2 style="margin:0 0 8px; font-size:18px; font-weight:800; color:var(--ink);">
+            প্রোফাইল ডিটেইলস
+          </h2>
+
+          <p style="margin:0 0 12px; font-size:13px; color:#4b5563;">
+            নিচের তথ্যগুলো আপনার বর্তমান লগইন সেশনের ভিত্তিতে দেখানো হচ্ছে।
+          </p>
+
+          <dl style="margin:0;">
+            <div style="margin-bottom:10px;">
+              <dt style="font-size:13px; color:#6b7280;">নাম</dt>
+              <dd id="profileName" style="margin:0; font-weight:600;">লোড হচ্ছে…</dd>
+            </div>
+
+            <div style="margin-bottom:10px;">
+              <dt style="font-size:13px; color:#6b7280;">ইমেইল</dt>
+              <dd id="profileEmail" style="margin:0; font-weight:600;">লোড হচ্ছে…</dd>
+            </div>
+
+            <div style="margin-bottom:10px;">
+              <dt style="font-size:13px; color:#6b7280;">রোল</dt>
+              <dd id="profileRole" style="margin:0; font-weight:600;">লোড হচ্ছে…</dd>
+            </div>
+
+            <div style="margin-bottom:10px;">
+              <dt style="font-size:13px; color:#6b7280;">অতিরিক্ত তথ্য</dt>
+              <dd id="profileExtra" style="margin:0; font-weight:600;">
+                স্টুডেন্ট আইডি / ডিপার্টমেন্ট যদি আলাদা টেবিলে সংরক্ষিত থাকে, সেটা ভবিষ্যতে এখানে দেখানো যাবে।
+              </dd>
+            </div>
+          </dl>
+
+          <button
+            id="logoutBtn"
+            class="btn btn-secondary"
+            type="button"
+            style="margin-top:16px; width:100%; text-align:center;"
+          >
+            লগআউট করুন
+          </button>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer (same as index.html) -->
+    <footer class="features">
+      <div class="feature">
+        <div class="feature-icon">🧾</div>
+        <div class="feature-text">
+          <h3>স্বচ্ছ প্রক্রিয়া</h3>
+          <p>সমস্ত রেকর্ড যাচাইযোগ্য ও নিরীক্ষাযোগ্য।</p>
+        </div>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">🔒</div>
+        <div class="feature-text">
+          <h3>এন্ড টু এন্ড এনক্রিপশন</h3>
+          <p>প্রতিটি ধাপে আপনার তথ্য সুরক্ষিত থাকে।</p>
+        </div>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">⚡</div>
+        <div class="feature-text">
+          <h3>দ্রুত ও কার্যকর</h3>
+          <p>রিয়েল টাইমে ফলাফল দেখতে পারবেন।</p>
+        </div>
+      </div>
+
+      <div class="nav-arrows">
+        <button class="arrow-btn" aria-label="পূর্বের স্লাইড">‹</button>
+        <button class="arrow-btn" aria-label="পরবর্তী স্লাইড">›</button>
+      </div>
+
+      <div class="dots" aria-hidden="true">
+        <span class="dot active"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+      </div>
+
+      <div class="footer-credit">
+        <p>© ২০২৫ <strong>FourA</strong> – CampusCast</p>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Minimal JS: only localStorage, no Supabase needed here -->
+  <script>
+    const CC_CURRENT_USER_KEY = "cc_currentUser";
+
+    function getCurrentUser() {
+      try {
+        const raw = localStorage.getItem(CC_CURRENT_USER_KEY);
+        return raw ? JSON.parse(raw) : null;
+      } catch {
+        return null;
+      }
+    }
+
+    function ensureVoterUser() {
+      const user = getCurrentUser();
+      if (!user) {
+        window.location.href = "login/login.html";
+        return null;
+      }
+      if (user.role !== "voter") {
+        alert("শুধুমাত্র ভোটার প্রোফাইল এখানে দেখা যাবে।");
+        window.location.href = "login/login.html";
+        return null;
+      }
+      return user;
+    }
+
+    (function initProfilePage() {
+      const user = ensureVoterUser();
+      if (!user) return;
+
+      const name = user.name || "নাম পাওয়া যায়নি";
+      const email = user.email || "ইমেইল পাওয়া যায়নি";
+
+      document.getElementById("profileName").textContent = name;
+      document.getElementById("profileEmail").textContent = email;
+      document.getElementById("profileRole").textContent = "ভোটার";
+
+      const titleEl = document.getElementById("profileTitle");
+      if (titleEl) {
+        titleEl.textContent = name + " – আপনার প্রোফাইল";
+      }
+
+      const logoutBtn = document.getElementById("logoutBtn");
+      logoutBtn.addEventListener("click", () => {
+        localStorage.removeItem(CC_CURRENT_USER_KEY);
+        window.location.href = "login/login.html";
+      });
+    })();
+  </script>
+</body>
+</html>
