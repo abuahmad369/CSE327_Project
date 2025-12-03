@@ -1,0 +1,467 @@
+/**
+ * Supabase project base URL.
+ * @type {string}
+ */
+const SUPABASE_URL = "https://hgxjuxgxgbjjqxxvafhx.supabase.co";
+
+/**
+ * Supabase public anon key.
+ * Never expose a secret service role key in client code.
+ * @type {string}
+ */
+const SUPABASE_ANON_KEY = "sb_publishable_RqoNSHsQQOhs8dfL0OXsdA_TfeVyZcn";
+
+/**
+ * Supabase client instance attached to window.
+ * @type {import("@supabase/supabase-js").SupabaseClient}
+ */
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+/**
+ * LocalStorage key for the current user object.
+ * @type {string}
+ */
+const CC_CURRENT_USER_KEY = "cc_currentUser";
+
+/**
+ * LocalStorage key for vote history list.
+ * @type {string}
+ */
+const CC_VOTE_HISTORY_KEY = "cc_voteHistory";
+
+/**
+ * @typedef {Object} CurrentUser
+ * @property {string|number} id Unique user identifier.
+ * @property {string} role Role of the user, for example "voter".
+ */
+
+/**
+ * @typedef {Object} VoterRow
+ * @property {string|number} id Voter row id.
+ * @property {boolean} is_approved Flag that indicates voter approval status.
+ */
+
+/**
+ * @typedef {Object} ElectionRow
+ * @property {string|number} id Election id.
+ * @property {string} [title] Election title.
+ * @property {string} [description] Election description.
+ * @property {"draft"|"scheduled"|"active"|"closed"|string} status Status of the election.
+ */
+
+/**
+ * @typedef {Object} CandidateRow
+ * @property {string|number} id Candidate id.
+ * @property {string|number} user_id Linked user id.
+ * @property {string} [symbol] Candidate symbol.
+ * @property {string} [manifesto] Candidate manifesto text.
+ * @property {boolean} is_approved Whether candidate is approved.
+ * @property {string} [userName] Human readable candidate name.
+ */
+
+/**
+ * @typedef {Object} VoteHistoryEntry
+ * @property {string|number} userId User id who cast the vote.
+ * @property {string|number} electionId Election id.
+ * @property {string} [electionTitle] Display title for the election.
+ * @property {string|number} candidateId Selected candidate id.
+ * @property {string|null} [candidateName] Selected candidate name.
+ * @property {string} timestamp ISO timestamp when vote was recorded.
+ */
+
+/**
+ * Retrieves the current logged in user from localStorage.
+ * @returns {CurrentUser|null} The parsed user object or null if not found or invalid.
+ */
+function getCurrentUser() {
+  try {
+    const raw = localStorage.getItem(CC_CURRENT_USER_KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Ensures the current user exists and has the "voter" role.
+ * Redirects to the login page if not valid.
+ * @returns {CurrentUser|null} The voter user object if valid, otherwise null.
+ */
+function requireVoterUser() {
+  const user = getCurrentUser();
+  if (!user || user.role !== "voter") {
+    window.location.href = "/login/login.html";
+    return null;
+  }
+  return user;
+}
+
+/**
+ * Extracts the election id from the URL query string.
+ * For example, given "?election_id=123" returns "123".
+ * @returns {string|null} The election id or null if missing.
+ */
+function getElectionIdFromUrl() {
+  const params = new URLSearchParams(window.location.search);
+  return params.get("election_id");
+}
+
+/**
+ * Saves a vote history entry to localStorage.
+ * Reads the current list from CC_VOTE_HISTORY_KEY, appends and writes back.
+ * @param {VoteHistoryEntry} entry The vote history record to store.
+ * @returns {void}
+ */
+function saveVoteHistoryEntry(entry) {
+  try {
+    const raw = localStorage.getItem(CC_VOTE_HISTORY_KEY) || "[]";
+    const list = JSON.parse(raw);
+    list.push(entry);
+    localStorage.setItem(CC_VOTE_HISTORY_KEY, JSON.stringify(list));
+  } catch (e) {
+    console.warn("failed to save local vote history:", e);
+  }
+}
+
+/**
+ * Initializes the vote page, loads election data, candidates
+ * and handles the vote submission flow.
+ * This is an immediately invoked function that runs on page load.
+ * @returns {void}
+ */
+(function initVotePage() {
+  const user = requireVoterUser();
+  if (!user) return;
+
+  const electionId = getElectionIdFromUrl();
+  const titleEl = document.getElementById("electionTitle");
+  const descEl = document.getElementById("electionDescription");
+  const statusTextEl = document.getElementById("electionStatusText");
+  const candStatusEl = document.getElementById("candidatesStatus");
+  const candListEl = document.getElementById("candidatesList");
+  const voteForm = document.getElementById("voteForm");
+  const voteMessageEl = document.getElementById("voteMessage");
+  const submitBtn = document.getElementById("submitBtn");
+
+  if (!electionId) {
+    if (titleEl) titleEl.textContent = "ভুল ইউআরএল - নির্বাচনের আইডি পাওয়া যায়নি";
+    if (candStatusEl) candStatusEl.textContent = "সঠিক নির্বাচনের লিঙ্ক দিয়ে পুনরায় চেষ্টা করুন।";
+    if (submitBtn) submitBtn.disabled = true;
+    return;
+  }
+
+  /** @type {VoterRow|null} */
+  let voterRow = null;
+
+  /** @type {ElectionRow|null} */
+  let electionRow = null;
+
+  /** @type {{id: string|number}|null} */
+  let existingVote = null;
+
+  /** @type {CandidateRow[]} */
+  let candidates = [];
+
+  /**
+   * Loads voter profile, election row, existing vote and candidate list.
+   * Populates the DOM with election info and candidates.
+   * @async
+   * @returns {Promise<void>}
+   */
+  async function loadAll() {
+    try {
+      // 1) voter row (from voters table)
+      const { data: voter, error: vErr } = await supabase
+        .from("voters")
+        .select("id, is_approved")
+        .eq("user_id", user.id)
+        .single();
+
+      if (vErr) {
+        throw new Error("ভোটার প্রোফাইল পাওয়া যায়নি।");
+      }
+      voterRow = voter;
+
+      // 2) election row
+      const { data: election, error: eErr } = await supabase
+        .from("elections")
+        .select("*")
+        .eq("id", electionId)
+        .single();
+
+      if (eErr || !election) {
+        throw new Error("নির্বাচনের তথ্য পাওয়া যায়নি।");
+      }
+      electionRow = election;
+
+      if (titleEl) titleEl.textContent = election.title || "নির্বাচনের নাম পাওয়া যায়নি";
+      if (descEl) {
+        const desc = election.description || "এই নির্বাচনের জন্য কোনো বিবরণ সংরক্ষণ করা হয়নি।";
+        descEl.textContent = desc;
+      }
+      if (statusTextEl) {
+        const st = election.status;
+        let bnStatus = "অজানা";
+        if (st === "draft") bnStatus = "খসড়া";
+        else if (st === "scheduled") bnStatus = "তালিকাভুক্ত";
+        else if (st === "active") bnStatus = "চলমান";
+        else if (st === "closed") bnStatus = "সমাপ্ত";
+
+        statusTextEl.textContent =
+          "বর্তমান স্ট্যাটাস: " +
+          bnStatus +
+          (st !== "active" ? " (চলমান নির্বাচন না হওয়ায় ভোট দেওয়া যাবে না)" : "");
+      }
+
+      // 3) existing vote (votes table uses voter_id referencing voters.id)
+      const { data: existing, error: exErr } = await supabase
+        .from("votes")
+        .select("id")
+        .eq("election_id", electionId)
+        .eq("voter_id", voterRow.id)
+        .maybeSingle();
+
+      if (exErr && exErr.code !== "PGRST116" && exErr.details !== "Results contain 0 rows") {
+        console.warn("existing vote error:", exErr);
+      }
+      existingVote = existing || null;
+
+      // 4) candidates (approved only)
+      const { data: candRows, error: cErr } = await supabase
+        .from("candidates")
+        .select("id, user_id, symbol, manifesto, is_approved")
+        .eq("election_id", electionId)
+        .eq("is_approved", true);
+
+      if (cErr) {
+        throw new Error("প্রার্থীর তথ্য লোড করতে সমস্যা হয়েছে।");
+      }
+
+      candidates = candRows || [];
+
+      if (!candidates.length) {
+        candStatusEl.textContent = "এই নির্বাচনের জন্য কোনো অনুমোদিত প্রার্থী পাওয়া যায়নি।";
+      } else {
+        candStatusEl.textContent = `মোট ${candidates.length} জন প্রার্থী পাওয়া গেছে।`;
+      }
+
+      // also load user names for candidates
+      if (candidates.length) {
+        const userIds = candidates.map(c => c.user_id);
+        const { data: candidateUsers, error: uErr } = await supabase
+          .from("users")
+          .select("id, name")
+          .in("id", userIds);
+
+        if (uErr) {
+          console.warn("candidate users load error:", uErr);
+        } else {
+          const nameMap = {};
+          (candidateUsers || []).forEach(u => {
+            nameMap[u.id] = u.name || "নাম নেই";
+          });
+          candidates = candidates.map(c => ({
+            ...c,
+            userName: nameMap[c.user_id] || "নাম নেই"
+          }));
+        }
+      }
+
+      renderCandidates();
+      updateFormAvailability();
+    } catch (err) {
+      console.error(err);
+      if (candStatusEl) candStatusEl.textContent = err.message || "ডেটা লোড করতে সমস্যা হয়েছে।";
+      if (submitBtn) submitBtn.disabled = true;
+    }
+  }
+
+  /**
+   * Renders the visual list of candidates inside the DOM.
+   * Uses the global candidates array and appends label elements to candListEl.
+   * @returns {void}
+   */
+  function renderCandidates() {
+    candListEl.innerHTML = "";
+    if (!candidates.length) return;
+
+    candidates.forEach(c => {
+      const wrapper = document.createElement("label");
+      wrapper.style.display = "flex";
+      wrapper.style.gap = "10px";
+      wrapper.style.alignItems = "flex-start";
+      wrapper.style.padding = "8px 10px";
+      wrapper.style.borderRadius = "10px";
+      wrapper.style.border = "1px solid var(--border)";
+      wrapper.style.background = "#f9fafb";
+      wrapper.style.cursor = "pointer";
+
+      const radio = document.createElement("input");
+      radio.type = "radio";
+      radio.name = "candidate";
+      radio.value = String(c.id);
+      radio.style.marginTop = "4px";
+
+      const inner = document.createElement("div");
+
+      const nameEl = document.createElement("p");
+      nameEl.style.margin = "0 0 2px";
+      nameEl.style.fontWeight = "700";
+      nameEl.textContent = c.userName || "নাম নেই";
+
+      const symEl = document.createElement("p");
+      symEl.style.margin = "0 0 2px";
+      symEl.style.fontSize = "13px";
+      symEl.style.color = "#4b5563";
+      symEl.textContent = "নির্বাচনী প্রতীক: " + (c.symbol || "উল্লেখ নেই");
+
+      const manEl = document.createElement("p");
+      manEl.style.margin = "0";
+      manEl.style.fontSize = "13px";
+      manEl.style.color = "#6b7280";
+      manEl.textContent = c.manifesto || "কোনো ইশতেহার দেওয়া হয়নি।";
+
+      inner.appendChild(nameEl);
+      inner.appendChild(symEl);
+      inner.appendChild(manEl);
+
+      wrapper.appendChild(radio);
+      wrapper.appendChild(inner);
+      candListEl.appendChild(wrapper);
+    });
+  }
+
+  /**
+   * Updates form availability and user messages based on:
+   *  - electionRow.status
+   *  - existingVote
+   *  - candidates length
+   * Sets submit button disabled state and voteMessage text.
+   * @returns {void}
+   */
+  function updateFormAvailability() {
+    if (!submitBtn) return;
+
+    if (!electionRow) {
+      submitBtn.disabled = true;
+      return;
+    }
+
+    if (electionRow.status !== "active") {
+      submitBtn.disabled = true;
+      voteMessageEl.style.color = "#b91c1c";
+      voteMessageEl.textContent =
+        "এই নির্বাচন বর্তমানে সক্রিয় নয়, তাই ভোট দেওয়া যাবে না।";
+      return;
+    }
+
+    if (existingVote) {
+      submitBtn.disabled = true;
+      voteMessageEl.style.color = "#15803d";
+      voteMessageEl.textContent = "আপনি ইতিমধ্যে এই নির্বাচনে ভোট দিয়েছেন।";
+      return;
+    }
+
+    if (!candidates.length) {
+      submitBtn.disabled = true;
+      voteMessageEl.style.color = "#4b5563";
+      voteMessageEl.textContent = "কোনো অনুমোদিত প্রার্থী না থাকায় ভোট প্রদান সম্ভব নয়।";
+      return;
+    }
+
+    // allowed
+    submitBtn.disabled = false;
+    voteMessageEl.textContent = "";
+  }
+
+  /**
+   * Handles the vote form submission.
+   * Validates selection, checks for duplicate vote,
+   * inserts into Supabase "votes" table and saves local history.
+   * @async
+   * @param {SubmitEvent} ev The form submit event.
+   * @returns {Promise<void>}
+   */
+  async function handleVoteSubmit(ev) {
+    ev.preventDefault();
+    if (!submitBtn || submitBtn.disabled) return;
+
+    const formData = new FormData(voteForm);
+    const candidateId = formData.get("candidate");
+
+    if (!candidateId) {
+      voteMessageEl.style.color = "#b91c1c";
+      voteMessageEl.textContent = "অনুগ্রহ করে একজন প্রার্থী নির্বাচন করুন।";
+      return;
+    }
+
+    voteMessageEl.style.color = "#4b5563";
+    voteMessageEl.textContent = "ভোট সাবমিট করা হচ্ছে...";
+    submitBtn.disabled = true;
+
+    try {
+      // double-check there is no existing vote (in case of race condition)
+      const { data: existing, error: exErr } = await supabase
+        .from("votes")
+        .select("id")
+        .eq("election_id", electionId)
+        .eq("voter_id", voterRow.id)
+        .maybeSingle();
+
+      if (exErr && exErr.code && exErr.code !== "PGRST116") {
+        console.warn("existing vote recheck error:", exErr);
+      }
+
+      if (existing) {
+        voteMessageEl.style.color = "#b91c1c";
+        voteMessageEl.textContent = "আপনি ইতিমধ্যে এই নির্বাচনে ভোট দিয়েছেন।";
+        return;
+      }
+
+      const { error: insErr } = await supabase.from("votes").insert({
+        election_id: electionId,
+        candidate_id: candidateId,
+        voter_id: voterRow.id
+      });
+
+      if (insErr) {
+        // unique constraint violation = tried to vote twice
+        if (insErr.code === "23505") {
+          voteMessageEl.style.color = "#b91c1c";
+          voteMessageEl.textContent = "আপনি ইতিমধ্যে এই নির্বাচনে ভোট দিয়েছেন।";
+          return;
+        }
+        throw insErr;
+      }
+
+      // local history
+      const candidate = candidates.find(c => String(c.id) === String(candidateId));
+      saveVoteHistoryEntry({
+        userId: user.id,
+        electionId: electionId,
+        electionTitle: electionRow.title,
+        candidateId: candidateId,
+        candidateName: candidate ? candidate.userName : null,
+        timestamp: new Date().toISOString()
+      });
+
+      voteMessageEl.style.color = "#15803d";
+      voteMessageEl.textContent = "ভোট সফলভাবে গ্রহণ করা হয়েছে! ফলাফল পৃষ্ঠায় নেওয়া হচ্ছে...";
+
+      setTimeout(() => {
+        window.location.href = `voter-result.html?election_id=${encodeURIComponent(
+          electionId
+        )}`;
+      }, 1200);
+    } catch (err) {
+      console.error(err);
+      voteMessageEl.style.color = "#b91c1c";
+      voteMessageEl.textContent = "ভোট সাবমিট করতে সমস্যা হয়েছে। একটু পরে আবার চেষ্টা করুন।";
+      submitBtn.disabled = false;
+    }
+  }
+
+  // attach listener and load initial data
+  voteForm.addEventListener("submit", handleVoteSubmit);
+  loadAll();
+})();

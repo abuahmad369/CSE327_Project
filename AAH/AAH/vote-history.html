@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CampusCast - ভোটের ইতিহাস</title>
+  <link rel="stylesheet" href="/assets/style.css" />
+</head>
+<body>
+  <!-- background image -->
+  <div class="hands-bg"></div>
+
+  <div class="container">
+    <!-- Header (same as login) -->
+    <header class="site-header">
+      <a href="/index.html" class="logo" aria-label="CampusCast হোমপেজে যান">
+        <div class="logo-text">
+          <span>CampusCast</span>
+          <div class="logo-bars">
+            <div class="bar"></div>
+            <div class="bar alt"></div>
+            <div class="bar"></div>
+            <div class="bar alt"></div>
+          </div>
+        </div>
+        <div class="logo-subtitle">বিশ্ববিদ্যালয় ই ভোটিং সিস্টেম</div>
+      </a>
+
+      <nav class="site-nav">
+        <a href="/login/login.html" class="nav-link">প্রশাসক</a>
+        <a href="/login/login.html" class="nav-link">প্রার্থী</a>
+        <a href="/login/login.html" class="nav-link">ভোটার</a>
+        <a href="/public.html" class="nav-link">পাবলিক</a>
+        <a class="login-btn" href="/login/login.html" role="button">লগইন</a>
+      </nav>
+    </header>
+
+    <!-- Main content (aligned with login layout) -->
+    <main class="main-content" style="gap:40px; align-items:flex-start;">
+      <!-- Left description -->
+      <section class="content" style="max-width:520px;">
+        <span class="badge">ভোটের ইতিহাস</span>
+        <h1>আপনার পূর্বে কাস্ট করা ভোটসমূহ</h1>
+        <p class="description">
+          এখানে এই ব্রাউজার থেকে আপনার কাস্ট করা ভোটের সংক্ষিপ্ত রেকর্ড দেখানো হয়।
+          প্রতিবার ভোট সফলভাবে কাস্ট হওয়ার পর তথ্যগুলো লোকালস্টোরেজে সংরক্ষিত হয়।
+        </p>
+
+        <div class="ethereum-note" style="margin-top:12px;">
+          <span class="ethereum-icon">ℹ️</span>
+          ব্রাউজারের ডেটা ক্লিয়ার করলে এই ইতিহাস মুছে যাবে, কিন্তু Supabase ডাটাবেসে
+          সংরক্ষিত আসল ভোট রেকর্ড মুছে যাবে না।
+        </div>
+      </section>
+
+      <!-- Right history card (styled like login card) -->
+      <section aria-label="ভোট ইতিহাস তালিকা" style="flex:1; max-width:540px;">
+        <div
+          style="
+            background:#fff;
+            border:1px solid var(--border);
+            border-radius:14px;
+            box-shadow:0 6px 18px rgba(0,0,0,.08);
+            padding:22px;
+          "
+        >
+          <h2 style="margin:0 0 8px; font-size:20px; font-weight:800; color:var(--ink);">
+            ভোট রেকর্ড
+          </h2>
+
+          <p id="historyStatus" style="margin:0 0 12px; font-size:13px; color:#4b5563;">
+            ডেটা লোড হচ্ছে…
+          </p>
+
+          <div style="overflow-x:auto;">
+            <table style="width:100%; border-collapse:collapse; font-size:14px;">
+              <thead>
+                <tr style="background:#f3f4f6;">
+                  <th style="text-align:left; padding:8px; border-bottom:1px solid var(--border);">
+                    নির্বাচন
+                  </th>
+                  <th style="text-align:left; padding:8px; border-bottom:1px solid var(--border);">
+                    প্রার্থী
+                  </th>
+                  <th style="text-align:left; padding:8px; border-bottom:1px solid var(--border);">
+                    সময়
+                  </th>
+                </tr>
+              </thead>
+              <tbody id="historyBody">
+                <!-- rows injected by JS -->
+              </tbody>
+            </table>
+          </div>
+
+          <button
+            class="btn btn-secondary"
+            type="button"
+            style="margin-top:16px; width:100%; text-align:center;"
+            onclick="window.location.href='voter.html';"
+          >
+            ড্যাশবোর্ডে ফিরে যান
+          </button>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer (same style as login) -->
+    <footer class="features">
+      <div class="feature">
+        <div class="feature-icon">🧾</div>
+        <div class="feature-text">
+          <h3>স্বচ্ছ প্রক্রিয়া</h3>
+          <p>সমস্ত রেকর্ড যাচাইযোগ্য ও নিরীক্ষাযোগ্য।</p>
+        </div>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">🔒</div>
+        <div class="feature-text">
+          <h3>এন্ড টু এন্ড এনক্রিপশন</h3>
+          <p>প্রতিটি ধাপে আপনার তথ্য সুরক্ষিত থাকে।</p>
+        </div>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">⚡</div>
+        <div class="feature-text">
+          <h3>দ্রুত ও কার্যকর</h3>
+          <p>রিয়েল টাইমে ফলাফল দেখতে পারবেন।</p>
+        </div>
+      </div>
+
+      <div class="nav-arrows">
+        <button class="arrow-btn" aria-label="পূর্বের স্লাইড">‹</button>
+        <button class="arrow-btn" aria-label="পরবর্তী স্লাইড">›</button>
+      </div>
+
+      <div class="dots" aria-hidden="true">
+        <span class="dot active"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+      </div>
+
+      <div class="footer-credit">
+        <p>© ২০২৫ <strong>FourA</strong> - CampusCast</p>
+      </div>
+    </footer>
+  </div>
+
+  <!-- JS: current voter + local history -->
+  <script>
+    const CC_CURRENT_USER_KEY = "cc_currentUser";
+    const CC_VOTE_HISTORY_KEY = "cc_voteHistory";
+
+    function getCurrentUser() {
+      try {
+        const raw = localStorage.getItem(CC_CURRENT_USER_KEY);
+        return raw ? JSON.parse(raw) : null;
+      } catch {
+        return null;
+      }
+    }
+
+    function ensureVoterUser() {
+      const user = getCurrentUser();
+      if (!user) {
+        window.location.href = "/login/login.html";
+        return null;
+      }
+      if (user.role !== "voter") {
+        alert("এই ইতিহাস শুধুমাত্র ভোটারদের জন্য।");
+        window.location.href = "/login/login.html";
+        return null;
+      }
+      return user;
+    }
+
+    function loadHistory(user) {
+      try {
+        const raw = localStorage.getItem(CC_VOTE_HISTORY_KEY) || "[]";
+        const list = JSON.parse(raw);
+        // শুধু এই ব্যবহারকারীর রেকর্ড দেখানো হবে
+        return list.filter(entry => entry.userId === user.id);
+      } catch (e) {
+        console.warn("vote history পড়তে সমস্যা:", e);
+        return [];
+      }
+    }
+
+    function formatTime(iso) {
+      if (!iso) return "";
+      const d = new Date(iso);
+      if (Number.isNaN(d.getTime())) return iso;
+      return d.toLocaleString("bn-BD");
+    }
+
+    (function initHistoryPage() {
+      const user = ensureVoterUser();
+      if (!user) return;
+
+      const statusEl = document.getElementById("historyStatus");
+      const bodyEl = document.getElementById("historyBody");
+      if (!statusEl || !bodyEl) return;
+
+      const rows = loadHistory(user);
+
+      if (!rows.length) {
+        statusEl.textContent =
+          "এই ব্রাউজারে আপনার কোনো ভোট ইতিহাস পাওয়া যায়নি। নতুন করে ভোট দিলে এই তালিকা আপডেট হবে।";
+        bodyEl.innerHTML = "";
+        return;
+      }
+
+      // newest first
+      rows.sort((a, b) => (a.timestamp < b.timestamp ? 1 : -1));
+
+      statusEl.textContent = `মোট ${rows.length} টি ভোট রেকর্ড দেখানো হচ্ছে।`;
+
+      bodyEl.innerHTML = "";
+      rows.forEach(r => {
+        const tr = document.createElement("tr");
+
+        const tdElection = document.createElement("td");
+        tdElection.style.padding = "6px 8px";
+        tdElection.style.borderBottom = "1px solid var(--border)";
+        tdElection.textContent = r.electionTitle || r.electionId;
+
+        const tdCandidate = document.createElement("td");
+        tdCandidate.style.padding = "6px 8px";
+        tdCandidate.style.borderBottom = "1px solid var(--border)";
+        tdCandidate.textContent = r.candidateName || r.candidateId;
+
+        const tdTime = document.createElement("td");
+        tdTime.style.padding = "6px 8px";
+        tdTime.style.borderBottom = "1px solid var(--border)";
+        tdTime.textContent = formatTime(r.timestamp);
+
+        tr.appendChild(tdElection);
+        tr.appendChild(tdCandidate);
+        tr.appendChild(tdTime);
+        bodyEl.appendChild(tr);
+      });
+    })();
+  </script>
+</body>
+</html>

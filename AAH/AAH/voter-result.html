@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CampusCast - ভোট ফলাফল</title>
+  <link rel="stylesheet" href="/assets/style.css" />
+</head>
+<body>
+  <div class="hands-bg"></div>
+
+  <div class="container">
+    <!-- Header -->
+    <header class="site-header">
+      <a href="index.html" class="logo" aria-label="CampusCast হোমপেজে যান">
+        <div class="logo-text">
+          <span>CampusCast</span>
+          <div class="logo-bars">
+            <div class="bar"></div>
+            <div class="bar alt"></div>
+            <div class="bar"></div>
+            <div class="bar alt"></div>
+          </div>
+        </div>
+        <div class="logo-subtitle">বিশ্ববিদ্যালয় ই-ভোটিং সিস্টেম</div>
+      </a>
+
+      <nav class="site-nav">
+        <a href="/login/login.html" class="nav-link">প্রশাসক</a>
+        <a href="/login/login.html" class="nav-link">প্রার্থী</a>
+        <a href="/login/login.html" class="nav-link">ভোটার</a>
+        <a href="public.html" class="nav-link">পাবলিক</a>
+        <a class="login-btn" href="/login/login.html" role="button">লগইন</a>
+      </nav>
+    </header>
+
+    <main class="main-content" style="gap:40px; align-items:flex-start;">
+      <!-- Left: summary -->
+      <section class="content" style="max-width:460px;">
+        <span class="badge">ভোট ফলাফল</span>
+        <h1 id="resultTitle">নির্বাচনের ফলাফল</h1>
+        <p class="description" id="resultDescription">
+          এখানে নির্বাচনের প্রার্থীদের মোট ভোট ও শতকরা হার দেখতে পারবেন। নিচে আপনার নিজস্ব ভোটটি আলাদা করে হাইলাইট করা থাকবে।
+        </p>
+
+        <div class="button-group" style="margin-top:12px;">
+          <a href="voter.html" class="btn btn-secondary" role="button">ড্যাশবোর্ডে ফিরে যান</a>
+          <a href="vote-history.html" class="btn btn-primary" role="button">আমার ভোট ইতিহাস</a>
+        </div>
+
+        <div class="ethereum-note" style="margin-top:12px;">
+          <span class="ethereum-icon">🔐</span>
+          ফলাফল শুধু মোট ভোটের হিসাব দেখায়; কোনো ব্যক্তিগত ভোট প্রকাশ করা হয় না।
+        </div>
+      </section>
+
+      <!-- Right: per-candidate cards -->
+      <section aria-label="প্রার্থীভিত্তিক ফলাফল" style="flex:1; max-width:520px;">
+        <div style="
+          background:#fff;
+          border:1px solid var(--border);
+          border-radius:14px;
+          box-shadow:0 6px 18px rgba(0,0,0,0.08);
+          padding:18px 18px 20px;
+        ">
+          <h2 style="font-size:18px; font-weight:800; margin:0 0 8px; color:var(--ink);">
+            প্রার্থীভিত্তিক ফলাফল
+          </h2>
+          <p id="resultStatus" style="font-size:14px; margin-bottom:10px; color:var(--muted);">
+            ফলাফল লোড হচ্ছে...
+          </p>
+
+          <div id="resultsContainer" style="display:flex; flex-direction:column; gap:8px;">
+            <!-- প্রার্থীদের রেজাল্ট কার্ড আসবে -->
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="features">
+      <div class="feature">
+        <div class="feature-icon">🧾</div>
+        <div class="feature-text">
+          <h3>স্বচ্ছ প্রক্রিয়া</h3>
+          <p>সমস্ত রেকর্ড যাচাইযোগ্য ও নিরীক্ষাযোগ্য।</p>
+        </div>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">🔒</div>
+        <div class="feature-text">
+          <h3>এন্ড টু এন্ড এনক্রিপশন</h3>
+          <p>প্রতিটি ধাপে আপনার তথ্য সুরক্ষিত থাকে।</p>
+        </div>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">⚡</div>
+        <div class="feature-text">
+          <h3>দ্রুত ও কার্যকর</h3>
+          <p>রিয়েল টাইমে ফলাফল দেখতে পারবেন।</p>
+        </div>
+      </div>
+
+      <div class="nav-arrows">
+        <button class="arrow-btn" aria-label="পূর্বের স্লাইড">‹</button>
+        <button class="arrow-btn" aria-label="পরবর্তী স্লাইড">›</button>
+      </div>
+
+      <div class="dots" aria-hidden="true">
+        <span class="dot active"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+      </div>
+
+      <div class="footer-credit">
+        <p>© ২০২৫ <strong>FourA</strong> - CampusCast</p>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Supabase + JS -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script>
+    const SUPABASE_URL = "https://dfniyjbsmznnzklfprsx.supabase.co";
+    const SUPABASE_ANON_KEY = "sb_publishable_XNUFe9_ygaeMfYHd6Z97XQ_UE1-VhGn";
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    const CC_CURRENT_USER_KEY = "cc_currentUser";
+
+    function getCurrentUser() {
+      try {
+        const raw = localStorage.getItem(CC_CURRENT_USER_KEY);
+        if (!raw) return null;
+        return JSON.parse(raw);
+      } catch {
+        return null;
+      }
+    }
+
+    function requireVoter() {
+      const user = getCurrentUser();
+      if (!user || user.role !== "voter") {
+        window.location.href = "/login/login.html";
+        return null;
+      }
+      return user;
+    }
+
+    function getQueryParam(name) {
+      const params = new URLSearchParams(window.location.search);
+      return params.get(name);
+    }
+
+    async function loadResults() {
+      const user = requireVoter();
+      if (!user) return;
+
+      const electionId = getQueryParam("election_id");
+      const titleEl = document.getElementById("resultTitle");
+      const descEl = document.getElementById("resultDescription");
+      const statusEl = document.getElementById("resultStatus");
+      const container = document.getElementById("resultsContainer");
+
+      if (!electionId || !titleEl || !descEl || !statusEl || !container) {
+        if (statusEl) statusEl.textContent = "নির্বাচনের তথ্য পাওয়া যায়নি।";
+        return;
+      }
+
+      statusEl.textContent = "ফলাফল লোড হচ্ছে...";
+      container.innerHTML = "";
+
+      try {
+        const { data: election, error: eErr } = await supabase
+          .from("elections")
+          .select("*")
+          .eq("id", electionId)
+          .single();
+
+        if (eErr || !election) {
+          statusEl.textContent = "এই আইডি অনুযায়ী কোনো নির্বাচন পাওয়া যায়নি।";
+          return;
+        }
+
+        titleEl.textContent = election.title || "নির্বাচনের ফলাফল";
+
+        const start = election.start_at ? new Date(election.start_at).toLocaleString() : "শুরু নির্ধারিত নয়";
+        const end = election.end_at ? new Date(election.end_at).toLocaleString() : "শেষ নির্ধারিত নয়";
+        descEl.textContent =
+          `এই নির্বাচনের ফলাফল দেখানো হচ্ছে। সময়: ${start} থেকে ${end}`;
+
+        const { data: candidates, error: cErr } = await supabase
+          .from("candidates")
+          .select("id, election_id, approved_symbol, requested_symbol, symbol, user:users(name, email, dept)")
+          .eq("election_id", electionId);
+
+        if (cErr) throw cErr;
+
+        const { data: votes, error: vErr } = await supabase
+          .from("votes")
+          .select("*")
+          .eq("election_id", electionId);
+
+        if (vErr) throw vErr;
+
+        const totalVotes = (votes || []).length;
+
+        /** count votes per candidate */
+        const counts = {};
+        (votes || []).forEach(v => {
+          counts[v.candidate_id] = (counts[v.candidate_id] || 0) + 1;
+        });
+
+        /** which candidate did this voter choose? */
+        let myCandidateId = null;
+        (votes || []).forEach(v => {
+          if (v.voter_id === user.id) {
+            myCandidateId = v.candidate_id;
+          }
+        });
+
+        if (!candidates || !candidates.length) {
+          statusEl.textContent = "এই নির্বাচনের জন্য কোনো প্রার্থী পাওয়া যায়নি।";
+          return;
+        }
+
+        if (!totalVotes) {
+          statusEl.textContent = "এখনো কোনো ভোট কাস্ট হয়নি।";
+        } else {
+          statusEl.textContent = `মোট ${totalVotes} টি ভোট কাস্ট হয়েছে।`;
+        }
+
+        // sort by votes desc
+        candidates.sort((a, b) => (counts[b.id] || 0) - (counts[a.id] || 0));
+
+        container.innerHTML = "";
+
+        candidates.forEach(c => {
+          const votesFor = counts[c.id] || 0;
+          const share = totalVotes > 0 ? Math.round((votesFor / totalVotes) * 1000) / 10 : 0;
+
+          const card = document.createElement("div");
+          card.style.border = "1px solid var(--border)";
+          card.style.borderRadius = "12px";
+          card.style.padding = "10px 12px";
+          card.style.backgroundColor = "#f9fafb";
+
+          if (c.id === myCandidateId) {
+            card.style.borderColor = "#22c55e";
+            card.style.boxShadow = "0 0 0 1px #22c55e55";
+          }
+
+          const header = document.createElement("div");
+          header.style.display = "flex";
+          header.style.justifyContent = "space-between";
+          header.style.alignItems = "flex-start";
+          header.style.marginBottom = "4px";
+
+          const left = document.createElement("div");
+          const nameP = document.createElement("p");
+          nameP.style.margin = "0 0 2px";
+          nameP.style.fontWeight = "700";
+          nameP.textContent = c.user?.name || "অজানা প্রার্থী";
+
+          const symbol = c.approved_symbol || c.requested_symbol || c.symbol || "নির্ধারিত নয়";
+
+          const subP = document.createElement("p");
+          subP.style.margin = "0";
+          subP.style.fontSize = "13px";
+          subP.style.color = "#4b5563";
+          subP.textContent = `প্রতীক: ${symbol}`;
+
+          left.appendChild(nameP);
+          left.appendChild(subP);
+
+          header.appendChild(left);
+
+          if (c.id === myCandidateId) {
+            const myTag = document.createElement("span");
+            myTag.textContent = "আপনার ভোট";
+            myTag.style.fontSize = "12px";
+            myTag.style.fontWeight = "600";
+            myTag.style.padding = "4px 10px";
+            myTag.style.borderRadius = "999px";
+            myTag.style.backgroundColor = "#dcfce7";
+            myTag.style.color = "#166534";
+            header.appendChild(myTag);
+          }
+
+          card.appendChild(header);
+
+          const stats = document.createElement("p");
+          stats.style.margin = "2px 0 6px";
+          stats.style.fontSize = "13px";
+          stats.innerHTML =
+            `<strong>মোট ভোট:</strong> ${votesFor} ` +
+            `( ${share.toFixed(1)}% )`;
+          card.appendChild(stats);
+
+          // progress bar
+          const barOuter = document.createElement("div");
+          barOuter.style.width = "100%";
+          barOuter.style.height = "8px";
+          barOuter.style.borderRadius = "999px";
+          barOuter.style.backgroundColor = "#e5e7eb";
+          barOuter.style.overflow = "hidden";
+
+          const barInner = document.createElement("div");
+          barInner.style.height = "100%";
+          barInner.style.width = share + "%";
+          barInner.style.backgroundColor = "#16a34a";
+
+          barOuter.appendChild(barInner);
+          card.appendChild(barOuter);
+
+          container.appendChild(card);
+        });
+      } catch (err) {
+        console.error(err);
+        statusEl.textContent = "ফলাফল লোড করতে সমস্যা হয়েছে।";
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", loadResults);
+  </script>
+</body>
+</html>

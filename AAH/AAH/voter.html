@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CampusCast - ভোটার ড্যাশবোর্ড</title>
+  <link rel="stylesheet" href="/assets/style.css" />
+</head>
+<body>
+  <!-- Background -->
+  <div class="hands-bg"></div>
+
+  <div class="container">
+    <!-- Header (same style as index) -->
+    <header class="site-header">
+      <a href="index.html" class="logo" aria-label="CampusCast হোমপেজে যান">
+        <div class="logo-text">
+          <span>CampusCast</span>
+          <div class="logo-bars">
+            <div class="bar"></div>
+            <div class="bar alt"></div>
+            <div class="bar"></div>
+            <div class="bar alt"></div>
+          </div>
+        </div>
+        <div class="logo-subtitle">বিশ্ববিদ্যালয় ই-ভোটিং সিস্টেম</div>
+      </a>
+
+      <nav class="site-nav">
+        <a href="/login/login.html" class="nav-link">প্রশাসক</a>
+        <a href="/login/login.html" class="nav-link">প্রার্থী</a>
+        <a href="/login/login.html" class="nav-link">ভোটার</a>
+        <a href="public.html" class="nav-link">পাবলিক</a>
+        <!-- <a href="/dashboard-test.html" class="nav-link">ড্যাশবোর্ড</a> -->
+        <a class="login-btn" href="/login/login.html" role="button">লগইন</a>
+      </nav>
+    </header>
+
+    <!-- Main content -->
+    <main class="main-content" style="gap:40px; align-items:flex-start;">
+      <!-- Left column: intro & quick links -->
+      <section class="content" style="max-width:460px;">
+        <span class="badge">ভোটার ড্যাশবোর্ড</span>
+        <h1 id="welcomeTitle">স্বাগতম, <span id="voterName">ভোটার</span></h1>
+        <p class="description" id="voterIntro">
+          এখানে আপনি আপনার জন্য নির্ধারিত নির্বাচনের তালিকা, ভোটের অবস্থা এবং ফলাফল দেখতে পারবেন।
+          প্রতিটি নির্বাচনে মাত্র একবার ভোট দেয়া যাবে।
+        </p>
+
+        <div class="button-group" style="margin-top:12px;">
+          <a class="btn btn-primary" href="vote-history.html" role="button">ভোট ইতিহাস</a>
+          <a class="btn btn-secondary" href="voter-profile.html" role="button">প্রোফাইল দেখুন</a>
+        </div>
+
+        <div class="ethereum-note" style="margin-top:12px;">
+          <span class="ethereum-icon">🔐</span>
+          আপনার লগইন তথ্য ও ভোট Supabase ডাটাবেজে সুরক্ষিতভাবে সংরক্ষিত থাকে।
+        </div>
+      </section>
+
+      <!-- Right column: Elections list -->
+      <section aria-label="আপনার নির্বাচনের তালিকা" style="flex:1; max-width:520px;">
+        <div style="
+          background:#fff;
+          border:1px solid var(--border);
+          border-radius:14px;
+          box-shadow:0 6px 18px rgba(0,0,0,0.08);
+          padding:18px 18px 16px;
+        ">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+            <h2 style="font-size:18px; font-weight:800; margin:0; color:var(--ink);">
+              আপনার জন্য নির্ধারিত নির্বাচন
+            </h2>
+            <button type="button" id="logoutBtn" class="btn btn-secondary" style="padding:6px 10px; font-size:13px;">
+              লগআউট
+            </button>
+          </div>
+          <p id="voterStatus" style="font-size:14px; margin-bottom:10px; color:var(--muted);">
+            নির্বাচন লোড হচ্ছে...
+          </p>
+
+          <div id="electionsContainer" style="display:flex; flex-direction:column; gap:8px;">
+            <!-- JS দিয়ে কার্ডগুলো আসবে -->
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer (same as other pages) -->
+    <footer class="features">
+      <div class="feature">
+        <div class="feature-icon">🧾</div>
+        <div class="feature-text">
+          <h3>স্বচ্ছ প্রক্রিয়া</h3>
+          <p>সমস্ত রেকর্ড যাচাইযোগ্য ও নিরীক্ষাযোগ্য।</p>
+        </div>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">🔒</div>
+        <div class="feature-text">
+          <h3>এন্ড টু এন্ড এনক্রিপশন</h3>
+          <p>প্রতিটি ধাপে আপনার তথ্য সুরক্ষিত থাকে।</p>
+        </div>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">⚡</div>
+        <div class="feature-text">
+          <h3>দ্রুত ও কার্যকর</h3>
+          <p>রিয়েল টাইমে ফলাফল দেখতে পারবেন।</p>
+        </div>
+      </div>
+
+      <div class="nav-arrows">
+        <button class="arrow-btn" aria-label="পূর্বের স্লাইড">‹</button>
+        <button class="arrow-btn" aria-label="পরবর্তী স্লাইড">›</button>
+      </div>
+
+      <div class="dots" aria-hidden="true">
+        <span class="dot active"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+      </div>
+
+      <div class="footer-credit">
+        <p>© ২০২৫ <strong>FourA</strong> - CampusCast</p>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Supabase client -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script>
+    const SUPABASE_URL = "https://hgxjuxgxgbjjqxxvafhx.supabase.co";
+    const SUPABASE_ANON_KEY = "sb_publishable_RqoNSHsQQOhs8dfL0OXsdA_TfeVyZcn";
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    const CC_CURRENT_USER_KEY = "cc_currentUser";
+
+    function getCurrentUser() {
+      try {
+        const raw = localStorage.getItem(CC_CURRENT_USER_KEY);
+        if (!raw) return null;
+        return JSON.parse(raw);
+      } catch {
+        return null;
+      }
+    }
+
+    function requireVoter() {
+      const user = getCurrentUser();
+      if (!user || user.role !== "voter") {
+        window.location.href = "/login/login.html";
+        return null;
+      }
+      return user;
+    }
+
+    function shortStatus(status) {
+      if (!status) return "অজানা";
+      if (status === "active") return "চলমান";
+      if (status === "closed") return "সমাপ্ত";
+      return status;
+    }
+
+    function badgeColor(status) {
+      if (status === "active") return "#dcfce7";
+      if (status === "closed") return "#fee2e2";
+      return "#e5e7eb";
+    }
+
+    async function loadVoterDashboard() {
+      const user = requireVoter();
+      if (!user) return;
+
+      const nameEl = document.getElementById("voterName");
+      if (nameEl) nameEl.textContent = user.name || "ভোটার";
+
+      const statusEl = document.getElementById("voterStatus");
+      const container = document.getElementById("electionsContainer");
+
+      if (!statusEl || !container) return;
+
+      statusEl.textContent = "নির্বাচনের তথ্য লোড হচ্ছে...";
+      container.innerHTML = "";
+
+      try {
+        const { data: elections, error: eErr } = await supabase
+          .from("elections")
+          .select("*")
+          .order("start_at", { ascending: true });
+
+        if (eErr) throw eErr;
+
+        const { data: votes, error: vErr } = await supabase
+          .from("votes")
+          .select("election_id")
+          .eq("voter_id", user.id);
+
+        if (vErr) throw vErr;
+
+        const votedSet = new Set((votes || []).map(v => v.election_id));
+
+        if (!elections || !elections.length) {
+          statusEl.textContent = "এখনো কোনো নির্বাচন তৈরি করা হয়নি।";
+          return;
+        }
+
+        statusEl.textContent = `মোট ${elections.length} টি নির্বাচন পাওয়া গেছে।`;
+
+        elections.forEach(e => {
+          const card = document.createElement("div");
+          card.style.border = "1px solid var(--border)";
+          card.style.borderRadius = "12px";
+          card.style.padding = "12px 14px";
+          card.style.backgroundColor = "#f9fafb";
+
+          const header = document.createElement("div");
+          header.style.display = "flex";
+          header.style.justifyContent = "space-between";
+          header.style.alignItems = "flex-start";
+          header.style.marginBottom = "4px";
+
+          const left = document.createElement("div");
+          const titleP = document.createElement("p");
+          titleP.style.margin = "0 0 2px";
+          titleP.style.fontWeight = "700";
+          titleP.textContent = e.title || "নির্বাচনের নাম নেই";
+
+          const subP = document.createElement("p");
+          subP.style.margin = "0";
+          subP.style.fontSize = "13px";
+          subP.style.color = "#4b5563";
+          const start = e.start_at ? new Date(e.start_at).toLocaleString() : "শুরু নির্ধারিত নয়";
+          const end = e.end_at ? new Date(e.end_at).toLocaleString() : "শেষ নির্ধারিত নয়";
+          subP.textContent = `${start} থেকে ${end}`;
+
+          left.appendChild(titleP);
+          left.appendChild(subP);
+
+          const pill = document.createElement("span");
+          pill.textContent = shortStatus(e.status);
+          pill.style.fontSize = "12px";
+          pill.style.fontWeight = "600";
+          pill.style.padding = "4px 10px";
+          pill.style.borderRadius = "999px";
+          pill.style.backgroundColor = badgeColor(e.status);
+          pill.style.color =
+            e.status === "active"
+              ? "#166534"
+              : e.status === "closed"
+              ? "#b91c1c"
+              : "#4b5563";
+
+          header.appendChild(left);
+          header.appendChild(pill);
+          card.appendChild(header);
+
+          const info = document.createElement("p");
+          info.style.margin = "2px 0 6px";
+          info.style.fontSize = "13px";
+          info.textContent = "প্রতি নির্বাচনে আপনি শুধুমাত্র একবার ভোট দিতে পারবেন।";
+          card.appendChild(info);
+
+          const btnRow = document.createElement("div");
+          btnRow.style.display = "flex";
+          btnRow.style.gap = "8px";
+          btnRow.style.marginTop = "4px";
+
+          const alreadyVoted = votedSet.has(e.id);
+
+          const voteBtn = document.createElement("a");
+          voteBtn.className = "btn btn-primary";
+          voteBtn.style.flex = "1";
+          voteBtn.style.textAlign = "center";
+          voteBtn.textContent = alreadyVoted ? "ইতিমধ্যে ভোট দিয়েছেন" : "ভোট দিন";
+          voteBtn.href = alreadyVoted ? "#" : `vote.html?election_id=${encodeURIComponent(e.id)}`;
+          if (alreadyVoted) {
+            voteBtn.style.opacity = "0.7";
+            voteBtn.style.pointerEvents = "none";
+          }
+
+          const resultBtn = document.createElement("a");
+          resultBtn.className = "btn btn-secondary";
+          resultBtn.style.flex = "1";
+          resultBtn.style.textAlign = "center";
+          resultBtn.textContent = "ফলাফল দেখুন";
+          resultBtn.href = `voter-result.html?election_id=${encodeURIComponent(e.id)}`;
+
+          btnRow.appendChild(voteBtn);
+          btnRow.appendChild(resultBtn);
+          card.appendChild(btnRow);
+
+          container.appendChild(card);
+        });
+      } catch (err) {
+        console.error(err);
+        statusEl.textContent = "ড্যাশবোর্ড ডেটা লোড করতে সমস্যা হয়েছে।";
+      }
+    }
+
+    function logout() {
+      localStorage.removeItem(CC_CURRENT_USER_KEY);
+      window.location.href = "/login/login.html";
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      loadVoterDashboard();
+      const logoutBtn = document.getElementById("logoutBtn");
+      if (logoutBtn) {
+        logoutBtn.addEventListener("click", logout);
+      }
+    });
+  </script>
+</body>
+</html>
