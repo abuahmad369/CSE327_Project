@@ -38,7 +38,7 @@
     <a href="../index.html">🏠 Home</a>
     <a href="supervisor.html">Supervisor Dashboard</a>
     <a href="registervoters.html">Registered Voters</a>
-    <button onclick="logout()">Logout</button>
+    <button onclick="logoutSupervisor()">Logout</button>
   </nav>
 </header>
 
@@ -56,34 +56,34 @@
 <!-- Supabase -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-const SUPABASE_URL = "https://yhhypbrmwlkelikrxbvs.supabase.co";
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InloaHlwYnJtd2xrZWxpa3J4YnZzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM5MDY1MDMsImV4cCI6MjA3OTQ4MjUwM30.PMNqc_nqU2D5MJDSGrxwgITAmqEg7X3OozshJq5hnkA";
+const supabaseUrl = "https://yhhypbrmwlkelikrxbvs.supabase.co";
+const supabaseAnonKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InloaHlwYnJtd2xrZWxpa3J4YnZzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM5MDY1MDMsImV4cCI6MjA3OTQ4MjUwM30.PMNqc_nqU2D5MJDSGrxwgITAmqEg7X3OozshJq5hnkA";
 
-const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const supabaseClient = supabase.createClient(supabaseUrl, supabaseAnonKey);
 
 async function loadPolls() {
-  const { data, error } = await supabase.from('polls').select('*');
-  const container = document.getElementById("pollContainer");
-  container.innerHTML = "";
+  const { data: polls, error } = await supabaseClient.from('polls').select('*');
+  const pollContainer = document.getElementById("pollContainer");
+  pollContainer.innerHTML = "";
   if (error) {
-    container.innerHTML = "<p>Error loading polls</p>";
+    pollContainer.innerHTML = "<p>Error loading polls</p>";
     console.error(error);
     return;
   }
 
-  data.forEach(poll => {
-    const card = document.createElement("div");
-    card.className = "poll-card";
-    card.innerHTML = `
+  polls.forEach(poll => {
+    const pollCard = document.createElement("div");
+    pollCard.className = "poll-card";
+    pollCard.innerHTML = `
       <div class="poll-header">
         <h3>${poll.title}</h3>
         <span class="status ${poll.status.toLowerCase()}">${poll.status}</span>
       </div>
       <div class="poll-details">
-        <p><strong>Total Candidates:</strong> ${poll.total_candidates}</p>
-        <p><strong>Total Voters:</strong> ${poll.total_voters}</p>
-        <p><strong>Start Date:</strong> ${poll.start_date}</p>
-        <p><strong>End Date:</strong> ${poll.end_date}</p>
+        <p><strong>Total Candidates:</strong> ${poll.totalCandidates}</p>
+        <p><strong>Total Voters:</strong> ${poll.totalVoters}</p>
+        <p><strong>Start Date:</strong> ${poll.startDate}</p>
+        <p><strong>End Date:</strong> ${poll.endDate}</p>
       </div>
       <div class="poll-actions">
         <button class="view-btn">View Details</button>
@@ -92,11 +92,11 @@ async function loadPolls() {
         ${poll.status === "Completed" ? '<button class="delete-btn">Remove</button>' : ''}
       </div>
     `;
-    container.appendChild(card);
+    pollContainer.appendChild(pollCard);
   });
 }
 
-function logout() {
+function logoutSupervisor() {
   alert("Logging out Supervisor...");
   window.location.href = "../index.html";
 }
