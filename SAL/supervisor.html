@@ -75,6 +75,61 @@
         </div>
       </section>
 
+      <!-- NEW: Election management block (status control) -->
+      <section
+        aria-label="Election management"
+        style="
+          margin-top:32px;
+          width:100%;
+          max-width:960px;
+          margin-left:auto;
+          margin-right:auto;
+        "
+      >
+        <div
+          style="
+            background:#fff;
+            border:1px solid var(--border);
+            border-radius:14px;
+            box-shadow:0 6px 18px rgba(0,0,0,.08);
+            padding:22px;
+            width:100%;
+          "
+        >
+          <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:16px;">
+            <div>
+              <h2 style="margin:0 0 6px; font-size:20px; font-weight:800; color:var(--ink);">
+                নির্বাচন ব্যবস্থাপনা (Status control)
+              </h2>
+              <p style="margin:0; font-size:14px; color:#4b5563;">
+                এখানে আপনি draft / scheduled / active / closed স্ট্যাটাস পরিবর্তন করতে পারবেন।
+                উদাহরণ: <strong>scheduled → active</strong> করে ভোট শুরু।
+              </p>
+            </div>
+
+            <button
+              type="button"
+              id="refreshElectionsBtn"
+              class="btn btn-secondary"
+              style="padding:6px 12px; font-size:13px;"
+            >
+              রিফ্রেশ
+            </button>
+          </div>
+
+          <p id="electionsManageStatus" style="margin:10px 0 4px; font-size:14px; color:#4b5563;">
+            নির্বাচনের তথ্য লোড হচ্ছে...
+          </p>
+
+          <div
+            id="electionsManageContainer"
+            style="margin-top:8px; display:flex; flex-direction:column; gap:10px;"
+          >
+            <!-- election rows injected by JS -->
+          </div>
+        </div>
+      </section>
+
       <!-- Candidate applications block -->
       <section
         aria-label="Candidate applications"
@@ -190,23 +245,10 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 
   <script>
-    /**
-     * Supabase config, same as login and candidate pages.
-     * @type {string}
-     */
     const SUPABASE_URL = "https://hgxjuxgxgbjjqxxvafhx.supabase.co";
     const SUPABASE_ANON_KEY = "sb_publishable_RqoNSHsQQOhs8dfL0OXsdA_TfeVyZcn";
-
-    /**
-     * LocalStorage key for logged in user.
-     * @type {string}
-     */
     const CC_CURRENT_USER_KEY = "cc_currentUser";
 
-    /**
-     * Supabase client instance.
-     * @type {import('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js').SupabaseClient}
-     */
     const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
     /**
@@ -239,15 +281,20 @@
      */
 
     /**
-     * Cached applications list in memory.
-     * @type {CandidateApplication[]}
+     * @typedef {Object} ElectionRow
+     * @property {string} id
+     * @property {string} title
+     * @property {string|null} description
+     * @property {"draft"|"scheduled"|"active"|"closed"} status
+     * @property {string|null} start_at
+     * @property {string|null} end_at
      */
-    let candidateApplications = [];
 
-    /**
-     * Read current user from localStorage.
-     * @returns {SupervisorUser|null}
-     */
+    /** @type {CandidateApplication[]} */
+    let candidateApplications = [];
+    /** @type {ElectionRow[]} */
+    let electionsManageList = [];
+
     function getCurrentUser() {
       try {
         const raw = localStorage.getItem(CC_CURRENT_USER_KEY);
@@ -259,11 +306,6 @@
       }
     }
 
-    /**
-     * Ensure the user is a supervisor and update welcome text.
-     * Redirect to login page if not.
-     * @returns {SupervisorUser|null}
-     */
     function ensureSupervisor() {
       const user = getCurrentUser();
       if (!user || user.role !== "supervisor") {
@@ -279,11 +321,6 @@
       return user;
     }
 
-    /**
-     * Show an error message near the top content.
-     * @param {string} message
-     * @returns {void}
-     */
     function showError(message) {
       let box = document.getElementById("dashboardError");
       if (!box) {
@@ -298,13 +335,7 @@
       box.textContent = message;
     }
 
-    /**
-     * Load top level metrics for supervisor.
-     * @param {SupervisorUser} user
-     * @returns {Promise<void>}
-     */
     async function loadMetrics(user) {
-      // Elections
       const { data: elections, error: electionsError } = await supabase
         .from("elections")
         .select("id, status");
@@ -322,7 +353,6 @@
       document.getElementById("totalElections").textContent = totalElections;
       document.getElementById("activeElections").textContent = activeElections;
 
-      // Candidates
       const { data: candidates, error: candidatesError } = await supabase
         .from("candidates")
         .select("id");
@@ -335,7 +365,6 @@
       document.getElementById("registeredCandidates").textContent =
         candidates ? candidates.length : 0;
 
-      // Voters
       const { data: voters, error: votersError } = await supabase
         .from("voters")
         .select("id");
@@ -348,7 +377,6 @@
       document.getElementById("registeredVoters").textContent =
         voters ? voters.length : 0;
 
-      // Polls supervised by this user
       const { data: polls, error: pollsError } = await supabase
         .from("polls")
         .select("id")
@@ -363,10 +391,194 @@
         polls ? polls.length : 0;
     }
 
-    /**
-     * Fetch candidate applications with joined user and election.
-     * @returns {Promise<CandidateApplication[]>}
-     */
+    // ===== Election management (status) =====
+
+    function bnStatus(status) {
+      if (status === "draft") return "Draft";
+      if (status === "scheduled") return "Scheduled (তালিকাভুক্ত)";
+      if (status === "active") return "Active (চলমান)";
+      if (status === "closed") return "Closed (সমাপ্ত)";
+      return status || "Unknown";
+    }
+
+    async function loadElectionsForManage() {
+      const statusEl = document.getElementById("electionsManageStatus");
+      const container = document.getElementById("electionsManageContainer");
+      if (!statusEl || !container) return;
+
+      statusEl.textContent = "নির্বাচনের তথ্য লোড হচ্ছে...";
+      container.innerHTML = "";
+
+      const { data, error } = await supabase
+        .from("elections")
+        .select("id, title, description, status, start_at, end_at")
+        .order("created_at", { ascending: false });
+
+      if (error) {
+        console.error("Election manage fetch error:", error);
+        statusEl.textContent =
+          "elections টেবিল পড়তে সমস্যা হয়েছে: " + error.message;
+        return;
+      }
+
+      electionsManageList = data || [];
+
+      if (!electionsManageList.length) {
+        statusEl.textContent = "এখনো কোনো নির্বাচন তৈরি করা হয়নি।";
+        return;
+      }
+
+      statusEl.textContent = `মোট ${electionsManageList.length} টি নির্বাচন পাওয়া গেছে।`;
+      renderElectionManageList();
+    }
+
+    function renderElectionManageList() {
+      const container = document.getElementById("electionsManageContainer");
+      if (!container) return;
+      container.innerHTML = "";
+
+      electionsManageList.forEach((election) => {
+        const card = document.createElement("div");
+        card.style.border = "1px solid var(--border)";
+        card.style.borderRadius = "12px";
+        card.style.padding = "12px 14px";
+        card.style.backgroundColor = "#f9fafb";
+
+        const header = document.createElement("div");
+        header.style.display = "flex";
+        header.style.justifyContent = "space-between";
+        header.style.alignItems = "flex-start";
+
+        const left = document.createElement("div");
+        const titleP = document.createElement("p");
+        titleP.style.margin = "0 0 2px";
+        titleP.style.fontWeight = "700";
+        titleP.textContent = election.title || "Untitled election";
+
+        const subP = document.createElement("p");
+        subP.style.margin = "0";
+        subP.style.fontSize = "13px";
+        subP.style.color = "#4b5563";
+        subP.textContent = bnStatus(election.status);
+
+        left.appendChild(titleP);
+        left.appendChild(subP);
+
+        const idP = document.createElement("p");
+        idP.style.margin = "0 0 0 8px";
+        idP.style.fontSize = "11px";
+        idP.style.color = "#9ca3af";
+        idP.textContent = "ID: " + election.id;
+
+        header.appendChild(left);
+        header.appendChild(idP);
+        card.appendChild(header);
+
+        const timesP = document.createElement("p");
+        timesP.style.margin = "6px 0 8px";
+        timesP.style.fontSize = "12px";
+        timesP.style.color = "#4b5563";
+        const start = election.start_at
+          ? new Date(election.start_at).toLocaleString()
+          : "নির্ধারিত নয়";
+        const end = election.end_at
+          ? new Date(election.end_at).toLocaleString()
+          : "নির্ধারিত নয়";
+        timesP.textContent = `Start: ${start} | End: ${end}`;
+        card.appendChild(timesP);
+
+        const btnRow = document.createElement("div");
+        btnRow.style.display = "flex";
+        btnRow.style.gap = "8px";
+        btnRow.style.flexWrap = "wrap";
+
+        const draftBtn = document.createElement("button");
+        draftBtn.type = "button";
+        draftBtn.textContent = "Set Draft";
+        draftBtn.className = "btn btn-secondary";
+        draftBtn.style.fontSize = "12px";
+
+        const scheduleBtn = document.createElement("button");
+        scheduleBtn.type = "button";
+        scheduleBtn.textContent = "Set Scheduled";
+        scheduleBtn.className = "btn btn-secondary";
+        scheduleBtn.style.fontSize = "12px";
+
+        const activeBtn = document.createElement("button");
+        activeBtn.type = "button";
+        activeBtn.textContent = "Set Active";
+        activeBtn.className = "btn btn-primary";
+        activeBtn.style.fontSize = "12px";
+
+        const closeBtn = document.createElement("button");
+        closeBtn.type = "button";
+        closeBtn.textContent = "Set Closed";
+        closeBtn.className = "btn btn-secondary";
+        closeBtn.style.fontSize = "12px";
+
+        // enable/disable logic so flow is: draft -> scheduled -> active -> closed
+        const s = election.status;
+        draftBtn.disabled = s === "draft";
+        scheduleBtn.disabled = s === "scheduled";
+        activeBtn.disabled = s === "active";
+        closeBtn.disabled = s === "closed";
+
+        draftBtn.addEventListener("click", () =>
+          updateElectionStatus(election.id, "draft")
+        );
+        scheduleBtn.addEventListener("click", () =>
+          updateElectionStatus(election.id, "scheduled")
+        );
+        activeBtn.addEventListener("click", () =>
+          updateElectionStatus(election.id, "active")
+        );
+        closeBtn.addEventListener("click", () =>
+          updateElectionStatus(election.id, "closed")
+        );
+
+        btnRow.appendChild(draftBtn);
+        btnRow.appendChild(scheduleBtn);
+        btnRow.appendChild(activeBtn);
+        btnRow.appendChild(closeBtn);
+
+        card.appendChild(btnRow);
+        container.appendChild(card);
+      });
+    }
+
+    async function updateElectionStatus(electionId, newStatus) {
+      const confirmText =
+        newStatus === "active"
+          ? "আপনি কি নিশ্চিত এই নির্বাচনকে ACTIVE করতে চান? এরপর ভোট শুরু হবে।"
+          : `আপনি কি নিশ্চিত status '${newStatus}' করতে চান?`;
+      if (!window.confirm(confirmText)) return;
+
+      const { error } = await supabase
+        .from("elections")
+        .update({ status: newStatus })
+        .eq("id", electionId);
+
+      if (error) {
+        console.error("Update election status error:", error);
+        alert("নির্বাচনের status আপডেট করতে সমস্যা হয়েছে: " + error.message);
+        return;
+      }
+
+      // Update local cache
+      electionsManageList = electionsManageList.map((e) =>
+        e.id === electionId ? { ...e, status: newStatus } : e
+      );
+
+      renderElectionManageList();
+      // Also update metrics (active count)
+      const user = getCurrentUser();
+      if (user && user.role === "supervisor") {
+        loadMetrics(user);
+      }
+    }
+
+    // ===== Candidate applications (unchanged logic) =====
+
     async function fetchCandidateApplications() {
       const { data, error } = await supabase
         .from("candidates")
@@ -400,11 +612,6 @@
       return data || [];
     }
 
-    /**
-     * Convert status to Bangla text.
-     * @param {"draft"|"submitted"|"under_review"|"approved"|"rejected"} status
-     * @returns {string}
-     */
     function statusText(status) {
       switch (status) {
         case "submitted":
@@ -420,11 +627,6 @@
       }
     }
 
-    /**
-     * Colors for status pill.
-     * @param {"draft"|"submitted"|"under_review"|"approved"|"rejected"} status
-     * @returns {{bg: string, color: string}}
-     */
     function statusColors(status) {
       switch (status) {
         case "submitted":
@@ -439,10 +641,6 @@
       }
     }
 
-    /**
-     * Render candidate applications list applying filters.
-     * @returns {void}
-     */
     function renderApplications() {
       const container = document.getElementById("applicationsContainer");
       const emptyText = document.getElementById("applicationsEmpty");
@@ -462,9 +660,7 @@
       const filterStatus = statusFilter.value;
       const search = searchInput.value.trim().toLowerCase();
 
-      /** @type {CandidateApplication[]} */
       const filtered = candidateApplications.filter((app) => {
-        // status filter
         if (filterStatus === "pending") {
           if (app.status !== "submitted" && app.status !== "under_review") {
             return false;
@@ -473,7 +669,6 @@
           if (app.status !== filterStatus) return false;
         }
 
-        // search filter
         if (search) {
           const name = (app.user?.name || "").toLowerCase();
           const email = (app.user?.email || "").toLowerCase();
@@ -589,7 +784,6 @@
         rejectBtn.style.backgroundColor = "#b91c1c";
         rejectBtn.style.color = "#ffffff";
 
-        // disable buttons if already final
         if (app.status === "approved" || app.status === "rejected") {
           approveBtn.disabled = true;
           rejectBtn.disabled = true;
@@ -614,12 +808,6 @@
       });
     }
 
-    /**
-     * Update candidate status in Supabase and refresh cached list.
-     * @param {string} candidateId
-     * @param {"approved"|"rejected"} newStatus
-     * @returns {Promise<void>}
-     */
     async function handleStatusChange(candidateId, newStatus) {
       const confirmText =
         newStatus === "approved"
@@ -645,29 +833,18 @@
         return;
       }
 
-      // update cached item
       candidateApplications = candidateApplications.map((app) =>
-        app.id === candidateId
-          ? { ...app, ...payload }
-          : app
+        app.id === candidateId ? { ...app, ...payload } : app
       );
 
       renderApplications();
     }
 
-    /**
-     * Logout and go back to home.
-     * @returns {void}
-     */
     function logout() {
       localStorage.removeItem(CC_CURRENT_USER_KEY);
       window.location.href = "../index.html";
     }
 
-    /**
-     * Initialize full supervisor dashboard.
-     * @returns {Promise<void>}
-     */
     async function initSupervisorDashboard() {
       const user = ensureSupervisor();
       if (!user) return;
@@ -676,12 +853,16 @@
 
       const statusFilter = document.getElementById("statusFilter");
       const searchInput = document.getElementById("searchInput");
+      const refreshElectionsBtn = document.getElementById("refreshElectionsBtn");
 
       if (statusFilter) {
         statusFilter.addEventListener("change", renderApplications);
       }
       if (searchInput) {
         searchInput.addEventListener("input", renderApplications);
+      }
+      if (refreshElectionsBtn) {
+        refreshElectionsBtn.addEventListener("click", loadElectionsForManage);
       }
 
       try {
@@ -692,6 +873,7 @@
       }
 
       renderApplications();
+      await loadElectionsForManage();
     }
 
     // Run on load
