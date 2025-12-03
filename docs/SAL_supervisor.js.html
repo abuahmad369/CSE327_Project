@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: SAL/supervisor.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: SAL/supervisor.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Supabase configuration.
+ * @constant {string}
+ */
+const SUPABASE_URL = "https://hgxjuxgxgbjjqxxvafhx.supabase.co";
+const SUPABASE_ANON_KEY = "sb_publishable_RqoNSHsQQOhs8dfL0OXsdA_TfeVyZcn";
+
+/** LocalStorage key for current user */
+const CC_CURRENT_USER_KEY = "cc_currentUser";
+
+/** Supabase client */
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+/**
+ * @typedef {Object} SupervisorUser
+ * @property {string} id
+ * @property {string} name
+ * @property {string} email
+ * @property {"supervisor"|"candidate"|"voter"|"public"} role
+ */
+
+/**
+ * @typedef {Object} CandidateApplication
+ * @property {string} id
+ * @property {string} user_id
+ * @property {string|null} election_id
+ * @property {string|null} requested_symbol
+ * @property {string|null} manifesto
+ * @property {boolean} is_approved
+ * @property {"draft"|"submitted"|"under_review"|"approved"|"rejected"} status
+ * @property {Object|null} user
+ * @property {Object|null} election
+ */
+
+/** @type {CandidateApplication[]} */
+let candidateApplications = [];
+
+/** Read current user from localStorage */
+function getCurrentUser() {
+  try {
+    const raw = localStorage.getItem(CC_CURRENT_USER_KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    return null;
+  }
+}
+
+/** Ensure user is supervisor */
+function ensureSupervisor() {
+  const user = getCurrentUser();
+  if (!user || user.role !== "supervisor") {
+    alert("শুধুমাত্র সুপারভাইজার প্রবেশ করতে পারবেন।");
+    window.location.href = "../login/login.html";
+    return null;
+  }
+  document.getElementById("welcomeText").textContent = `স্বাগতম, ${user.name} (Supervisor)।`;
+  return user;
+}
+
+/** Show error message */
+function showError(message) {
+  let box = document.getElementById("dashboardError");
+  if (!box) {
+    box = document.createElement("p");
+    box.id = "dashboardError";
+    box.style.color = "crimson";
+    box.style.marginTop = "8px";
+    box.style.fontSize = "14px";
+    document.querySelector(".content")?.appendChild(box);
+  }
+  box.textContent = message;
+}
+
+/** Load top metrics */
+async function loadMetrics(user) {
+  const { data: elections, error: electionsError } = await supabase.from("elections").select("id,status");
+  if (electionsError) showError("Elections error: " + electionsError.message);
+
+  document.getElementById("totalElections").textContent = elections?.length || 0;
+  document.getElementById("activeElections").textContent = elections?.filter(e => e.status?.toLowerCase() === "active").length || 0;
+
+  const { data: candidates, error: candidatesError } = await supabase.from("candidates").select("id");
+  if (candidatesError) showError("Candidates error: " + candidatesError.message);
+  document.getElementById("registeredCandidates").textContent = candidates?.length || 0;
+
+  const { data: voters, error: votersError } = await supabase.from("voters").select("id");
+  if (votersError) showError("Voters error: " + votersError.message);
+  document.getElementById("registeredVoters").textContent = voters?.length || 0;
+
+  const { data: polls, error: pollsError } = await supabase.from("polls").select("id").eq("supervisor_id", user.id);
+  if (pollsError) showError("Polls error: " + pollsError.message);
+  document.getElementById("supervisedPolls").textContent = polls?.length || 0;
+}
+
+/** Fetch candidate applications */
+async function fetchCandidateApplications() {
+  const { data, error } = await supabase.from("candidates").select(`
+    id,user_id,election_id,requested_symbol,manifesto,is_approved,status,
+    user:user_id(name,email,dept),
+    election:election_id(title,status)
+  `).order("created_at", { ascending: false });
+  if (error) throw new Error(error.message);
+  return data || [];
+}
+
+/** Map status to Bangla text */
+function statusText(status) {
+  return {
+    submitted: "সাবমিট করা হয়েছে",
+    under_review: "পর্যালোচনাধীন",
+    approved: "অনুমোদিত",
+    rejected: "বাতিল"
+  }[status] || "ড্রাফট";
+}
+
+/** Status colors */
+function statusColors(status) {
+  return {
+    submitted: { bg: "#fef3c7", color: "#92400e" },
+    under_review: { bg: "#fef3c7", color: "#92400e" },
+    approved: { bg: "#dcfce7", color: "#166534" },
+    rejected: { bg: "#fee2e2", color: "#b91c1c" },
+    draft: { bg: "#e5e7eb", color: "#4b5563" }
+  }[status] || { bg: "#e5e7eb", color: "#4b5563" };
+}
+
+/** Render candidate applications */
+function renderApplications() {
+  const container = document.getElementById("applicationsContainer");
+  const emptyText = document.getElementById("applicationsEmpty");
+  const statusFilter = document.getElementById("statusFilter");
+  const searchInput = document.getElementById("searchInput");
+  if (!container || !statusFilter || !searchInput) return;
+
+  container.innerHTML = "";
+  if (!candidateApplications.length) {
+    emptyText.textContent = "এখনো কোনো প্রার্থীর আবেদন পাওয়া যায়নি।";
+    return;
+  }
+
+  const filterStatus = statusFilter.value;
+  const search = searchInput.value.trim().toLowerCase();
+
+  const filtered = candidateApplications.filter(app => {
+    if (filterStatus === "pending" &amp;&amp; !["submitted","under_review"].includes(app.status)) return false;
+    else if (filterStatus !== "all" &amp;&amp; filterStatus !== "pending" &amp;&amp; app.status !== filterStatus) return false;
+
+    const name = app.user?.name?.toLowerCase() || "";
+    const email = app.user?.email?.toLowerCase() || "";
+    if (search &amp;&amp; !name.includes(search) &amp;&amp; !email.includes(search)) return false;
+
+    return true;
+  });
+
+  if (!filtered.length) {
+    const p = document.createElement("p");
+    p.textContent = "এই ফিল্টার অনুযায়ী কোনো আবেদন পাওয়া যায়নি।";
+    p.style.fontSize = "14px";
+    p.style.color = "#4b5563";
+    container.appendChild(p);
+    return;
+  }
+
+  filtered.forEach(app => {
+    const card = document.createElement("div");
+    card.className = "application-card";
+    card.innerHTML = `
+      &lt;div style="display:flex; justify-content:space-between; margin-bottom:6px;">
+        &lt;div>
+          &lt;p style="margin:0 0 2px; font-weight:700;">${app.user?.name||"Unknown"}&lt;/p>
+          &lt;p style="margin:0; font-size:13px; color:#4b5563;">
+            ${app.user?.email||"no-email"}${app.user?.dept?` · ${app.user.dept}`:""}
+          &lt;/p>
+        &lt;/div>
+        &lt;span style="font-size:12px;font-weight:600;padding:4px 10px;border-radius:999px;background-color:${statusColors(app.status).bg};color:${statusColors(app.status).color}">
+          ${statusText(app.status)}
+        &lt;/span>
+      &lt;/div>
+      &lt;p style="margin:4px 0;font-size:13px;">&lt;strong>নির্বাচন:&lt;/strong> ${app.election?.title||"কোনো নির্বাচন নির্বাচন করা হয়নি"}&lt;/p>
+      &lt;p style="margin:0 0 4px;font-size:13px;">&lt;strong>প্রতীক (requested):&lt;/strong> ${app.requested_symbol||"নির্ধারিত নয়"}&lt;/p>
+      ${app.manifesto?`&lt;p style="margin:0 0 6px;font-size:13px;">&lt;strong>ইশতেহার:&lt;/strong> ${app.manifesto}&lt;/p>`:""}
+      &lt;div style="display:flex;justify-content:flex-end;gap:8px;margin-top:6px;">
+        &lt;button class="approve-btn" ${["approved","rejected"].includes(app.status)?"disabled":""}>Approve&lt;/button>
+        &lt;button class="reject-btn" ${["approved","rejected"].includes(app.status)?"disabled":""}>Reject&lt;/button>
+      &lt;/div>
+    `;
+    const approveBtn = card.querySelector(".approve-btn");
+    const rejectBtn = card.querySelector(".reject-btn");
+    approveBtn?.addEventListener("click", ()=>handleStatusChange(app.id,"approved"));
+    rejectBtn?.addEventListener("click", ()=>handleStatusChange(app.id,"rejected"));
+    container.appendChild(card);
+  });
+}
+
+/** Update candidate status */
+async function handleStatusChange(candidateId, newStatus) {
+  if (!window.confirm(`আপনি কি সত্যি এই প্রার্থীকে ${newStatus} করতে চান?`)) return;
+  const approved = newStatus === "approved";
+  const payload = { status: newStatus, is_approved: approved, approved_at: new Date().toISOString() };
+
+  const { error } = await supabase.from("candidates").update(payload).eq("id", candidateId);
+  if (error) return alert("স্ট্যাটাস আপডেট করতে সমস্যা হয়েছে: " + error.message);
+
+  candidateApplications = candidateApplications.map(app => app.id===candidateId?{...app,...payload}:app);
+  renderApplications();
+}
+
+/** Logout */
+function logout() {
+  localStorage.removeItem(CC_CURRENT_USER_KEY);
+  window.location.href = "../index.html";
+}
+
+document.getElementById("logoutBtn")?.addEventListener("click", logout);
+
+/** Initialize dashboard */
+async function initSupervisorDashboard() {
+  const user = ensureSupervisor();
+  if (!user) return;
+  await loadMetrics(user);
+  document.getElementById("statusFilter")?.addEventListener("change", renderApplications);
+  document.getElementById("searchInput")?.addEventListener("input", renderApplications);
+
+  try {
+    candidateApplications = await fetchCandidateApplications();
+  } catch(err) {
+    showError(err.message||"প্রার্থীর আবেদন লোড করতে ব্যর্থ হয়েছে।");
+    candidateApplications = [];
+  }
+
+  renderApplications();
+}
+
+initSupervisorDashboard();
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-login.html">login</a></li><li><a href="module-registration.html">registration</a></li></ul><h3>Global</h3><ul><li><a href="global.html#CC_CURRENT_USER_KEY">CC_CURRENT_USER_KEY</a></li><li><a href="global.html#CURRENT_USER_KEY">CURRENT_USER_KEY</a></li><li><a href="global.html#ELECTIONS_CACHE">ELECTIONS_CACHE</a></li><li><a href="global.html#SUPABASE_ANON_KEY">SUPABASE_ANON_KEY</a></li><li><a href="global.html#SUPABASE_URL">SUPABASE_URL</a></li><li><a href="global.html#allElections">allElections</a></li><li><a href="global.html#candidateApplications">candidateApplications</a></li><li><a href="global.html#clipboard_title">clipboard_title</a></li><li><a href="global.html#createElectionForm">createElectionForm</a></li><li><a href="global.html#ensureSupervisor">ensureSupervisor</a></li><li><a href="global.html#fetchCandidateApplications">fetchCandidateApplications</a></li><li><a href="global.html#getCurrentUser">getCurrentUser</a></li><li><a href="global.html#getPublicProfilesPage">getPublicProfilesPage</a></li><li><a href="global.html#getSample">getSample</a></li><li><a href="global.html#handleStatusChange">handleStatusChange</a></li><li><a href="global.html#init">init</a></li><li><a href="global.html#initSupervisorDashboard">initSupervisorDashboard</a></li><li><a href="global.html#loadApprovedCandidates">loadApprovedCandidates</a></li><li><a href="global.html#loadCandidatesPage">loadCandidatesPage</a></li><li><a href="global.html#loadDashboardData">loadDashboardData</a></li><li><a href="global.html#loadElections">loadElections</a></li><li><a href="global.html#loadMetrics">loadMetrics</a></li><li><a href="global.html#loadPollData">loadPollData</a></li><li><a href="global.html#loadPolls">loadPolls</a></li><li><a href="global.html#loadVotersData">loadVotersData</a></li><li><a href="global.html#logout">logout</a></li><li><a href="global.html#logoutSupervisor">logoutSupervisor</a></li><li><a href="global.html#onSearchInput">onSearchInput</a></li><li><a href="global.html#onStatusFilterChange">onStatusFilterChange</a></li><li><a href="global.html#renderApplications">renderApplications</a></li><li><a href="global.html#renderCandidates">renderCandidates</a></li><li><a href="global.html#renderElections">renderElections</a></li><li><a href="global.html#renderPublicProfilesPage">renderPublicProfilesPage</a></li><li><a href="global.html#renderSample">renderSample</a></li><li><a href="global.html#saveCandidate">saveCandidate</a></li><li><a href="global.html#setStatus">setStatus</a></li><li><a href="global.html#showError">showError</a></li><li><a href="global.html#statusColors">statusColors</a></li><li><a href="global.html#statusElement">statusElement</a></li><li><a href="global.html#statusText">statusText</a></li><li><a href="global.html#supabase">supabase</a></li><li><a href="global.html#supabaseAnonKey">supabaseAnonKey</a></li><li><a href="global.html#supabaseClient">supabaseClient</a></li><li><a href="global.html#supabaseUrl">supabaseUrl</a></li><li><a href="global.html#testSupabaseConnection">testSupabaseConnection</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.5</a> on Thu Dec 04 2025 00:19:41 GMT+0600 (Bangladesh Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: Documentations/html/clipboard.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: Documentations/html/clipboard.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+
+The code below is based on the Doxygen Awesome project, see
+https://github.com/jothepro/doxygen-awesome-css
+
+MIT License
+
+Copyright (c) 2021 - 2022 jothepro
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+*/
+
+let clipboard_title = "Copy to clipboard"
+let clipboard_icon = `&lt;svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">&lt;path fill="#888" d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/>&lt;/svg>`
+let clipboard_successIcon = `&lt;svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">&lt;path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/>&lt;/svg>`
+let clipboard_successDuration = 1000
+
+$(function() {
+  if(navigator.clipboard) {
+    const fragments = document.getElementsByClassName("fragment")
+    for(const fragment of fragments) {
+      const clipboard_div = document.createElement("div")
+      clipboard_div.classList.add("clipboard")
+      clipboard_div.innerHTML = clipboard_icon
+      clipboard_div.title = clipboard_title
+      $(clipboard_div).click(function() {
+        const content = this.parentNode.cloneNode(true)
+        // filter out line number and folded fragments from file listings
+        content.querySelectorAll(".lineno, .ttc, .foldclosed").forEach((node) => { node.remove() })
+        let text = content.textContent
+        // remove trailing newlines and trailing spaces from empty lines
+        text = text.replace(/^\s*\n/gm,'\n').replace(/\n*$/,'')
+        navigator.clipboard.writeText(text);
+        this.classList.add("success")
+        this.innerHTML = clipboard_successIcon
+        window.setTimeout(() => { // switch back to normal icon after timeout
+            this.classList.remove("success")
+            this.innerHTML = clipboard_icon
+        }, clipboard_successDuration);
+      })
+      fragment.insertBefore(clipboard_div, fragment.firstChild)
+    }
+  }
+})
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-login.html">login</a></li><li><a href="module-registration.html">registration</a></li></ul><h3>Global</h3><ul><li><a href="global.html#CC_CURRENT_USER_KEY">CC_CURRENT_USER_KEY</a></li><li><a href="global.html#CURRENT_USER_KEY">CURRENT_USER_KEY</a></li><li><a href="global.html#ELECTIONS_CACHE">ELECTIONS_CACHE</a></li><li><a href="global.html#SUPABASE_ANON_KEY">SUPABASE_ANON_KEY</a></li><li><a href="global.html#SUPABASE_URL">SUPABASE_URL</a></li><li><a href="global.html#allElections">allElections</a></li><li><a href="global.html#candidateApplications">candidateApplications</a></li><li><a href="global.html#clipboard_title">clipboard_title</a></li><li><a href="global.html#createElectionForm">createElectionForm</a></li><li><a href="global.html#ensureSupervisor">ensureSupervisor</a></li><li><a href="global.html#fetchCandidateApplications">fetchCandidateApplications</a></li><li><a href="global.html#getCurrentUser">getCurrentUser</a></li><li><a href="global.html#getPublicProfilesPage">getPublicProfilesPage</a></li><li><a href="global.html#getSample">getSample</a></li><li><a href="global.html#handleStatusChange">handleStatusChange</a></li><li><a href="global.html#init">init</a></li><li><a href="global.html#initSupervisorDashboard">initSupervisorDashboard</a></li><li><a href="global.html#loadApprovedCandidates">loadApprovedCandidates</a></li><li><a href="global.html#loadCandidatesPage">loadCandidatesPage</a></li><li><a href="global.html#loadDashboardData">loadDashboardData</a></li><li><a href="global.html#loadElections">loadElections</a></li><li><a href="global.html#loadMetrics">loadMetrics</a></li><li><a href="global.html#loadPollData">loadPollData</a></li><li><a href="global.html#loadPolls">loadPolls</a></li><li><a href="global.html#loadVotersData">loadVotersData</a></li><li><a href="global.html#logout">logout</a></li><li><a href="global.html#logoutSupervisor">logoutSupervisor</a></li><li><a href="global.html#onSearchInput">onSearchInput</a></li><li><a href="global.html#onStatusFilterChange">onStatusFilterChange</a></li><li><a href="global.html#renderApplications">renderApplications</a></li><li><a href="global.html#renderCandidates">renderCandidates</a></li><li><a href="global.html#renderElections">renderElections</a></li><li><a href="global.html#renderPublicProfilesPage">renderPublicProfilesPage</a></li><li><a href="global.html#renderSample">renderSample</a></li><li><a href="global.html#saveCandidate">saveCandidate</a></li><li><a href="global.html#setStatus">setStatus</a></li><li><a href="global.html#showError">showError</a></li><li><a href="global.html#statusColors">statusColors</a></li><li><a href="global.html#statusElement">statusElement</a></li><li><a href="global.html#statusText">statusText</a></li><li><a href="global.html#supabase">supabase</a></li><li><a href="global.html#supabaseAnonKey">supabaseAnonKey</a></li><li><a href="global.html#supabaseClient">supabaseClient</a></li><li><a href="global.html#supabaseUrl">supabaseUrl</a></li><li><a href="global.html#testSupabaseConnection">testSupabaseConnection</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.5</a> on Thu Dec 04 2025 00:19:41 GMT+0600 (Bangladesh Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

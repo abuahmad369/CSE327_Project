@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: SAL/registeredcandidate.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: SAL/registeredcandidate.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Supabase project URL.
+ * @constant {string}
+ */
+const SUPABASE_URL = "https://hgxjuxgxgbjjqxxvafhx.supabase.co";
+
+/**
+ * Supabase public anon key.
+ * @constant {string}
+ */
+const SUPABASE_ANON_KEY = "sb_publishable_RqoNSHsQQOhs8dfL0OXsdA_TfeVyZcn";
+
+/**
+ * Supabase client instance.
+ * @type {import('@supabase/supabase-js').SupabaseClient}
+ */
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+/**
+ * Key used to store the current user in localStorage.
+ * @constant {string}
+ */
+const CC_CURRENT_USER_KEY = "cc_currentUser";
+
+/**
+ * Cache for elections fetched from Supabase.
+ * @type {Array&lt;{id: string, title: string, status: string}>}
+ */
+let ELECTIONS_CACHE = [];
+
+/**
+ * Retrieves the current logged-in user from localStorage.
+ * @returns {Object|null} The current user object or null if not found.
+ */
+function getCurrentUser() {
+  try {
+    const raw = localStorage.getItem(CC_CURRENT_USER_KEY);
+    if (!raw) return null;
+    return JSON.parse(raw);
+  } catch (e) {
+    console.error("Failed to parse current user", e);
+    return null;
+  }
+}
+
+/**
+ * Ensures that the current user is a supervisor.
+ * If not, redirects to login page.
+ * @returns {Object|null} The current supervisor user or null if not allowed.
+ */
+function ensureSupervisor() {
+  const user = getCurrentUser();
+  if (!user || user.role !== "supervisor") {
+    alert("শুধুমাত্র সুপারভাইজার এই পেজে প্রবেশ করতে পারবেন।");
+    window.location.href = "../login/login.html";
+    return null;
+  }
+  return user;
+}
+
+/**
+ * Logs out the current user and redirects to home page.
+ */
+function logout() {
+  localStorage.removeItem(CC_CURRENT_USER_KEY);
+  window.location.href = "../index.html";
+}
+
+/**
+ * Updates the status message shown on the page.
+ * @param {string} message - The message to display.
+ * @param {boolean} [isError=false] - If true, display in red color, otherwise green.
+ */
+function setStatus(message, isError = false) {
+  const el = document.getElementById("candStatus");
+  el.style.color = isError ? "crimson" : "green";
+  el.textContent = message;
+}
+
+/**
+ * Renders the list of candidates into the HTML table.
+ * @param {Array&lt;Object>} candidates - Array of candidate objects.
+ */
+function renderCandidates(candidates) {
+  const tbody = document.getElementById("candidatesBody");
+  if (!tbody) return;
+
+  if (!candidates || candidates.length === 0) {
+    tbody.innerHTML = `
+      &lt;tr>
+        &lt;td colspan="5" style="padding:10px; text-align:center; color:#6b7280;">
+          এখনো কোনো প্রার্থী নিবন্ধিত নেই।
+        &lt;/td>
+      &lt;/tr>
+    `;
+    return;
+  }
+
+  const rowsHtml = candidates.map(c => {
+    const name = c.user?.name || "নাম নেই";
+    const email = c.user?.email || "";
+    const approvedChecked = c.is_approved ? "checked" : "";
+    const electionId = c.election_id || "";
+
+    const optionsHtml = [
+      '&lt;option value="">নির্বাচন নির্বাচন করুন&lt;/option>',
+      ...ELECTIONS_CACHE.map(e => {
+        const title = e.title || "(শিরোনাম নেই)";
+        const selected = e.id === electionId ? "selected" : "";
+        return `&lt;option value="${e.id}" ${selected}>${title}&lt;/option>`;
+      })
+    ].join("");
+
+    return `
+      &lt;tr data-id="${c.id}">
+        &lt;td style="padding:8px;">${name}&lt;/td>
+        &lt;td style="padding:8px;">${email}&lt;/td>
+        &lt;td style="padding:8px; min-width:180px;">
+          &lt;select class="election-select" style="width:100%; padding:6px; border-radius:6px; border:1px solid var(--border);">
+            ${optionsHtml}
+          &lt;/select>
+        &lt;/td>
+        &lt;td style="padding:8px; text-align:center;">
+          &lt;input type="checkbox" class="approved-checkbox" ${approvedChecked} />
+        &lt;/td>
+        &lt;td style="padding:8px; text-align:center;">
+          &lt;button type="button"
+                  onclick="saveCandidate('${c.id}')"
+                  style="padding:6px 12px; border-radius:6px; border:none; background:var(--brand); color:#fff; font-size:13px; cursor:pointer;">
+            সংরক্ষণ
+          &lt;/button>
+        &lt;/td>
+      &lt;/tr>
+    `;
+  }).join("");
+
+  tbody.innerHTML = rowsHtml;
+}
+
+/**
+ * Loads elections and candidates from Supabase and renders them.
+ */
+async function loadCandidatesPage() {
+  const user = ensureSupervisor();
+  if (!user) return;
+
+  setStatus("প্রার্থীদের তথ্য লোড হচ্ছে...");
+
+  // Load elections
+  const { data: elections, error: electionsError } = await supabase
+    .from("elections")
+    .select("id, title, status")
+    .order("created_at", { ascending: false });
+
+  if (electionsError) {
+    console.error("Elections error:", electionsError);
+    setStatus("elections টেবিল থেকে ডাটা আনতে সমস্যা হচ্ছে।", true);
+    ELECTIONS_CACHE = [];
+  } else {
+    ELECTIONS_CACHE = elections || [];
+  }
+
+  // Load candidates
+  const { data: candidates, error: candidatesError } = await supabase
+    .from("candidates")
+    .select(`
+      id,
+      is_approved,
+      election_id,
+      user:users (
+        name,
+        email
+      )
+    `)
+    .order("created_at", { ascending: false });
+
+  if (candidatesError) {
+    console.error("Candidates error:", candidatesError);
+    setStatus("candidates টেবিল থেকে ডাটা আনতে সমস্যা হচ্ছে।", true);
+    return;
+  }
+
+  renderCandidates(candidates);
+  setStatus("প্রার্থীদের তথ্য লোড সম্পন্ন হয়েছে।", false);
+}
+
+/**
+ * Saves changes made to a candidate's election or approval status.
+ * @param {string} id - The candidate ID to update.
+ */
+async function saveCandidate(id) {
+  const row = document.querySelector(`tr[data-id="${id}"]`);
+  if (!row) return;
+
+  const select = row.querySelector(".election-select");
+  const checkbox = row.querySelector(".approved-checkbox");
+
+  const electionId = select.value || null;
+  const approved = checkbox.checked;
+
+  setStatus("প্রার্থীর তথ্য সংরক্ষণ হচ্ছে...");
+
+  const { error } = await supabase
+    .from("candidates")
+    .update({
+      election_id: electionId,
+      is_approved: approved
+    })
+    .eq("id", id);
+
+  if (error) {
+    console.error("Update candidate error:", error);
+    setStatus("সংরক্ষণ ব্যর্থ হয়েছে। আবার চেষ্টা করুন।", true);
+    return;
+  }
+
+  setStatus("প্রার্থীর তথ্য সফলভাবে সংরক্ষিত হয়েছে।", false);
+  loadCandidatesPage();
+}
+
+// Expose functions to global scope
+window.saveCandidate = saveCandidate;
+window.logout = logout;
+
+// Initialize page
+loadCandidatesPage();
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-login.html">login</a></li><li><a href="module-registration.html">registration</a></li></ul><h3>Global</h3><ul><li><a href="global.html#CC_CURRENT_USER_KEY">CC_CURRENT_USER_KEY</a></li><li><a href="global.html#CURRENT_USER_KEY">CURRENT_USER_KEY</a></li><li><a href="global.html#ELECTIONS_CACHE">ELECTIONS_CACHE</a></li><li><a href="global.html#SUPABASE_ANON_KEY">SUPABASE_ANON_KEY</a></li><li><a href="global.html#SUPABASE_URL">SUPABASE_URL</a></li><li><a href="global.html#allElections">allElections</a></li><li><a href="global.html#candidateApplications">candidateApplications</a></li><li><a href="global.html#clipboard_title">clipboard_title</a></li><li><a href="global.html#createElectionForm">createElectionForm</a></li><li><a href="global.html#ensureSupervisor">ensureSupervisor</a></li><li><a href="global.html#fetchCandidateApplications">fetchCandidateApplications</a></li><li><a href="global.html#getCurrentUser">getCurrentUser</a></li><li><a href="global.html#getPublicProfilesPage">getPublicProfilesPage</a></li><li><a href="global.html#getSample">getSample</a></li><li><a href="global.html#handleStatusChange">handleStatusChange</a></li><li><a href="global.html#init">init</a></li><li><a href="global.html#initSupervisorDashboard">initSupervisorDashboard</a></li><li><a href="global.html#loadApprovedCandidates">loadApprovedCandidates</a></li><li><a href="global.html#loadCandidatesPage">loadCandidatesPage</a></li><li><a href="global.html#loadDashboardData">loadDashboardData</a></li><li><a href="global.html#loadElections">loadElections</a></li><li><a href="global.html#loadMetrics">loadMetrics</a></li><li><a href="global.html#loadPollData">loadPollData</a></li><li><a href="global.html#loadPolls">loadPolls</a></li><li><a href="global.html#loadVotersData">loadVotersData</a></li><li><a href="global.html#logout">logout</a></li><li><a href="global.html#logoutSupervisor">logoutSupervisor</a></li><li><a href="global.html#onSearchInput">onSearchInput</a></li><li><a href="global.html#onStatusFilterChange">onStatusFilterChange</a></li><li><a href="global.html#renderApplications">renderApplications</a></li><li><a href="global.html#renderCandidates">renderCandidates</a></li><li><a href="global.html#renderElections">renderElections</a></li><li><a href="global.html#renderPublicProfilesPage">renderPublicProfilesPage</a></li><li><a href="global.html#renderSample">renderSample</a></li><li><a href="global.html#saveCandidate">saveCandidate</a></li><li><a href="global.html#setStatus">setStatus</a></li><li><a href="global.html#showError">showError</a></li><li><a href="global.html#statusColors">statusColors</a></li><li><a href="global.html#statusElement">statusElement</a></li><li><a href="global.html#statusText">statusText</a></li><li><a href="global.html#supabase">supabase</a></li><li><a href="global.html#supabaseAnonKey">supabaseAnonKey</a></li><li><a href="global.html#supabaseClient">supabaseClient</a></li><li><a href="global.html#supabaseUrl">supabaseUrl</a></li><li><a href="global.html#testSupabaseConnection">testSupabaseConnection</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.5</a> on Thu Dec 04 2025 00:19:41 GMT+0600 (Bangladesh Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

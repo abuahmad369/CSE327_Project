@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: SAL/create_election.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: SAL/create_election.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Supabase credentials
+ * @constant {string}
+ */
+const SUPABASE_URL = "https://hgxjuxgxgbjjqxxvafhx.supabase.co";
+const SUPABASE_ANON_KEY = "sb_publishable_RqoNSHsQQOhs8dfL0OXsdA_TfeVyZcn";
+
+/**
+ * Supabase client instance
+ * @type {import('@supabase/supabase-js').SupabaseClient}
+ */
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+/**
+ * LocalStorage key for current user
+ * @constant {string}
+ */
+const CURRENT_USER_KEY = "cc_currentUser";
+
+/**
+ * @typedef {Object} User
+ * @property {string} id - Unique ID of the user
+ * @property {string} role - Role of the user (e.g., "supervisor")
+ * @property {string} [name] - Optional user name
+ */
+
+/**
+ * Retrieves the current logged-in user from localStorage
+ * @returns {User|null} The user object if logged in, otherwise null
+ */
+function getCurrentUser() {
+  try {
+    const rawUserData = localStorage.getItem(CURRENT_USER_KEY);
+    if (!rawUserData) return null;
+    return JSON.parse(rawUserData);
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Logs out the current user and redirects to the home page
+ */
+function logout() {
+  localStorage.removeItem(CURRENT_USER_KEY);
+  window.location.href = "../index.html";
+}
+
+/**
+ * HTML form element for creating elections
+ * @type {HTMLFormElement}
+ */
+const createElectionForm = document.getElementById("createElectionForm");
+
+/**
+ * HTML element to display status messages
+ * @type {HTMLElement}
+ */
+const statusElement = document.getElementById("status");
+
+/**
+ * @typedef {Object} Election
+ * @property {string} title - Title of the election
+ * @property {string} description - Description of the election
+ * @property {string|null} start_at - Start date/time (optional)
+ * @property {string|null} end_at - End date/time (optional)
+ * @property {string} status - Election status ("scheduled")
+ * @property {string} created_by - Supervisor ID who created it
+ */
+
+/**
+ * Handles the form submission to create a new election.
+ * Validates user role and form fields before inserting into Supabase.
+ * @param {SubmitEvent} event - The form submit event
+ */
+createElectionForm.addEventListener("submit", async (event) => {
+  event.preventDefault();
+
+  statusElement.style.color = "crimson";
+  statusElement.textContent = "তথ্য যাচাই করা হচ্ছে...";
+
+  const currentUser = getCurrentUser();
+  if (!currentUser || currentUser.role !== "supervisor") {
+    statusElement.textContent = "শুধুমাত্র Supervisor এই কাজটি করতে পারবেন।";
+    return;
+  }
+
+  const titleValue = document.getElementById("title").value.trim();
+  const descriptionValue = document.getElementById("description").value.trim();
+  const startAtValue = document.getElementById("start_at").value || null;
+  const endAtValue = document.getElementById("end_at").value || null;
+
+  if (!titleValue) {
+    statusElement.textContent = "শিরোনাম লিখতে হবে।";
+    return;
+  }
+
+  /** @type {{ error: import('@supabase/supabase-js').PostgrestError|null }} */
+  const { error } = await supabaseClient
+    .from("elections")
+    .insert([
+      {
+        title: titleValue,
+        description: descriptionValue,
+        start_at: startAtValue,
+        end_at: endAtValue,
+        status: "scheduled",
+        created_by: currentUser.id
+      }
+    ]);
+
+  if (error) {
+    console.error("Create election error:", error);
+    statusElement.style.color = "crimson";
+    statusElement.textContent = "নির্বাচন তৈরি ব্যর্থ হয়েছে। আবার চেষ্টা করুন।";
+    return;
+  }
+
+  statusElement.style.color = "green";
+  statusElement.textContent = "নির্বাচন সফলভাবে তৈরি হয়েছে।";
+  createElectionForm.reset();
+});
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-login.html">login</a></li><li><a href="module-registration.html">registration</a></li></ul><h3>Global</h3><ul><li><a href="global.html#CC_CURRENT_USER_KEY">CC_CURRENT_USER_KEY</a></li><li><a href="global.html#CURRENT_USER_KEY">CURRENT_USER_KEY</a></li><li><a href="global.html#ELECTIONS_CACHE">ELECTIONS_CACHE</a></li><li><a href="global.html#SUPABASE_ANON_KEY">SUPABASE_ANON_KEY</a></li><li><a href="global.html#SUPABASE_URL">SUPABASE_URL</a></li><li><a href="global.html#allElections">allElections</a></li><li><a href="global.html#candidateApplications">candidateApplications</a></li><li><a href="global.html#clipboard_title">clipboard_title</a></li><li><a href="global.html#createElectionForm">createElectionForm</a></li><li><a href="global.html#ensureSupervisor">ensureSupervisor</a></li><li><a href="global.html#fetchCandidateApplications">fetchCandidateApplications</a></li><li><a href="global.html#getCurrentUser">getCurrentUser</a></li><li><a href="global.html#getPublicProfilesPage">getPublicProfilesPage</a></li><li><a href="global.html#getSample">getSample</a></li><li><a href="global.html#handleStatusChange">handleStatusChange</a></li><li><a href="global.html#init">init</a></li><li><a href="global.html#initSupervisorDashboard">initSupervisorDashboard</a></li><li><a href="global.html#loadApprovedCandidates">loadApprovedCandidates</a></li><li><a href="global.html#loadCandidatesPage">loadCandidatesPage</a></li><li><a href="global.html#loadDashboardData">loadDashboardData</a></li><li><a href="global.html#loadElections">loadElections</a></li><li><a href="global.html#loadMetrics">loadMetrics</a></li><li><a href="global.html#loadPollData">loadPollData</a></li><li><a href="global.html#loadPolls">loadPolls</a></li><li><a href="global.html#loadVotersData">loadVotersData</a></li><li><a href="global.html#logout">logout</a></li><li><a href="global.html#logoutSupervisor">logoutSupervisor</a></li><li><a href="global.html#onSearchInput">onSearchInput</a></li><li><a href="global.html#onStatusFilterChange">onStatusFilterChange</a></li><li><a href="global.html#renderApplications">renderApplications</a></li><li><a href="global.html#renderCandidates">renderCandidates</a></li><li><a href="global.html#renderElections">renderElections</a></li><li><a href="global.html#renderPublicProfilesPage">renderPublicProfilesPage</a></li><li><a href="global.html#renderSample">renderSample</a></li><li><a href="global.html#saveCandidate">saveCandidate</a></li><li><a href="global.html#setStatus">setStatus</a></li><li><a href="global.html#showError">showError</a></li><li><a href="global.html#statusColors">statusColors</a></li><li><a href="global.html#statusElement">statusElement</a></li><li><a href="global.html#statusText">statusText</a></li><li><a href="global.html#supabase">supabase</a></li><li><a href="global.html#supabaseAnonKey">supabaseAnonKey</a></li><li><a href="global.html#supabaseClient">supabaseClient</a></li><li><a href="global.html#supabaseUrl">supabaseUrl</a></li><li><a href="global.html#testSupabaseConnection">testSupabaseConnection</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.5</a> on Thu Dec 04 2025 00:19:41 GMT+0600 (Bangladesh Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

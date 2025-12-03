@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: SAL/supervisedpoll.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: SAL/supervisedpoll.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Supabase project URL.
+ * @constant {string}
+ */
+const supabaseUrl = "https://yhhypbrmwlkelikrxbvs.supabase.co";
+
+/**
+ * Supabase public anon key.
+ * @constant {string}
+ */
+const supabaseAnonKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InloaHlwYnJtd2xrZWxpa3J4YnZzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM5MDY1MDMsImV4cCI6MjA3OTQ4MjUwM30.PMNqc_nqU2D5MJDSGrxwgITAmqEg7X3OozshJq5hnkA";
+
+/**
+ * Supabase client instance.
+ * @type {import('@supabase/supabase-js').SupabaseClient}
+ */
+const supabaseClient = supabase.createClient(supabaseUrl, supabaseAnonKey);
+
+/**
+ * Loads all polls from Supabase and displays them in the dashboard.
+ * Each poll displays status, total candidates, total voters, and dates.
+ * @async
+ */
+async function loadPolls() {
+  const { data: polls, error } = await supabaseClient.from('polls').select('*');
+  const pollContainer = document.getElementById("pollContainer");
+  pollContainer.innerHTML = "";
+
+  if (error) {
+    pollContainer.innerHTML = "&lt;p>Error loading polls&lt;/p>";
+    console.error(error);
+    return;
+  }
+
+  polls.forEach(poll => {
+    const pollCard = document.createElement("div");
+    pollCard.className = "poll-card";
+    pollCard.innerHTML = `
+      &lt;div class="poll-header">
+        &lt;h3>${poll.title}&lt;/h3>
+        &lt;span class="status ${poll.status.toLowerCase()}">${poll.status}&lt;/span>
+      &lt;/div>
+      &lt;div class="poll-details">
+        &lt;p>&lt;strong>Total Candidates:&lt;/strong> ${poll.totalCandidates}&lt;/p>
+        &lt;p>&lt;strong>Total Voters:&lt;/strong> ${poll.totalVoters}&lt;/p>
+        &lt;p>&lt;strong>Start Date:&lt;/strong> ${poll.startDate}&lt;/p>
+        &lt;p>&lt;strong>End Date:&lt;/strong> ${poll.endDate}&lt;/p>
+      &lt;/div>
+      &lt;div class="poll-actions">
+        &lt;button class="view-btn">View Details&lt;/button>
+        ${poll.status === "Ongoing" ? '&lt;button class="stop-btn">Stop Poll&lt;/button>' : ''}
+        ${poll.status === "Upcoming" ? '&lt;button class="start-btn">Start Poll&lt;/button>&lt;button class="delete-btn">Delete&lt;/button>' : ''}
+        ${poll.status === "Completed" ? '&lt;button class="delete-btn">Remove&lt;/button>' : ''}
+      &lt;/div>
+    `;
+    pollContainer.appendChild(pollCard);
+  });
+}
+
+/**
+ * Logs out the supervisor and redirects to the homepage.
+ */
+function logoutSupervisor() {
+  alert("Logging out Supervisor...");
+  window.location.href = "../index.html";
+}
+
+// Initialize polls on page load
+loadPolls();
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-login.html">login</a></li><li><a href="module-registration.html">registration</a></li></ul><h3>Global</h3><ul><li><a href="global.html#CC_CURRENT_USER_KEY">CC_CURRENT_USER_KEY</a></li><li><a href="global.html#CURRENT_USER_KEY">CURRENT_USER_KEY</a></li><li><a href="global.html#ELECTIONS_CACHE">ELECTIONS_CACHE</a></li><li><a href="global.html#SUPABASE_ANON_KEY">SUPABASE_ANON_KEY</a></li><li><a href="global.html#SUPABASE_URL">SUPABASE_URL</a></li><li><a href="global.html#allElections">allElections</a></li><li><a href="global.html#candidateApplications">candidateApplications</a></li><li><a href="global.html#clipboard_title">clipboard_title</a></li><li><a href="global.html#createElectionForm">createElectionForm</a></li><li><a href="global.html#ensureSupervisor">ensureSupervisor</a></li><li><a href="global.html#fetchCandidateApplications">fetchCandidateApplications</a></li><li><a href="global.html#getCurrentUser">getCurrentUser</a></li><li><a href="global.html#getPublicProfilesPage">getPublicProfilesPage</a></li><li><a href="global.html#getSample">getSample</a></li><li><a href="global.html#handleStatusChange">handleStatusChange</a></li><li><a href="global.html#init">init</a></li><li><a href="global.html#initSupervisorDashboard">initSupervisorDashboard</a></li><li><a href="global.html#loadApprovedCandidates">loadApprovedCandidates</a></li><li><a href="global.html#loadCandidatesPage">loadCandidatesPage</a></li><li><a href="global.html#loadDashboardData">loadDashboardData</a></li><li><a href="global.html#loadElections">loadElections</a></li><li><a href="global.html#loadMetrics">loadMetrics</a></li><li><a href="global.html#loadPollData">loadPollData</a></li><li><a href="global.html#loadPolls">loadPolls</a></li><li><a href="global.html#loadVotersData">loadVotersData</a></li><li><a href="global.html#logout">logout</a></li><li><a href="global.html#logoutSupervisor">logoutSupervisor</a></li><li><a href="global.html#onSearchInput">onSearchInput</a></li><li><a href="global.html#onStatusFilterChange">onStatusFilterChange</a></li><li><a href="global.html#renderApplications">renderApplications</a></li><li><a href="global.html#renderCandidates">renderCandidates</a></li><li><a href="global.html#renderElections">renderElections</a></li><li><a href="global.html#renderPublicProfilesPage">renderPublicProfilesPage</a></li><li><a href="global.html#renderSample">renderSample</a></li><li><a href="global.html#saveCandidate">saveCandidate</a></li><li><a href="global.html#setStatus">setStatus</a></li><li><a href="global.html#showError">showError</a></li><li><a href="global.html#statusColors">statusColors</a></li><li><a href="global.html#statusElement">statusElement</a></li><li><a href="global.html#statusText">statusText</a></li><li><a href="global.html#supabase">supabase</a></li><li><a href="global.html#supabaseAnonKey">supabaseAnonKey</a></li><li><a href="global.html#supabaseClient">supabaseClient</a></li><li><a href="global.html#supabaseUrl">supabaseUrl</a></li><li><a href="global.html#testSupabaseConnection">testSupabaseConnection</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.5</a> on Thu Dec 04 2025 00:19:41 GMT+0600 (Bangladesh Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
