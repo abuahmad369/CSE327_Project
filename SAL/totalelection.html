@@ -15,7 +15,6 @@
       display: flex;
       flex-direction: column;
     }
-
     header {
       background: rgba(0, 0, 0, 0.35);
       display: flex;
@@ -24,12 +23,10 @@
       padding: 1rem 2rem;
       backdrop-filter: blur(8px);
     }
-
     header h1 {
       font-size: 1.6rem;
       color: #00ffae;
     }
-
     nav a, nav button {
       color: white;
       text-decoration: none;
@@ -41,28 +38,23 @@
       font-size: 1rem;
       font-weight: 500;
     }
-
     nav a:hover, nav button:hover {
       color: #00ffae;
     }
-
     main {
       flex: 1;
       padding: 2rem;
     }
-
     h2 {
       color: #00ffae;
       margin-bottom: 1.2rem;
     }
-
     .filter-bar {
       display: flex;
       justify-content: space-between;
       align-items: center;
       margin-bottom: 1.5rem;
     }
-
     .filter-bar input, .filter-bar select {
       background: rgba(255, 255, 255, 0.1);
       color: white;
@@ -71,17 +63,14 @@
       padding: 0.5rem 1rem;
       outline: none;
     }
-
     .filter-bar input::placeholder {
       color: rgba(255, 255, 255, 0.7);
     }
-
     .election-list {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
       gap: 1.5rem;
     }
-
     .election-card {
       background: rgba(255, 255, 255, 0.1);
       padding: 1.2rem;
@@ -89,21 +78,17 @@
       box-shadow: 0 4px 20px rgba(0,0,0,0.2);
       transition: transform 0.3s;
     }
-
     .election-card:hover {
       transform: translateY(-5px);
     }
-
     .election-card h3 {
       margin: 0 0 0.4rem;
       font-size: 1.2rem;
     }
-
     .election-card p {
       margin: 0.2rem 0;
       font-size: 0.95rem;
     }
-
     .status {
       display: inline-block;
       margin-top: 0.5rem;
@@ -111,11 +96,9 @@
       border-radius: 5px;
       font-weight: 500;
     }
-
     .status.active { background: #00ffae; color: #000; }
-    .status.completed { background: #007a4d; }
+    .status.completed { background: #007a4d; color: #fff; }
     .status.pending { background: #ffc107; color: #000; }
-
     .progress-bar {
       background: rgba(255, 255, 255, 0.2);
       border-radius: 5px;
@@ -123,14 +106,12 @@
       margin-top: 0.5rem;
       height: 8px;
     }
-
     .progress {
       background: #00ffae;
       height: 100%;
       width: 0;
       transition: width 0.6s ease;
     }
-
     .btn-view {
       background: #00ffae;
       border: none;
@@ -142,11 +123,9 @@
       font-weight: 600;
       transition: background 0.3s;
     }
-
     .btn-view:hover {
       background: #00e099;
     }
-
     footer {
       text-align: center;
       background: rgba(0, 0, 0, 0.35);
@@ -160,13 +139,13 @@
     <nav>
       <a href="../index.html">🏠 Home</a>
       <a href="supervisor.html">Supervisor Dashboard</a>
-      <button onclick="logout()">Logout</button>
+      <button onclick="logoutSupervisor()">Logout</button>
     </nav>
   </header>
 
   <main>
     <div class="filter-bar">
-      <input type="text" id="search" placeholder="Search election..." onkeyup="filterElections()" />
+      <input type="text" id="searchInput" placeholder="Search election..." onkeyup="filterElections()" />
       <select id="statusFilter" onchange="filterElections()">
         <option value="all">All</option>
         <option value="active">Active</option>
@@ -177,7 +156,7 @@
 
     <h2>Election Overview</h2>
     <div class="election-list" id="electionList">
-      <div class="election-card" data-status="active">
+      <div class="election-card" dataStatus="active">
         <h3>Student Council Election 2025</h3>
         <p><strong>Date:</strong> Nov 2, 2025</p>
         <p><strong>Turnout:</strong> 72%</p>
@@ -186,7 +165,7 @@
         <button class="btn-view">View Details</button>
       </div>
 
-      <div class="election-card" data-status="completed">
+      <div class="election-card" dataStatus="completed">
         <h3>Department Representative Election</h3>
         <p><strong>Date:</strong> Oct 15, 2025</p>
         <p><strong>Turnout:</strong> 84%</p>
@@ -195,7 +174,7 @@
         <button class="btn-view">View Report</button>
       </div>
 
-      <div class="election-card" data-status="pending">
+      <div class="election-card" dataStatus="pending">
         <h3>Club Executive Committee Election</h3>
         <p><strong>Date:</strong> Upcoming</p>
         <p><strong>Turnout:</strong> —</p>
@@ -211,23 +190,23 @@
   </footer>
 
   <script>
-    function logout() {
+    function logoutSupervisor() {
       alert("Logging out Supervisor...");
       window.location.href = "../index.html";
     }
 
     function filterElections() {
-      const search = document.getElementById("search").value.toLowerCase();
-      const filter = document.getElementById("statusFilter").value;
-      const cards = document.querySelectorAll(".election-card");
+      const searchValue = document.getElementById("searchInput").value.toLowerCase();
+      const statusValue = document.getElementById("statusFilter").value;
+      const electionCards = document.querySelectorAll(".election-card");
 
-      cards.forEach(card => {
+      electionCards.forEach(card => {
         const title = card.querySelector("h3").textContent.toLowerCase();
-        const status = card.dataset.status;
-        const matchesSearch = title.includes(search);
-        const matchesFilter = filter === "all" || filter === status;
+        const status = card.dataset.status || card.getAttribute("dataStatus");
+        const matchesSearch = title.includes(searchValue);
+        const matchesStatus = statusValue === "all" || status === statusValue;
 
-        card.style.display = (matchesSearch && matchesFilter) ? "block" : "none";
+        card.style.display = (matchesSearch && matchesStatus) ? "block" : "none";
       });
     }
   </script>
