@@ -119,16 +119,16 @@
   <!-- Supabase client -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script>
-    const SUPABASE_URL = "https://hgxjuxgxgbjjqxxvafhx.supabase.co";
-    const SUPABASE_ANON_KEY = "sb_publishable_RqoNSHsQQOhs8dfL0OXsdA_TfeVyZcn";
-    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    const supabaseUrl = "https://hgxjuxgxgbjjqxxvafhx.supabase.co";
+    const supabaseAnonKey = "sb_publishable_RqoNSHsQQOhs8dfL0OXsdA_TfeVyZcn";
+    const supabase = window.supabase.createClient(supabaseUrl, supabaseAnonKey);
 
-    const CC_CURRENT_USER_KEY = "cc_currentUser";
-    let ELECTIONS_CACHE = [];
+    const ccCurrentUserKey = "cc_currentUser";
+    let electionsCache = [];
 
     function getCurrentUser() {
       try {
-        const raw = localStorage.getItem(CC_CURRENT_USER_KEY);
+        const raw = localStorage.getItem(ccCurrentUserKey);
         if (!raw) return null;
         return JSON.parse(raw);
       } catch (e) {
@@ -148,7 +148,7 @@
     }
 
     function logout() {
-      localStorage.removeItem(CC_CURRENT_USER_KEY);
+      localStorage.removeItem(ccCurrentUserKey);
       window.location.href = "../index.html";
     }
 
@@ -173,25 +173,25 @@
         return;
       }
 
-      const rowsHtml = voters.map(v => {
-        const name = v.user?.name || "নাম নেই";
-        const email = v.user?.email || "";
-        const studentId = v.student_id || "";
-        const approvedChecked = v.is_approved ? "checked" : "";
-        const bannedChecked = v.is_banned ? "checked" : "";
-        const electionId = v.election_id || "";
+      const rowsHtml = voters.map(voter => {
+        const name = voter.user?.name || "নাম নেই";
+        const email = voter.user?.email || "";
+        const studentId = voter.student_id || "";
+        const approvedChecked = voter.is_approved ? "checked" : "";
+        const bannedChecked = voter.is_banned ? "checked" : "";
+        const electionId = voter.election_id || "";
 
         const optionsHtml = [
           '<option value="">নির্বাচন নির্বাচন করুন</option>',
-          ...ELECTIONS_CACHE.map(e => {
-            const title = e.title || "(শিরোনাম নেই)";
-            const selected = e.id === electionId ? "selected" : "";
-            return `<option value="${e.id}" ${selected}>${title}</option>`;
+          ...electionsCache.map(election => {
+            const title = election.title || "(শিরোনাম নেই)";
+            const selected = election.id === electionId ? "selected" : "";
+            return `<option value="${election.id}" ${selected}>${title}</option>`;
           })
         ].join("");
 
         return `
-          <tr data-id="${v.id}">
+          <tr data-id="${voter.id}">
             <td style="padding:8px;">${name}</td>
             <td style="padding:8px;">${email}</td>
             <td style="padding:8px;">${studentId}</td>
@@ -208,12 +208,12 @@
             </td>
             <td style="padding:8px; text-align:center;">
               <button type="button"
-                      onclick="saveVoter('${v.id}')"
+                      onclick="saveVoter('${voter.id}')"
                       style="padding:4px 10px; border-radius:6px; border:none; background:var(--brand); color:#fff; font-size:12px; cursor:pointer; margin-right:6px;">
                 সংরক্ষণ
               </button>
               <button type="button"
-                      onclick="deleteVoter('${v.id}')"
+                      onclick="deleteVoter('${voter.id}')"
                       style="padding:4px 10px; border-radius:6px; border:none; background:#b91c1c; color:#fff; font-size:12px; cursor:pointer;">
                 মুছে ফেলুন
               </button>
@@ -231,7 +231,7 @@
 
       setVoterStatus("ভোটারদের তথ্য লোড হচ্ছে...");
 
-      // 1) load elections for dropdown
+      // load elections for dropdown
       const { data: elections, error: electionsError } = await supabase
         .from("elections")
         .select("id, title, status")
@@ -240,12 +240,12 @@
       if (electionsError) {
         console.error("Elections error:", electionsError);
         setVoterStatus("elections টেবিল থেকে ডাটা আনতে সমস্যা হচ্ছে।", true);
-        ELECTIONS_CACHE = [];
+        electionsCache = [];
       } else {
-        ELECTIONS_CACHE = elections || [];
+        electionsCache = elections || [];
       }
 
-      // 2) load voters joined with users
+      // load voters joined with users
       const { data: voters, error: votersError } = await supabase
         .from("voters")
         .select(`
