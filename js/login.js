@@ -48,7 +48,7 @@
   const ROLE_ROUTES = {
     supervisor: "/SAL/supervisor.html",
     candidate: "/IAH/candidates.html",
-    voter: "/dashboard-test.html",
+    voter: "/AAH/voter.html",
     public: "/publicDash.html"
   };
 
