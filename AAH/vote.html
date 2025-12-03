@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CampusCast - ভোট দিন</title>
+  <link rel="stylesheet" href="/assets/style.css" />
+</head>
+<body>
+  <!-- Background -->
+  <div class="hands-bg"></div>
+
+  <div class="container">
+    <!-- Header (same as others) -->
+    <header class="site-header">
+      <a href="index.html" class="logo" aria-label="CampusCast হোমপেজে যান">
+        <div class="logo-text">
+          <span>CampusCast</span>
+          <div class="logo-bars">
+            <div class="bar"></div>
+            <div class="bar alt"></div>
+            <div class="bar"></div>
+            <div class="bar alt"></div>
+          </div>
+        </div>
+        <div class="logo-subtitle">বিশ্ববিদ্যালয় ই-ভোটিং সিস্টেম</div>
+      </a>
+
+      <nav class="site-nav">
+        <a href="/login/login.html" class="nav-link">প্রশাসক</a>
+        <a href="/login/login.html" class="nav-link">প্রার্থী</a>
+        <a href="/voter.html" class="nav-link">ভোটার</a>
+        <a href="public.html" class="nav-link">পাবলিক</a>
+        <a class="login-btn" href="/login/login.html" role="button">লগইন</a>
+      </nav>
+    </header>
+
+    <!-- Main content -->
+    <main class="main-content" style="gap:40px; align-items:flex-start;">
+      <!-- Left info -->
+      <section class="content" style="max-width:460px;">
+        <span class="badge">ভোট প্রদান</span>
+        <h1 id="electionTitle">নির্বাচনের তথ্য লোড হচ্ছে...</h1>
+        <p class="description" id="electionDescription">
+          নির্বাচনের বিস্তারিত তথ্য Supabase থেকে লোড করা হচ্ছে। অনুগ্রহ করে অপেক্ষা করুন।
+        </p>
+
+        <div class="ethereum-note" style="margin-top:12px;">
+          <span class="ethereum-icon">⚠️</span>
+          প্রতিটি নির্বাচনে মাত্র একবার ভোট দেওয়া যাবে। ভোট সাবমিট করার পর আর পরিবর্তন করা যাবে না।
+        </div>
+
+        <p id="electionStatusText" style="margin-top:10px; font-size:14px; color:#4b5563;"></p>
+
+        <button
+          type="button"
+          class="btn btn-secondary"
+          style="margin-top:10px;"
+          onclick="window.location.href='voter.html';"
+        >
+          ড্যাশবোর্ডে ফিরে যান
+        </button>
+      </section>
+
+      <!-- Right: vote form -->
+      <section aria-label="প্রার্থী তালিকা" style="flex:1; max-width:520px;">
+        <div
+          style="
+            background:#fff;
+            border:1px solid var(--border);
+            border-radius:14px;
+            box-shadow:0 6px 18px rgba(0,0,0,0.08);
+            padding:18px 18px 18px;
+          "
+        >
+          <h2 style="font-size:18px; font-weight:800; margin:0 0 8px; color:var(--ink);">
+            প্রার্থী তালিকা
+          </h2>
+          <p id="candidatesStatus" style="font-size:14px; margin-bottom:10px; color:var(--muted);">
+            প্রার্থীর তথ্য লোড হচ্ছে...
+          </p>
+
+          <form id="voteForm">
+            <div id="candidatesList" style="display:flex; flex-direction:column; gap:8px;">
+              <!-- JS will insert candidate cards -->
+            </div>
+
+            <p id="voteMessage" style="margin-top:10px; font-size:14px; color:crimson;"></p>
+
+            <button
+              id="submitBtn"
+              type="submit"
+              class="btn btn-primary"
+              style="margin-top:12px; width:100%; text-align:center;"
+            >
+              ভোট সাবমিট করুন
+            </button>
+          </form>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="features">
+      <div class="feature">
+        <div class="feature-icon">🧾</div>
+        <div class="feature-text">
+          <h3>স্বচ্ছ প্রক্রিয়া</h3>
+          <p>সমস্ত রেকর্ড যাচাইযোগ্য ও নিরীক্ষাযোগ্য।</p>
+        </div>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">🔒</div>
+        <div class="feature-text">
+          <h3>এন্ড টু এন্ড এনক্রিপশন</h3>
+          <p>প্রতিটি ধাপে আপনার তথ্য সুরক্ষিত থাকে।</p>
+        </div>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">⚡</div>
+        <div class="feature-text">
+          <h3>দ্রুত ও কার্যকর</h3>
+          <p>রিয়েল টাইমে ফলাফল দেখতে পারবেন।</p>
+        </div>
+      </div>
+
+      <div class="nav-arrows">
+        <button class="arrow-btn" aria-label="পূর্বের স্লাইড">‹</button>
+        <button class="arrow-btn" aria-label="পরবর্তী স্লাইড">›</button>
+      </div>
+
+      <div class="dots" aria-hidden="true">
+        <span class="dot active"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+      </div>
+
+      <div class="footer-credit">
+        <p>© ২০২৫ <strong>FourA</strong> - CampusCast</p>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Supabase client -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script>
+    const SUPABASE_URL = "https://hgxjuxgxgbjjqxxvafhx.supabase.co";
+    const SUPABASE_ANON_KEY = "sb_publishable_RqoNSHsQQOhs8dfL0OXsdA_TfeVyZcn";
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    const CC_CURRENT_USER_KEY = "cc_currentUser";
+    const CC_VOTE_HISTORY_KEY = "cc_voteHistory";
+
+    function getCurrentUser() {
+      try {
+        const raw = localStorage.getItem(CC_CURRENT_USER_KEY);
+        return raw ? JSON.parse(raw) : null;
+      } catch {
+        return null;
+      }
+    }
+
+    function requireVoterUser() {
+      const user = getCurrentUser();
+      if (!user || user.role !== "voter") {
+        window.location.href = "/login/login.html";
+        return null;
+      }
+      return user;
+    }
+
+    function getElectionIdFromUrl() {
+      const params = new URLSearchParams(window.location.search);
+      return params.get("election_id");
+    }
+
+    function saveVoteHistoryEntry(entry) {
+      try {
+        const raw = localStorage.getItem(CC_VOTE_HISTORY_KEY) || "[]";
+        const list = JSON.parse(raw);
+        list.push(entry);
+        localStorage.setItem(CC_VOTE_HISTORY_KEY, JSON.stringify(list));
+      } catch (e) {
+        console.warn("failed to save local vote history:", e);
+      }
+    }
+
+    (function initVotePage() {
+      const user = requireVoterUser();
+      if (!user) return;
+
+      const electionId = getElectionIdFromUrl();
+      const titleEl = document.getElementById("electionTitle");
+      const descEl = document.getElementById("electionDescription");
+      const statusTextEl = document.getElementById("electionStatusText");
+      const candStatusEl = document.getElementById("candidatesStatus");
+      const candListEl = document.getElementById("candidatesList");
+      const voteForm = document.getElementById("voteForm");
+      const voteMessageEl = document.getElementById("voteMessage");
+      const submitBtn = document.getElementById("submitBtn");
+
+      if (!electionId) {
+        if (titleEl) titleEl.textContent = "ভুল ইউআরএল - নির্বাচনের আইডি পাওয়া যায়নি";
+        if (candStatusEl) candStatusEl.textContent = "সঠিক নির্বাচনের লিঙ্ক দিয়ে পুনরায় চেষ্টা করুন।";
+        if (submitBtn) submitBtn.disabled = true;
+        return;
+      }
+
+      let voterRow = null;
+      let electionRow = null;
+      let existingVote = null;
+      let candidates = [];
+
+      async function loadAll() {
+        try {
+          // 1) voter row (from voters table)
+          const { data: voter, error: vErr } = await supabase
+            .from("voters")
+            .select("id, is_approved")
+            .eq("user_id", user.id)
+            .single();
+
+          if (vErr) {
+            throw new Error("ভোটার প্রোফাইল পাওয়া যায়নি।");
+          }
+          voterRow = voter;
+
+          // 2) election row
+          const { data: election, error: eErr } = await supabase
+            .from("elections")
+            .select("*")
+            .eq("id", electionId)
+            .single();
+
+          if (eErr || !election) {
+            throw new Error("নির্বাচনের তথ্য পাওয়া যায়নি।");
+          }
+          electionRow = election;
+
+          if (titleEl) titleEl.textContent = election.title || "নির্বাচনের নাম পাওয়া যায়নি";
+          if (descEl) {
+            const desc = election.description || "এই নির্বাচনের জন্য কোনো বিবরণ সংরক্ষণ করা হয়নি।";
+            descEl.textContent = desc;
+          }
+          if (statusTextEl) {
+            const st = election.status;
+            let bnStatus = "অজানা";
+            if (st === "draft") bnStatus = "খসড়া";
+            else if (st === "scheduled") bnStatus = "তালিকাভুক্ত";
+            else if (st === "active") bnStatus = "চলমান";
+            else if (st === "closed") bnStatus = "সমাপ্ত";
+
+            statusTextEl.textContent =
+              "বর্তমান স্ট্যাটাস: " +
+              bnStatus +
+              (st !== "active" ? " (চলমান নির্বাচন না হওয়ায় ভোট দেওয়া যাবে না)" : "");
+          }
+
+          // 3) existing vote (votes table uses voter_id referencing voters.id)
+          const { data: existing, error: exErr } = await supabase
+            .from("votes")
+            .select("id")
+            .eq("election_id", electionId)
+            .eq("voter_id", voterRow.id)
+            .maybeSingle();
+
+          if (exErr && exErr.code !== "PGRST116" && exErr.details !== "Results contain 0 rows") {
+            console.warn("existing vote error:", exErr);
+          }
+          existingVote = existing || null;
+
+          // 4) candidates (approved only)
+          const { data: candRows, error: cErr } = await supabase
+            .from("candidates")
+            .select("id, user_id, symbol, manifesto, is_approved")
+            .eq("election_id", electionId)
+            .eq("is_approved", true);
+
+          if (cErr) {
+            throw new Error("প্রার্থীর তথ্য লোড করতে সমস্যা হয়েছে।");
+          }
+
+          candidates = candRows || [];
+
+          if (!candidates.length) {
+            candStatusEl.textContent = "এই নির্বাচনের জন্য কোনো অনুমোদিত প্রার্থী পাওয়া যায়নি।";
+          } else {
+            candStatusEl.textContent = `মোট ${candidates.length} জন প্রার্থী পাওয়া গেছে।`;
+          }
+
+          // also load user names for candidates
+          if (candidates.length) {
+            const userIds = candidates.map(c => c.user_id);
+            const { data: candidateUsers, error: uErr } = await supabase
+              .from("users")
+              .select("id, name")
+              .in("id", userIds);
+
+            if (uErr) {
+              console.warn("candidate users load error:", uErr);
+            } else {
+              const nameMap = {};
+              (candidateUsers || []).forEach(u => {
+                nameMap[u.id] = u.name || "নাম নেই";
+              });
+              candidates = candidates.map(c => ({
+                ...c,
+                userName: nameMap[c.user_id] || "নাম নেই"
+              }));
+            }
+          }
+
+          renderCandidates();
+          updateFormAvailability();
+        } catch (err) {
+          console.error(err);
+          if (candStatusEl) candStatusEl.textContent = err.message || "ডেটা লোড করতে সমস্যা হয়েছে।";
+          if (submitBtn) submitBtn.disabled = true;
+        }
+      }
+
+      function renderCandidates() {
+        candListEl.innerHTML = "";
+        if (!candidates.length) return;
+
+        candidates.forEach(c => {
+          const wrapper = document.createElement("label");
+          wrapper.style.display = "flex";
+          wrapper.style.gap = "10px";
+          wrapper.style.alignItems = "flex-start";
+          wrapper.style.padding = "8px 10px";
+          wrapper.style.borderRadius = "10px";
+          wrapper.style.border = "1px solid var(--border)";
+          wrapper.style.background = "#f9fafb";
+          wrapper.style.cursor = "pointer";
+
+          const radio = document.createElement("input");
+          radio.type = "radio";
+          radio.name = "candidate";
+          radio.value = c.id;
+          radio.style.marginTop = "4px";
+
+          const inner = document.createElement("div");
+
+          const nameEl = document.createElement("p");
+          nameEl.style.margin = "0 0 2px";
+          nameEl.style.fontWeight = "700";
+          nameEl.textContent = c.userName || "নাম নেই";
+
+          const symEl = document.createElement("p");
+          symEl.style.margin = "0 0 2px";
+          symEl.style.fontSize = "13px";
+          symEl.style.color = "#4b5563";
+          symEl.textContent = "নির্বাচনী প্রতীক: " + (c.symbol || "উল্লেখ নেই");
+
+          const manEl = document.createElement("p");
+          manEl.style.margin = "0";
+          manEl.style.fontSize = "13px";
+          manEl.style.color = "#6b7280";
+          manEl.textContent = c.manifesto || "কোনো ইশতেহার দেওয়া হয়নি।";
+
+          inner.appendChild(nameEl);
+          inner.appendChild(symEl);
+          inner.appendChild(manEl);
+
+          wrapper.appendChild(radio);
+          wrapper.appendChild(inner);
+          candListEl.appendChild(wrapper);
+        });
+      }
+
+      function updateFormAvailability() {
+        if (!submitBtn) return;
+
+        if (!electionRow) {
+          submitBtn.disabled = true;
+          return;
+        }
+
+        if (electionRow.status !== "active") {
+          submitBtn.disabled = true;
+          voteMessageEl.style.color = "#b91c1c";
+          voteMessageEl.textContent = "এই নির্বাচন বর্তমানে সক্রিয় নয়, তাই ভোট দেওয়া যাবে না।";
+          return;
+        }
+
+        if (existingVote) {
+          submitBtn.disabled = true;
+          voteMessageEl.style.color = "#15803d";
+          voteMessageEl.textContent = "আপনি ইতিমধ্যে এই নির্বাচনে ভোট দিয়েছেন।";
+          return;
+        }
+
+        if (!candidates.length) {
+          submitBtn.disabled = true;
+          voteMessageEl.style.color = "#4b5563";
+          voteMessageEl.textContent = "কোনো অনুমোদিত প্রার্থী না থাকায় ভোট প্রদান সম্ভব নয়।";
+          return;
+        }
+
+        // allowed
+        submitBtn.disabled = false;
+        voteMessageEl.textContent = "";
+      }
+
+      voteForm.addEventListener("submit", async (ev) => {
+        ev.preventDefault();
+        if (!submitBtn || submitBtn.disabled) return;
+
+        const formData = new FormData(voteForm);
+        const candidateId = formData.get("candidate");
+
+        if (!candidateId) {
+          voteMessageEl.style.color = "#b91c1c";
+          voteMessageEl.textContent = "অনুগ্রহ করে একজন প্রার্থী নির্বাচন করুন।";
+          return;
+        }
+
+        voteMessageEl.style.color = "#4b5563";
+        voteMessageEl.textContent = "ভোট সাবমিট করা হচ্ছে...";
+        submitBtn.disabled = true;
+
+        try {
+          // double-check there is no existing vote (in case of race condition)
+          const { data: existing, error: exErr } = await supabase
+            .from("votes")
+            .select("id")
+            .eq("election_id", electionId)
+            .eq("voter_id", voterRow.id)
+            .maybeSingle();
+
+          if (existing) {
+            voteMessageEl.style.color = "#b91c1c";
+            voteMessageEl.textContent = "আপনি ইতিমধ্যে এই নির্বাচনে ভোট দিয়েছেন।";
+            return;
+          }
+
+          const { error: insErr } = await supabase.from("votes").insert({
+            election_id: electionId,
+            candidate_id: candidateId,
+            voter_id: voterRow.id
+          });
+
+          if (insErr) {
+            // unique constraint violation = tried to vote twice
+            if (insErr.code === "23505") {
+              voteMessageEl.style.color = "#b91c1c";
+              voteMessageEl.textContent = "আপনি ইতিমধ্যে এই নির্বাচনে ভোট দিয়েছেন।";
+              return;
+            }
+            throw insErr;
+          }
+
+          // local history
+          const candidate = candidates.find(c => c.id === candidateId);
+          saveVoteHistoryEntry({
+            userId: user.id,
+            electionId: electionId,
+            electionTitle: electionRow.title,
+            candidateId: candidateId,
+            candidateName: candidate ? candidate.userName : null,
+            timestamp: new Date().toISOString()
+          });
+
+          voteMessageEl.style.color = "#15803d";
+          voteMessageEl.textContent = "ভোট সফলভাবে গ্রহণ করা হয়েছে! ফলাফল পৃষ্ঠায় নেওয়া হচ্ছে...";
+
+          setTimeout(() => {
+            window.location.href = `voter-result.html?election_id=${encodeURIComponent(
+              electionId
+            )}`;
+          }, 1200);
+        } catch (err) {
+          console.error(err);
+          voteMessageEl.style.color = "#b91c1c";
+          voteMessageEl.textContent = "ভোট সাবমিট করতে সমস্যা হয়েছে। একটু পরে আবার চেষ্টা করুন।";
+          submitBtn.disabled = false;
+        }
+      });
+
+      loadAll();
+    })();
+  </script>
+</body>
+</html>
