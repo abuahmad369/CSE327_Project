@@ -53,7 +53,6 @@
       padding: 2rem;
     }
 
-    /* Dashboard Cards */
     .dashboard {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -101,7 +100,7 @@
       <a href="totalelection.html">Total Elections</a>
       <a href="supervisedpoll.html">Supervised Polls</a>
       <a href="registervoters.html">Registered Voters</a>
-      <button onclick="logout()">Logout</button>
+      <button onclick="logoutSupervisor()">Logout</button>
     </nav>
   </header>
 
@@ -133,78 +132,60 @@
   <!-- Supabase -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
-    const SUPABASE_URL = "https://yhhypbrmwlkelikrxbvs.supabase.co";
-    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InloaHlwYnJtd2xrZWxpa3J4YnZzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM5MDY1MDMsImV4cCI6MjA3OTQ4MjUwM30.PMNqc_nqU2D5MJDSGrxwgITAmqEg7X3OozshJq5hnkA";
+    const supabaseUrl = "https://yhhypbrmwlkelikrxbvs.supabase.co";
+    const supabaseAnonKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InloaHlwYnJtd2xrZWxpa3J4YnZzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM5MDY1MDMsImV4cCI6MjA3OTQ4MjUwM30.PMNqc_nqU2D5MJDSGrxwgITAmqEg7X3OozshJq5hnkA";
 
-    const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    const supabaseClient = supabase.createClient(supabaseUrl, supabaseAnonKey);
 
-    async function loadDashboard() {
+    async function loadDashboardData() {
       // Total Elections
-      const { data: elections, error: electionsError } = await supabase.from('elections').select('*');
-      if(electionsError){ console.error(electionsError); }
+      const { data: elections, error: electionsError } = await supabaseClient.from('elections').select('*');
+      if (electionsError) console.error(electionsError);
       document.getElementById('totalElections').innerText = elections ? elections.length : 0;
 
       // Active Elections
-      const active = elections ? elections.filter(e => e.status.toLowerCase() === 'active') : [];
-      document.getElementById('activeElections').innerText = active.length;
+      const activeElections = elections ? elections.filter(e => e.status.toLowerCase() === 'active') : [];
+      document.getElementById('activeElections').innerText = activeElections.length;
 
       // Registered Voters
-      const { data: voters, error: votersError } = await supabase.from('voters').select('*');
-      if(votersError){ console.error(votersError); }
+      const { data: voters, error: votersError } = await supabaseClient.from('voters').select('*');
+      if (votersError) console.error(votersError);
       document.getElementById('registeredVoters').innerText = voters ? voters.length : 0;
 
       // Supervised Polls
-      const { data: polls, error: pollsError } = await supabase.from('polls').select('*');
-      if(pollsError){ console.error(pollsError); }
+      const { data: polls, error: pollsError } = await supabaseClient.from('polls').select('*');
+      if (pollsError) console.error(pollsError);
       document.getElementById('supervisedPolls').innerText = polls ? polls.length : 0;
     }
 
-    function logout() {
+    function logoutSupervisor() {
       alert("Logging out Supervisor...");
       window.location.href = "../index.html";
     }
 
-    loadDashboard();
+    async function testSupabaseConnection() {
+      console.log("Testing Supabase connection...");
+
+      // Fetch elections
+      const { data: elections, error: electionsError } = await supabaseClient.from('elections').select('*');
+      if (electionsError) console.error("Elections Error:", electionsError);
+      else console.log("Elections table:", elections);
+
+      // Fetch voters
+      const { data: voters, error: votersError } = await supabaseClient.from('voters').select('*');
+      if (votersError) console.error("Voters Error:", votersError);
+      else console.log("Voters table:", voters);
+
+      // Fetch polls
+      const { data: polls, error: pollsError } = await supabaseClient.from('polls').select('*');
+      if (pollsError) console.error("Polls Error:", pollsError);
+      else console.log("Polls table:", polls);
+
+      alert("Check the console for Supabase data output!");
+    }
+
+    loadDashboardData();
+    testSupabaseConnection();
   </script>
 </body>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
-  // Your Supabase credentials
-  const SUPABASE_URL = "https://yhhypbrmwlkelikrxbvs.supabase.co";
-  const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InloaHlwYnJtd2xrZWxpa3J4YnZzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM5MDY1MDMsImV4cCI6MjA3OTQ4MjUwM30.PMNqc_nqU2D5MJDSGrxwgITAmqEg7X3OozshJq5hnkA";
-
-  const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-  async function testSupabase() {
-    console.log("Testing Supabase connection...");
-
-    // Fetch elections
-    const { data: elections, error: electionsError } = await supabase
-      .from('elections')
-      .select('*');
-    if (electionsError) console.error("Elections Error:", electionsError);
-    else console.log("Elections table:", elections);
-
-    // Fetch voters
-    const { data: voters, error: votersError } = await supabase
-      .from('voters')
-      .select('*');
-    if (votersError) console.error("Voters Error:", votersError);
-    else console.log("Voters table:", voters);
-
-    // Fetch polls
-    const { data: polls, error: pollsError } = await supabase
-      .from('polls')
-      .select('*');
-    if (pollsError) console.error("Polls Error:", pollsError);
-    else console.log("Polls table:", polls);
-
-    alert("Check the console for Supabase data output!");
-  }
-
-  // Run the test
-  testSupabase();
-</script>
-
 </html>
