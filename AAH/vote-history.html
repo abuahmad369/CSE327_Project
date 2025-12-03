@@ -3,17 +3,17 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CampusCast – ভোটের ইতিহাস</title>
-  <link rel="stylesheet" href="assets/style.css" />
+  <title>CampusCast - ভোটের ইতিহাস</title>
+  <link rel="stylesheet" href="/assets/style.css" />
 </head>
 <body>
   <!-- background image -->
   <div class="hands-bg"></div>
 
   <div class="container">
-    <!-- Header (same as index.html) -->
+    <!-- Header (same as login) -->
     <header class="site-header">
-      <a href="index.html" class="logo" aria-label="CampusCast হোমপেজে যান">
+      <a href="/index.html" class="logo" aria-label="CampusCast হোমপেজে যান">
         <div class="logo-text">
           <span>CampusCast</span>
           <div class="logo-bars">
@@ -23,19 +23,19 @@
             <div class="bar alt"></div>
           </div>
         </div>
-        <div class="logo-subtitle">বিশ্ববিদ্যালয় ই-ভোটিং সিস্টেম</div>
+        <div class="logo-subtitle">বিশ্ববিদ্যালয় ই ভোটিং সিস্টেম</div>
       </a>
 
       <nav class="site-nav">
-        <a href="login/login.html" class="nav-link">প্রশাসক</a>
-        <a href="candidate.html" class="nav-link">প্রার্থী</a>
-        <a href="voter.html" class="nav-link">ভোটার</a>
-        <a href="public.html" class="nav-link">পাবলিক</a>
-        <a class="login-btn" href="login/login.html" role="button">লগইন</a>
+        <a href="/login/login.html" class="nav-link">প্রশাসক</a>
+        <a href="/login/login.html" class="nav-link">প্রার্থী</a>
+        <a href="/login/login.html" class="nav-link">ভোটার</a>
+        <a href="/public.html" class="nav-link">পাবলিক</a>
+        <a class="login-btn" href="/login/login.html" role="button">লগইন</a>
       </nav>
     </header>
 
-    <!-- Main content -->
+    <!-- Main content (aligned with login layout) -->
     <main class="main-content" style="gap:40px; align-items:flex-start;">
       <!-- Left description -->
       <section class="content" style="max-width:520px;">
@@ -53,10 +53,18 @@
         </div>
       </section>
 
-      <!-- Right history table -->
+      <!-- Right history card (styled like login card) -->
       <section aria-label="ভোট ইতিহাস তালিকা" style="flex:1; max-width:540px;">
-        <div class="super-card">
-          <h2 style="margin:0 0 8px; font-size:18px; font-weight:800; color:var(--ink);">
+        <div
+          style="
+            background:#fff;
+            border:1px solid var(--border);
+            border-radius:14px;
+            box-shadow:0 6px 18px rgba(0,0,0,.08);
+            padding:22px;
+          "
+        >
+          <h2 style="margin:0 0 8px; font-size:20px; font-weight:800; color:var(--ink);">
             ভোট রেকর্ড
           </h2>
 
@@ -97,7 +105,7 @@
       </section>
     </main>
 
-    <!-- Footer (same as index.html) -->
+    <!-- Footer (same style as login) -->
     <footer class="features">
       <div class="feature">
         <div class="feature-icon">🧾</div>
@@ -133,7 +141,7 @@
       </div>
 
       <div class="footer-credit">
-        <p>© ২০২৫ <strong>FourA</strong> – CampusCast</p>
+        <p>© ২০২৫ <strong>FourA</strong> - CampusCast</p>
       </div>
     </footer>
   </div>
@@ -155,12 +163,12 @@
     function ensureVoterUser() {
       const user = getCurrentUser();
       if (!user) {
-        window.location.href = "login/login.html";
+        window.location.href = "/login/login.html";
         return null;
       }
       if (user.role !== "voter") {
         alert("এই ইতিহাস শুধুমাত্র ভোটারদের জন্য।");
-        window.location.href = "login/login.html";
+        window.location.href = "/login/login.html";
         return null;
       }
       return user;
