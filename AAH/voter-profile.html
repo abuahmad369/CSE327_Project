@@ -3,17 +3,17 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CampusCast – ভোটার প্রোফাইল</title>
-  <link rel="stylesheet" href="assets/style.css" />
+  <title>CampusCast - ভোটার প্রোফাইল</title>
+  <link rel="stylesheet" href="/assets/style.css" />
 </head>
 <body>
   <!-- background image -->
   <div class="hands-bg"></div>
 
   <div class="container">
-    <!-- Header (same as index.html) -->
+    <!-- Header (same style as login.html) -->
     <header class="site-header">
-      <a href="index.html" class="logo" aria-label="CampusCast হোমপেজে যান">
+      <a href="/index.html" class="logo" aria-label="CampusCast হোমপেজে যান">
         <div class="logo-text">
           <span>CampusCast</span>
           <div class="logo-bars">
@@ -23,19 +23,19 @@
             <div class="bar alt"></div>
           </div>
         </div>
-        <div class="logo-subtitle">বিশ্ববিদ্যালয় ই-ভোটিং সিস্টেম</div>
+        <div class="logo-subtitle">বিশ্ববিদ্যালয় ই ভোটিং সিস্টেম</div>
       </a>
 
       <nav class="site-nav">
-        <a href="login/login.html" class="nav-link">প্রশাসক</a>
-        <a href="candidate.html" class="nav-link">প্রার্থী</a>
-        <a href="voter.html" class="nav-link">ভোটার</a>
-        <a href="public.html" class="nav-link">পাবলিক</a>
-        <a class="login-btn" href="login/login.html" role="button">লগইন</a>
+        <a href="/login/login.html" class="nav-link">প্রশাসক</a>
+        <a href="/login/login.html" class="nav-link">প্রার্থী</a>
+        <a href="/login/login.html" class="nav-link">ভোটার</a>
+        <a href="/public.html" class="nav-link">পাবলিক</a>
+        <a class="login-btn" href="/login/login.html" role="button">লগইন</a>
       </nav>
     </header>
 
-    <!-- Main content -->
+    <!-- Main content (aligned with login layout) -->
     <main class="main-content" style="gap:40px; align-items:flex-start;">
       <!-- Left text -->
       <section class="content" style="max-width:520px;">
@@ -47,8 +47,8 @@
         </p>
 
         <div class="button-group" style="margin-top:10px;">
-          <a class="btn btn-secondary" href="voter.html" role="button">ড্যাশবোর্ড</a>
-          <a class="btn btn-secondary" href="vote-history.html" role="button">ভোটের ইতিহাস</a>
+          <a class="btn btn-secondary" href="/AAH/voter.html" role="button">ড্যাশবোর্ড</a>
+          <a class="btn btn-secondary" href="/AAH/vote-history.html" role="button">ভোটের ইতিহাস</a>
         </div>
 
         <div class="ethereum-note" style="margin-top:12px;">
@@ -59,10 +59,18 @@
         <p id="profileError" style="margin-top:8px; font-size:14px; color:crimson;"></p>
       </section>
 
-      <!-- Right profile card -->
+      <!-- Right profile card (styled like login card) -->
       <section aria-label="প্রোফাইল তথ্য" style="flex:1; max-width:540px;">
-        <div class="super-card">
-          <h2 style="margin:0 0 8px; font-size:18px; font-weight:800; color:var(--ink);">
+        <div
+          style="
+            background:#fff;
+            border:1px solid var(--border);
+            border-radius:14px;
+            box-shadow:0 6px 18px rgba(0,0,0,.08);
+            padding:22px;
+          "
+        >
+          <h2 style="margin:0 0 8px; font-size:20px; font-weight:800; color:var(--ink);">
             প্রোফাইল ডিটেইলস
           </h2>
 
@@ -106,7 +114,7 @@
       </section>
     </main>
 
-    <!-- Footer (same as index.html) -->
+    <!-- Footer (same style as login) -->
     <footer class="features">
       <div class="feature">
         <div class="feature-icon">🧾</div>
@@ -142,7 +150,7 @@
       </div>
 
       <div class="footer-credit">
-        <p>© ২০২৫ <strong>FourA</strong> – CampusCast</p>
+        <p>© ২০২৫ <strong>FourA</strong> - CampusCast</p>
       </div>
     </footer>
   </div>
@@ -163,12 +171,12 @@
     function ensureVoterUser() {
       const user = getCurrentUser();
       if (!user) {
-        window.location.href = "login/login.html";
+        window.location.href = "/login/login.html";
         return null;
       }
       if (user.role !== "voter") {
         alert("শুধুমাত্র ভোটার প্রোফাইল এখানে দেখা যাবে।");
-        window.location.href = "login/login.html";
+        window.location.href = "/login/login.html";
         return null;
       }
       return user;
@@ -187,13 +195,13 @@
 
       const titleEl = document.getElementById("profileTitle");
       if (titleEl) {
-        titleEl.textContent = name + " – আপনার প্রোফাইল";
+        titleEl.textContent = name + " - আপনার প্রোফাইল";
       }
 
       const logoutBtn = document.getElementById("logoutBtn");
       logoutBtn.addEventListener("click", () => {
         localStorage.removeItem(CC_CURRENT_USER_KEY);
-        window.location.href = "login/login.html";
+        window.location.href = "/login/login.html";
       });
     })();
   </script>
