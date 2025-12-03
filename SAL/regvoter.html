@@ -24,7 +24,7 @@
   <nav>
     <a href="../index.html">🏠 Home</a>
     <a href="supervisor.html">Dashboard</a>
-    <button onclick="logout()">Logout</button>
+    <button onclick="logoutSupervisor()">Logout</button>
   </nav>
 </header>
 
@@ -52,37 +52,37 @@
 <!-- Supabase -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-const SUPABASE_URL = "https://yhhypbrmwlkelikrxbvs.supabase.co";
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InloaHlwYnJtd2xrZWxpa3J4YnZzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM5MDY1MDMsImV4cCI6MjA3OTQ4MjUwM30.PMNqc_nqU2D5MJDSGrxwgITAmqEg7X3OozshJq5hnkA";
+const supabaseUrl = "https://yhhypbrmwlkelikrxbvs.supabase.co";
+const supabaseAnonKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InloaHlwYnJtd2xrZWxpa3J4YnZzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM5MDY1MDMsImV4cCI6MjA3OTQ4MjUwM30.PMNqc_nqU2D5MJDSGrxwgITAmqEg7X3OozshJq5hnkA";
 
-const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const supabaseClient = supabase.createClient(supabaseUrl, supabaseAnonKey);
 
-async function loadVoters() {
-  const { data, error } = await supabase.from('voters').select('*');
+async function loadVotersData() {
+  const { data: votersData, error: votersError } = await supabaseClient.from('voters').select('*');
   const tbody = document.querySelector("#votersTable tbody");
   tbody.innerHTML = "";
-  if (error) {
+  if (votersError) {
     tbody.innerHTML = `<tr><td colspan="4">Error fetching voters</td></tr>`;
-    console.error(error);
+    console.error(votersError);
     return;
   }
-  data.forEach(voter => {
-    const row = `<tr>
+  votersData.forEach(voter => {
+    const rowHtml = `<tr>
       <td>${voter.id}</td>
       <td>${voter.name}</td>
       <td>${voter.email}</td>
       <td>${voter.department}</td>
     </tr>`;
-    tbody.innerHTML += row;
+    tbody.innerHTML += rowHtml;
   });
 }
 
-function logout() {
+function logoutSupervisor() {
   alert("Logging out Supervisor...");
   window.location.href = "../index.html";
 }
 
-loadVoters();
+loadVotersData();
 </script>
 </body>
 </html>
