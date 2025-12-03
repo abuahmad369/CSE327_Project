@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: SAL/totelec.js</title>
+    <title>JSDoc: Source: AAH/vote-history.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: SAL/totelec.js</h1>
+    <h1 class="page-title">Source: AAH/vote-history.js</h1>
 
     
 
@@ -27,100 +27,117 @@
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>/**
- * @fileoverview Total Elections page JS
- * Fetches elections from Supabase and handles filtering and logout.
+ * Gets the currently logged in user from localStorage.
+ * @returns {object|null} Parsed user object or null if not found or invalid.
  */
-
-/** @type {string} Supabase URL */
-const SUPABASE_URL = "https://yhhypbrmwlkelikrxbvs.supabase.co";
-
-/** @type {string} Supabase Anon Key */
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InloaHlwYnJtd2xrZWxpa3J4YnZzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM5MDY1MDMsImV4cCI6MjA3OTQ4MjUwM30.PMNqc_nqU2D5MJDSGrxwgITAmqEg7X3OozshJq5hnkA";
-
-/** @type {import('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2').SupabaseClient} */
-const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-/** @type {Array&lt;Object>} All elections fetched from Supabase */
-let allElections = [];
-
-/**
- * Fetch elections from Supabase
- * @returns {Promise&lt;void>}
- */
-async function loadElections() {
-  const { data, error } = await supabaseClient.from('elections').select('*');
-  if (error) {
-    console.error("Error fetching elections:", error);
-    document.getElementById("loadingText").textContent = "Failed to load elections.";
-    return;
+function getCurrentUser() {
+  try {
+    const raw = localStorage.getItem(CC_CURRENT_USER_KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    return null;
   }
-
-  allElections = data || [];
-  renderElections();
 }
 
 /**
- * Render elections based on filter
+ * Ensures the current user exists and is a voter.
+ * Redirects to login page if invalid.
+ * @returns {object|null} User object if valid, otherwise null.
+ */
+function ensureVoterUser() {
+  const user = getCurrentUser();
+  if (!user) {
+    window.location.href = "login/login.html";
+    return null;
+  }
+  if (user.role !== "voter") {
+    alert("এই ইতিহাস শুধুমাত্র ভোটারদের জন্য।");
+    window.location.href = "login/login.html";
+    return null;
+  }
+  return user;
+}
+
+/**
+ * Loads vote history for a specific user.
+ * @param {object} user The current voter user.
+ * @param {string|number} user.id The unique user ID used for filtering history.
+ * @returns {Array&lt;object>} Filtered list of vote history entries.
+ */
+function loadHistory(user) {
+  try {
+    const raw = localStorage.getItem(CC_VOTE_HISTORY_KEY) || "[]";
+    const list = JSON.parse(raw);
+    return list.filter(entry => entry.userId === user.id);
+  } catch (e) {
+    console.warn("vote history পড়তে সমস্যা:", e);
+    return [];
+  }
+}
+
+/**
+ * Formats an ISO timestamp string into a readable time for bn-BD locale.
+ * @param {string} iso ISO formatted timestamp.
+ * @returns {string} Localized human readable date and time.
+ */
+function formatTime(iso) {
+  if (!iso) return "";
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return iso;
+  return d.toLocaleString("bn-BD");
+}
+
+/**
+ * Initializes the history page and populates vote history for the current user.
+ * No parameters are needed since it reads from the DOM and storage.
  * @returns {void}
  */
-function renderElections() {
-  const electionList = document.getElementById("electionList");
-  const statusFilter = document.getElementById("statusFilter").value;
+(function initHistoryPage() {
+  const user = ensureVoterUser();
+  if (!user) return;
 
-  electionList.innerHTML = "";
+  const statusEl = document.getElementById("historyStatus");
+  const bodyEl = document.getElementById("historyBody");
+  if (!statusEl || !bodyEl) return;
 
-  if (!allElections.length) {
-    electionList.innerHTML = '&lt;p style="color:#ccc;">No elections found.&lt;/p>';
+  const rows = loadHistory(user);
+
+  if (!rows.length) {
+    statusEl.textContent =
+      "এই ব্রাউজারে আপনার কোনো ভোট ইতিহাস পাওয়া যায়নি। নতুন করে ভোট দিলে এই তালিকা আপডেট হবে।";
+    bodyEl.innerHTML = "";
     return;
   }
 
-  const filtered = allElections.filter(election => {
-    return statusFilter === "all" || election.status.toLowerCase() === statusFilter;
+  rows.sort((a, b) => (a.timestamp &lt; b.timestamp ? 1 : -1));
+
+  statusEl.textContent = `মোট ${rows.length} টি ভোট রেকর্ড দেখানো হচ্ছে।`;
+
+  bodyEl.innerHTML = "";
+  rows.forEach(r => {
+    const tr = document.createElement("tr");
+
+    const tdElection = document.createElement("td");
+    tdElection.style.padding = "6px 8px";
+    tdElection.style.borderBottom = "1px solid var(--border)";
+    tdElection.textContent = r.electionTitle || r.electionId;
+
+    const tdCandidate = document.createElement("td");
+    tdCandidate.style.padding = "6px 8px";
+    tdCandidate.style.borderBottom = "1px solid var(--border)";
+    tdCandidate.textContent = r.candidateName || r.candidateId;
+
+    const tdTime = document.createElement("td");
+    tdTime.style.padding = "6px 8px";
+    tdTime.style.borderBottom = "1px solid var(--border)";
+    tdTime.textContent = formatTime(r.timestamp);
+
+    tr.appendChild(tdElection);
+    tr.appendChild(tdCandidate);
+    tr.appendChild(tdTime);
+    bodyEl.appendChild(tr);
   });
-
-  if (!filtered.length) {
-    electionList.innerHTML = '&lt;p style="color:#ccc;">No elections match this filter.&lt;/p>';
-    return;
-  }
-
-  filtered.forEach(election => {
-    const card = document.createElement("div");
-    card.className = "electionCard";
-
-    card.innerHTML = `
-      &lt;h3>${election.title}&lt;/h3>
-      &lt;p>&lt;strong>Date:&lt;/strong> ${election.start_date || "Upcoming"}&lt;/p>
-      &lt;p>&lt;strong>Turnout:&lt;/strong> ${election.turnout || 0}%&lt;/p>
-      &lt;div class="progressBar">&lt;div class="progress" style="width:${election.turnout || 0}%">&lt;/div>&lt;/div>
-      &lt;span class="status ${election.status.toLowerCase()}">${election.status}&lt;/span>
-      &lt;button class="btnView">View Details&lt;/button>
-    `;
-
-    electionList.appendChild(card);
-  });
-}
-
-/**
- * Logout supervisor
- * @returns {void}
- */
-function logoutSupervisor() {
-  alert("Logging out Supervisor...");
-  window.location.href = "../index.html";
-}
-
-/**
- * Initialize page: set events and load elections
- */
-function init() {
-  document.getElementById("logoutBtn").addEventListener("click", logoutSupervisor);
-  document.getElementById("statusFilter").addEventListener("change", renderElections);
-
-  loadElections();
-}
-
-// Run initialization
-init();
+})();
 </code></pre>
         </article>
     </section>
