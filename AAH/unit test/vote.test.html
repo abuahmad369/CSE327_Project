@@ -2,101 +2,148 @@
 <html lang="bn">
 <head>
   <meta charset="UTF-8" />
-  <title>CampusCast - Voter Dashboard Tests</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/mocha/mocha.css" />
+  <title>vote.html detailed tests</title>
+  <style>
+    body {
+      font-family: system-ui, sans-serif;
+      padding: 20px;
+    }
+    h2 {
+      margin-bottom: 12px;
+    }
+    .test-item {
+      font-size: 16px;
+      margin: 4px 0;
+    }
+    .pass {
+      color: #16a34a;
+      font-weight: 600;
+    }
+    .fail {
+      color: #b91c1c;
+      font-weight: 600;
+    }
+    #summary {
+      margin-top: 20px;
+      font-size: 20px;
+      font-weight: bold;
+    }
+  </style>
 </head>
 <body>
-  <h1>CampusCast - ভোটার ড্যাশবোর্ড Unit Tests</h1>
-  <div id="mocha"></div>
+  <h2>vote.html unit tests (Detailed Results)</h2>
 
-  <!-- Load Mocha & Chai FIRST -->
-  <script src="https://cdn.jsdelivr.net/npm/mocha/mocha.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chai/chai.js"></script>
+  <div id="testResults"></div>
+  <div id="summary"></div>
+
+  <!-- Hidden iframe (loads your real vote.html page) -->
+  <iframe
+    id="appFrame"
+    src="vote.html?election_id=test-election-123"
+    style="width:0;height:0;border:0;visibility:hidden;"
+  ></iframe>
 
   <script>
-    // Ensure chai is fully loaded
-    const waitForExpect = setInterval(() => {
-      if (window.chai && chai.expect) {
-        window.expect = chai.expect; // make global
-        clearInterval(waitForExpect);
-        mocha.setup("bdd");
-        runTests(); // start tests only when expect is ready
-      }
-    }, 10);
+    const testResultsEl = document.getElementById("testResults");
+    const summaryEl = document.getElementById("summary");
 
-    function runTests() {
-      // Create hidden iframe
-      const iframe = document.createElement("iframe");
-      iframe.id = "appFrame";
-      iframe.src = "voter.html";
-      iframe.style = "width:0;height:0;border:0;visibility:hidden;";
-      document.body.appendChild(iframe);
+    // Fake voter user so vote.html does NOT redirect
+    localStorage.setItem(
+      "cc_currentUser",
+      JSON.stringify({ id: "test-user-1", role: "voter" })
+    );
 
-      describe("CampusCast Voter Dashboard UI", function () {
-        let doc;
+    const tests = []; // each test stored as {name, pass, message}
 
-        before(function (done) {
-          iframe.onload = function () {
-            doc = iframe.contentDocument || iframe.contentWindow.document;
-            done();
-          };
-        });
+    function addTest(name, condition, failMessage = "") {
+      tests.push({
+        name,
+        pass: condition,
+        message: failMessage
+      });
+    }
 
-        it("পেইজের title সঠিক আছে", function () {
-          expect(doc.title).to.equal("CampusCast - ভোটার ড্যাশবোর্ড");
-        });
+    document.getElementById("appFrame").addEventListener("load", function () {
+      const win = this.contentWindow;
+      const doc = win.document;
 
-        it("হেডারে logo লিংক index.html এ যায়", function () {
-          const logoLink = doc.querySelector(".site-header .logo");
-          expect(logoLink).to.exist;
-          expect(logoLink.getAttribute("href")).to.equal("index.html");
-        });
+      // -------- RUN TEST CASES ----------
+      addTest("Page title is correct",
+        doc.title === "CampusCast - ভোট দিন",
+        "Title does not match"
+      );
 
-        it("নেভিগেশন মেনু ঠিকভাবে আছে", function () {
-          const navLinks = Array.from(doc.querySelectorAll(".site-nav .nav-link"));
-          expect(navLinks.length).to.be.at.least(4);
-        });
+      addTest("electionTitle element exists",
+        !!doc.getElementById("electionTitle"),
+        "Missing #electionTitle"
+      );
 
-        it("লগইন বাটন সঠিক আছে", function () {
-          const loginBtn = doc.querySelector(".site-nav .login-btn");
-          expect(loginBtn).to.exist;
-          expect(loginBtn.getAttribute("href")).to.equal("/login/login.html");
-        });
+      addTest("electionDescription exists",
+        !!doc.getElementById("electionDescription"),
+        "Missing #electionDescription"
+      );
 
-        it("welcome title আছে", function () {
-          expect(doc.getElementById("welcomeTitle")).to.exist;
-          expect(doc.getElementById("voterName")).to.exist;
-        });
+      addTest("voteForm exists",
+        !!doc.getElementById("voteForm"),
+        "Missing #voteForm"
+      );
 
-        it("vote history ও profile বাটন আছে", function () {
-          const buttons = Array.from(doc.querySelectorAll(".button-group .btn"));
-          const hrefs = buttons.map(b => b.getAttribute("href"));
-          expect(hrefs).to.include("vote-history.html");
-          expect(hrefs).to.include("voter-profile.html");
-        });
+      addTest("candidatesList exists",
+        !!doc.getElementById("candidatesList"),
+        "Missing #candidatesList"
+      );
 
-        it("elections container আছে", function () {
-          expect(doc.getElementById("electionsContainer")).to.exist;
-        });
+      addTest("submitBtn exists",
+        !!doc.getElementById("submitBtn"),
+        "Missing #submitBtn"
+      );
 
-        it("logout বাটন আছে", function () {
-          const btn = doc.getElementById("logoutBtn");
-          expect(btn).to.exist;
-        });
+      // JS function tests
+      const user = win.getCurrentUser && win.getCurrentUser();
+      addTest("getCurrentUser() returns test user",
+        user && user.id === "test-user-1",
+        "getCurrentUser() returned wrong value"
+      );
 
-        it("footer এ তিনটা feature ব্লক আছে", function () {
-          const features = doc.querySelectorAll("footer.features .feature");
-          expect(features.length).to.equal(3);
-        });
+      const eid = win.getElectionIdFromUrl && win.getElectionIdFromUrl();
+      addTest("getElectionIdFromUrl() reads election_id correctly",
+        eid === "test-election-123",
+        "Wrong election_id from URL"
+      );
 
-        it("footer dot indicators আছে", function () {
-          const dots = doc.querySelectorAll("footer .dots .dot");
-          expect(dots.length).to.be.at.least(1);
-        });
+      win.localStorage.removeItem("cc_voteHistory");
+      win.saveVoteHistoryEntry({ x: 1 });
+      win.saveVoteHistoryEntry({ y: 2 });
+      const history = JSON.parse(win.localStorage.getItem("cc_voteHistory") || "[]");
+
+      addTest("saveVoteHistoryEntry() stores entries",
+        history.length === 2,
+        "vote history length incorrect"
+      );
+
+      addTest("saveVoteHistoryEntry() stores correct data",
+        history[0].x === 1 && history[1].y === 2,
+        "vote history data incorrect"
+      );
+
+      // -------- DISPLAY RESULTS ----------
+      let failures = 0;
+      tests.forEach(t => {
+        const div = document.createElement("div");
+        div.className = "test-item " + (t.pass ? "pass" : "fail");
+        div.textContent = t.pass
+          ? `✔ ${t.name}`
+          : `❌ ${t.name} — ${t.message}`;
+        testResultsEl.appendChild(div);
+        if (!t.pass) failures++;
       });
 
-      mocha.run();
-    }
+      summaryEl.textContent =
+        failures === 0
+          ? "✅ ALL TESTS PASSED"
+          : `❌ ${failures} TEST(S) FAILED`;
+      summaryEl.style.color = failures === 0 ? "#16a34a" : "#b91c1c";
+    });
   </script>
 </body>
 </html>
