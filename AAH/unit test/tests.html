@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8" />
+  <title>CampusCast voter tests</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      padding: 20px;
+      background: #f3f4f6;
+    }
+    h1 {
+      margin-bottom: 10px;
+    }
+    pre {
+      background: #111827;
+      color: #e5e7eb;
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 13px;
+      max-height: 70vh;
+      overflow: auto;
+      white-space: pre-wrap;
+    }
+  </style>
+</head>
+<body>
+  <h1>CampusCast unit tests</h1>
+  <pre id="testOutput">Running tests...</pre>
+
+  <!-- Your real helper functions, copied from the app page -->
+  <script>
+    /**
+     * Current user key used in localStorage.
+     * @type {string}
+     */
+    const CC_CURRENT_USER_KEY = "cc_currentUser";
+
+    /**
+     * Read current user object from localStorage.
+     * @returns {{id:string, role:string, name?:string} | null}
+     */
+    function getCurrentUser() {
+      try {
+        const raw = localStorage.getItem(CC_CURRENT_USER_KEY);
+        if (!raw) return null;
+        return JSON.parse(raw);
+      } catch {
+        return null;
+      }
+    }
+
+    /**
+     * Ensure current user is a voter. Redirects to login if not.
+     * @returns {{id:string, role:string, name?:string} | null}
+     */
+    function requireVoter() {
+      const user = getCurrentUser();
+      if (!user || user.role !== "voter") {
+        window.location.href = "/login/login.html";
+        return null;
+      }
+      return user;
+    }
+
+    /**
+     * Convert election status to short Bangla label.
+     * @param {string | null | undefined} status
+     * @returns {string}
+     */
+    function shortStatus(status) {
+      if (!status) return "অজানা";
+      if (status === "active") return "চলমান";
+      if (status === "closed") return "সমাপ্ত";
+      return status;
+    }
+
+    /**
+     * Background color for a status badge.
+     * @param {string | null | undefined} status
+     * @returns {string}
+     */
+    function badgeColor(status) {
+      if (status === "active") return "#dcfce7";
+      if (status === "closed") return "#fee2e2";
+      return "#e5e7eb";
+    }
+  </script>
+
+  <!-- Tiny test runner and tests -->
+  <script>
+    /**
+     * @typedef {Object} TestResult
+     * @property {string} name
+     * @property {boolean} passed
+     * @property {string} [error]
+     */
+
+    /** @type {TestResult[]} */
+    const results = [];
+
+    /**
+     * Define a test case.
+     * @param {string} name
+     * @param {() => void} fn
+     */
+    function test(name, fn) {
+      try {
+        fn();
+        console.log("✅ PASS - " + name);
+        results.push({ name, passed: true });
+      } catch (err) {
+        console.error("❌ FAIL - " + name, err);
+        results.push({ name, passed: false, error: String(err) });
+      }
+    }
+
+    /**
+     * Assert strict equality.
+     * @param {any} actual
+     * @param {any} expected
+     * @param {string} [msg]
+     */
+    function assertEqual(actual, expected, msg) {
+      if (actual !== expected) {
+        throw new Error(
+          (msg || "Values are not equal") +
+            " | expected=" +
+            JSON.stringify(expected) +
+            " actual=" +
+            JSON.stringify(actual)
+        );
+      }
+    }
+
+    /**
+     * Assert that a value is null.
+     * @param {any} value
+     * @param {string} [msg]
+     */
+    function assertNull(value, msg) {
+      if (value !== null) {
+        throw new Error((msg || "Value is not null") + " | actual=" + JSON.stringify(value));
+      }
+    }
+
+    /**
+     * Render all results to the page.
+     */
+    function renderResults() {
+      const out = document.getElementById("testOutput");
+      if (!out) return;
+
+      let text = "";
+      let passedCount = 0;
+      let failedCount = 0;
+
+      results.forEach(r => {
+        if (r.passed) {
+          passedCount++;
+          text += "✅ PASS - " + r.name + "\n";
+        } else {
+          failedCount++;
+          text += "❌ FAIL - " + r.name + "\n    " + r.error + "\n";
+        }
+      });
+
+      text =
+        "Total: " + results.length +
+        ", Passed: " + passedCount +
+        ", Failed: " + failedCount +
+        "\n\n" + text;
+
+      out.textContent = text;
+    }
+
+    /* ---------------- tests for shortStatus ---------------- */
+
+    test("shortStatus maps active to চলমান", () => {
+      const actual = shortStatus("active");
+      assertEqual(actual, "চলমান", "active should map to চলমান");
+    });
+
+    test("shortStatus maps closed to সমাপ্ত", () => {
+      const actual = shortStatus("closed");
+      assertEqual(actual, "সমাপ্ত", "closed should map to সমাপ্ত");
+    });
+
+    test("shortStatus returns অজানা for falsy values", () => {
+      assertEqual(shortStatus(""), "অজানা");
+      assertEqual(shortStatus(null), "অজানা");
+      assertEqual(shortStatus(undefined), "অজানা");
+    });
+
+    test("shortStatus returns original string for unknown status", () => {
+      assertEqual(shortStatus("pending"), "pending");
+    });
+
+    /* ---------------- tests for badgeColor ---------------- */
+
+    test("badgeColor for active", () => {
+      assertEqual(badgeColor("active"), "#dcfce7");
+    });
+
+    test("badgeColor for closed", () => {
+      assertEqual(badgeColor("closed"), "#fee2e2");
+    });
+
+    test("badgeColor default for other values", () => {
+      assertEqual(badgeColor("pending"), "#e5e7eb");
+      assertEqual(badgeColor(""), "#e5e7eb");
+    });
+
+    /* ---------------- tests for getCurrentUser ---------------- */
+
+    test("getCurrentUser returns null when nothing saved", () => {
+      localStorage.removeItem(CC_CURRENT_USER_KEY);
+      const user = getCurrentUser();
+      assertNull(user, "User should be null when not in storage");
+    });
+
+    test("getCurrentUser returns parsed object for valid JSON", () => {
+      const mockUser = { id: "123", role: "voter", name: "Test Voter" };
+      localStorage.setItem(CC_CURRENT_USER_KEY, JSON.stringify(mockUser));
+      const user = getCurrentUser();
+      assertEqual(user.id, mockUser.id);
+      assertEqual(user.role, mockUser.role);
+      assertEqual(user.name, mockUser.name);
+    });
+
+    test("getCurrentUser returns null for invalid JSON", () => {
+      localStorage.setItem(CC_CURRENT_USER_KEY, "{invalid-json");
+      const user = getCurrentUser();
+      assertNull(user, "User should be null for invalid JSON");
+    });
+
+    /* ---------------- tests for requireVoter ---------------- */
+
+    test("requireVoter returns user when role is voter", () => {
+      const mockUser = { id: "999", role: "voter", name: "Valid Voter" };
+      localStorage.setItem(CC_CURRENT_USER_KEY, JSON.stringify(mockUser));
+
+      // Temporarily stop real redirect during this test
+      const oldHref = window.location.href;
+      const oldLocation = window.location;
+
+      // Basic stub to avoid navigation
+      delete window.location;
+      window.location = { href: "/dummy" };
+
+      const user = requireVoter();
+
+      assertEqual(user.id, "999");
+      assertEqual(user.role, "voter");
+
+      // Restore location
+      window.location = oldLocation;
+      window.location.href = oldHref;
+    });
+
+    window.addEventListener("load", renderResults);
+  </script>
+</body>
+</html>
