@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Supervisor Approve Test (Local)</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; background:#f5f5f5; }
+    h1 { margin-bottom: 20px; }
+    .card { background: #fff; border: 1px solid #ccc; padding: 12px; margin-bottom: 10px; border-radius: 6px; }
+    .btn { padding: 5px 10px; border: none; border-radius: 4px; cursor: pointer; margin-right: 5px; }
+    .approve { background-color: #16a34a; color: white; }
+    .reject { background-color: #b91c1c; color: white; }
+    .status { font-weight: bold; margin-left: 10px; }
+  </style>
+</head>
+<body>
+  <h1>Supervisor Approve/Reject Test (Local)</h1>
+  <p id="authStatus"></p>
+  <div id="applicationsContainer"></div>
+
+  <script>
+    // Simulate logged-in supervisor
+    const supervisor = {
+      id: "supervisor_test_id",
+      name: "Test Supervisor",
+      email: "supervisor@test.com",
+      role: "supervisor"
+    };
+
+    const authBox = document.getElementById("authStatus");
+    if (!supervisor || supervisor.role !== "supervisor") {
+      authBox.textContent = "❌ Supervisor not logged in!";
+    } else {
+      authBox.textContent = "✅ Supervisor: " + supervisor.name;
+    }
+
+    // Simulated candidate applications
+    let candidateApplications = [
+      { id: "1", name: "Alice", email: "alice@example.com", status: "submitted" },
+      { id: "2", name: "Bob", email: "bob@example.com", status: "under_review" },
+      { id: "3", name: "Charlie", email: "charlie@example.com", status: "submitted" }
+    ];
+
+    function renderApplications() {
+      const container = document.getElementById("applicationsContainer");
+      container.innerHTML = "";
+
+      if (!candidateApplications.length) {
+        container.textContent = "No candidate applications found!";
+        return;
+      }
+
+      candidateApplications.forEach(app => {
+        const card = document.createElement("div");
+        card.className = "card";
+
+        const info = document.createElement("p");
+        info.innerHTML = `${app.name} (${app.email}) - Status: <span class="status">${app.status}</span>`;
+        card.appendChild(info);
+
+        const approveBtn = document.createElement("button");
+        approveBtn.textContent = "Approve";
+        approveBtn.className = "btn approve";
+
+        const rejectBtn = document.createElement("button");
+        rejectBtn.textContent = "Reject";
+        rejectBtn.className = "btn reject";
+
+        if (app.status === "approved" || app.status === "rejected") {
+          approveBtn.disabled = true;
+          rejectBtn.disabled = true;
+        }
+
+        approveBtn.addEventListener("click", () => handleStatusChange(app.id, "approved", card));
+        rejectBtn.addEventListener("click", () => handleStatusChange(app.id, "rejected", card));
+
+        card.appendChild(approveBtn);
+        card.appendChild(rejectBtn);
+        container.appendChild(card);
+      });
+    }
+
+    function handleStatusChange(candidateId, newStatus, card) {
+      // Update local application data
+      candidateApplications = candidateApplications.map(app =>
+        app.id === candidateId ? { ...app, status: newStatus } : app
+      );
+
+      const statusEl = card.querySelector(".status");
+      statusEl.textContent = newStatus === "approved" ? "✅ approved" : "❌ rejected";
+      statusEl.style.color = newStatus === "approved" ? "green" : "red";
+
+      // Disable buttons after action
+      card.querySelectorAll("button").forEach(btn => btn.disabled = true);
+    }
+
+    // Initial render
+    renderApplications();
+  </script>
+</body>
+</html>
