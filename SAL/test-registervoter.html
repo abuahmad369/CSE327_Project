@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TEST | নিবন্ধিত ভোটার</title>
+  <style>
+    body { font-family: Poppins, sans-serif; padding: 20px; background: #f7f7f7; }
+    table { width: 100%; border-collapse: collapse; background: white; }
+    th, td { padding: 10px; border-bottom: 1px solid #ddd; }
+    th { background: #eee; text-align: left; }
+    .pass { color: green; font-weight: bold; }
+    .fail { color: crimson; font-weight: bold; }
+    .btn { padding: 4px 10px; border-radius: 6px; font-size: 12px; cursor: pointer; border: none; }
+    .btn-save { background: #2563eb; color: white; }
+    .btn-delete { background: #b91c1c; color: white; }
+  </style>
+</head>
+<body>
+
+<h1>TEST: নিবন্ধিত ভোটারের তালিকা</h1>
+<p style="color:#555">এই টেস্ট ভার্সনে ডাটাবেস ব্যবহার করা হয়নি — সব কিছু লোকাল ডামি ডেটা দিয়ে কাজ করবে।</p>
+
+<h3 id="testStatus"></h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>নাম</th>
+      <th>ইমেইল</th>
+      <th>স্টুডেন্ট আইডি</th>
+      <th>নির্বাচন</th>
+      <th>অনুমোদন</th>
+      <th>ব্যান</th>
+      <th>একশন</th>
+    </tr>
+  </thead>
+  <tbody id="votersBody"></tbody>
+</table>
+
+<script>
+  // ------------------------------
+  // MOCK DATA (no Supabase needed)
+  // ------------------------------
+  let elections = [
+    { id: "E1", title: "Campus Election 2025" },
+    { id: "E2", title: "Hall Union Election" }
+  ];
+
+  let voters = [
+    {
+      id: "V1",
+      name: "রহিম উদ্দিন",
+      email: "rahim@example.com",
+      student_id: "2134001",
+      is_approved: true,
+      is_banned: false,
+      election_id: "E1"
+    },
+    {
+      id: "V2",
+      name: "করিমা আক্তার",
+      email: "karima@example.com",
+      student_id: "2134002",
+      is_approved: false,
+      is_banned: false,
+      election_id: ""
+    },
+    {
+      id: "V3",
+      name: "সাজিদ হোসেন",
+      email: "sajid@example.com",
+      student_id: "2134003",
+      is_approved: false,
+      is_banned: true,
+      election_id: "E2"
+    }
+  ];
+
+  // ------------------------------
+  // Render voters table
+  // ------------------------------
+  function renderVoters() {
+    const tbody = document.getElementById("votersBody");
+
+    tbody.innerHTML = voters.map(voter => {
+      const options = elections.map(e =>
+        `<option value="${e.id}" ${e.id === voter.election_id ? "selected" : ""}>${e.title}</option>`
+      ).join("");
+
+      return `
+        <tr data-id="${voter.id}">
+          <td>${voter.name}</td>
+          <td>${voter.email}</td>
+          <td>${voter.student_id}</td>
+          <td>
+            <select class="election-select">${options}</select>
+          </td>
+          <td style="text-align:center">
+            <input type="checkbox" class="approved-checkbox" ${voter.is_approved ? "checked" : ""}>
+          </td>
+          <td style="text-align:center">
+            <input type="checkbox" class="banned-checkbox" ${voter.is_banned ? "checked" : ""}>
+          </td>
+          <td style="text-align:center">
+            <button class="btn btn-save" onclick="saveVoter('${voter.id}')">সংরক্ষণ</button>
+            <button class="btn btn-delete" onclick="deleteVoter('${voter.id}')">মুছে ফেলুন</button>
+          </td>
+        </tr>
+      `;
+    }).join("");
+  }
+
+  // ------------------------------
+  // PASS / FAIL message
+  // ------------------------------
+  function showStatus(message, success=true) {
+    const el = document.getElementById("testStatus");
+    el.className = success ? "pass" : "fail";
+    el.textContent = (success ? "PASS: " : "FAIL: ") + message;
+  }
+
+  // ------------------------------
+  // Save voter (LOCAL only)
+  // ------------------------------
+  function saveVoter(id) {
+    const row = document.querySelector(`tr[data-id="${id}"]`);
+
+    const election = row.querySelector(".election-select").value;
+    const approved = row.querySelector(".approved-checkbox").checked;
+    const banned = row.querySelector(".banned-checkbox").checked;
+
+    const voter = voters.find(v => v.id === id);
+
+    if (!voter) {
+      showStatus("ভোটার পাওয়া যায়নি!", false);
+      return;
+    }
+
+    voter.election_id = election;
+    voter.is_approved = approved;
+    voter.is_banned = banned;
+
+    showStatus("ভোটারের তথ্য সফলভাবে সংরক্ষিত হয়েছে!");
+  }
+
+  // ------------------------------
+  // Delete voter (LOCAL only)
+  // ------------------------------
+  function deleteVoter(id) {
+    const index = voters.findIndex(v => v.id === id);
+
+    if (index === -1) {
+      showStatus("মুছতে ব্যর্থ — ভোটার পাওয়া যায়নি!", false);
+      return;
+    }
+
+    voters.splice(index, 1);
+    renderVoters();
+    showStatus("ভোটার সফলভাবে মুছে ফেলা হয়েছে!");
+  }
+
+  // ------------------------------
+  // Load page
+  // ------------------------------
+  renderVoters();
+</script>
+
+</body>
+</html>
