@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8" />
+  <title>vote.html detailed tests</title>
+  <style>
+    body {
+      font-family: system-ui, sans-serif;
+      padding: 20px;
+    }
+    h2 {
+      margin-bottom: 12px;
+    }
+    .test-item {
+      font-size: 16px;
+      margin: 4px 0;
+    }
+    .pass {
+      color: #16a34a;
+      font-weight: 600;
+    }
+    .fail {
+      color: #b91c1c;
+      font-weight: 600;
+    }
+    #summary {
+      margin-top: 20px;
+      font-size: 20px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <h2>vote.html unit tests (Detailed Results)</h2>
+
+  <div id="testResults"></div>
+  <div id="summary"></div>
+
+  <!-- Hidden iframe (loads your real vote.html page) -->
+  <iframe
+    id="appFrame"
+    src="vote.html?election_id=test-election-123"
+    style="width:0;height:0;border:0;visibility:hidden;"
+  ></iframe>
+
+  <script>
+    const testResultsEl = document.getElementById("testResults");
+    const summaryEl = document.getElementById("summary");
+
+    // Fake voter user so vote.html does NOT redirect
+    localStorage.setItem(
+      "cc_currentUser",
+      JSON.stringify({ id: "test-user-1", role: "voter" })
+    );
+
+    const tests = []; // each test stored as {name, pass, message}
+
+    function addTest(name, condition, failMessage = "") {
+      tests.push({
+        name,
+        pass: condition,
+        message: failMessage
+      });
+    }
+
+    document.getElementById("appFrame").addEventListener("load", function () {
+      const win = this.contentWindow;
+      const doc = win.document;
+
+      // -------- RUN TEST CASES ----------
+      addTest("Page title is correct",
+        doc.title === "CampusCast - ভোট দিন",
+        "Title does not match"
+      );
+
+      addTest("electionTitle element exists",
+        !!doc.getElementById("electionTitle"),
+        "Missing #electionTitle"
+      );
+
+      addTest("electionDescription exists",
+        !!doc.getElementById("electionDescription"),
+        "Missing #electionDescription"
+      );
+
+      addTest("voteForm exists",
+        !!doc.getElementById("voteForm"),
+        "Missing #voteForm"
+      );
+
+      addTest("candidatesList exists",
+        !!doc.getElementById("candidatesList"),
+        "Missing #candidatesList"
+      );
+
+      addTest("submitBtn exists",
+        !!doc.getElementById("submitBtn"),
+        "Missing #submitBtn"
+      );
+
+      // JS function tests
+      const user = win.getCurrentUser && win.getCurrentUser();
+      addTest("getCurrentUser() returns test user",
+        user && user.id === "test-user-1",
+        "getCurrentUser() returned wrong value"
+      );
+
+      const eid = win.getElectionIdFromUrl && win.getElectionIdFromUrl();
+      addTest("getElectionIdFromUrl() reads election_id correctly",
+        eid === "test-election-123",
+        "Wrong election_id from URL"
+      );
+
+      win.localStorage.removeItem("cc_voteHistory");
+      win.saveVoteHistoryEntry({ x: 1 });
+      win.saveVoteHistoryEntry({ y: 2 });
+      const history = JSON.parse(win.localStorage.getItem("cc_voteHistory") || "[]");
+
+      addTest("saveVoteHistoryEntry() stores entries",
+        history.length === 2,
+        "vote history length incorrect"
+      );
+
+      addTest("saveVoteHistoryEntry() stores correct data",
+        history[0].x === 1 && history[1].y === 2,
+        "vote history data incorrect"
+      );
+
+      // -------- DISPLAY RESULTS ----------
+      let failures = 0;
+      tests.forEach(t => {
+        const div = document.createElement("div");
+        div.className = "test-item " + (t.pass ? "pass" : "fail");
+        div.textContent = t.pass
+          ? `✔ ${t.name}`
+          : `❌ ${t.name} — ${t.message}`;
+        testResultsEl.appendChild(div);
+        if (!t.pass) failures++;
+      });
+
+      summaryEl.textContent =
+        failures === 0
+          ? "✅ ALL TESTS PASSED"
+          : `❌ ${failures} TEST(S) FAILED`;
+      summaryEl.style.color = failures === 0 ? "#16a34a" : "#b91c1c";
+    });
+  </script>
+</body>
+</html>
